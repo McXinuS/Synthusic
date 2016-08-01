@@ -6,7 +6,7 @@ var express = require('express'),
   app = express();
 var server = require('http').Server(app);
 
-server.listen(80);
+server.listen(8080);
 
 app.use(express.static('public'));
 
@@ -17,4 +17,4 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-console.log("The server is running @ localhost:80");
+console.log("The server is running @ localhost:8080");

@@ -1,10 +1,10 @@
 /*
-	Attempt to create a push-server based on Node.js
+	A push-server based on Node.js
 */
 
 var express = require('express'),
   app = express();
-var server = require('http').Server(app);
+var server = require('https').Server(app);
 
 server.listen(process.env.PORT || 5000);
 

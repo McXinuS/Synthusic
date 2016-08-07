@@ -1,0 +1,7 @@
+{
+  "name": "Simple Synthesizer",
+  "short_name": "SimpleSynth",
+  "start_url": "/",
+  "display": "standalone",
+  "gcm_sender_id": "313485014103"
+}

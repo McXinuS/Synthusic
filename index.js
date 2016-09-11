@@ -9,9 +9,7 @@ require("http").Server(app).listen(port);
 
 app.use(express.static('public'));
 
-var useSsl = (process.argv[2] != undefined 
-	|| process.argv[2].toLowerCase()=='true') 
-	|| false;
+var useSsl = (process.argv[2] != undefined && process.argv[2].toLowerCase()=='true');
 
 // redirect to HTTPS
 if (useSsl) {

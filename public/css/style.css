@@ -25,29 +25,46 @@
 	cursor        : pointer;
 }
 
-.inline-block { display : inline-block; }
+.inline-block {
+	display : inline-block;
+}
 
-.title-arrow { float : right; cursor : pointer; }
+.title-arrow {
+	float  : right;
+	cursor : pointer;
+}
 
-.title-arrow-up { border : 14px solid transparent; border-top : 0; border-bottom-color : #6ea972; }
+.title-arrow-up {
+	border              : 14px solid transparent;
+	border-top          : 0;
+	border-bottom-color : #6ea972;
+}
 
-.title-arrow-down { border : 14px solid transparent; border-bottom : 0; border-top-color : #6ea972; }
+.title-arrow-down {
+	border           : 14px solid transparent;
+	border-bottom    : 0;
+	border-top-color : #6ea972;
+}
 
 /* ---settings--- */
-#settings { background : rgba(100, 100, 100, 0.5); color : #ddd; }
+#settings {
+	background : rgba(100, 100, 100, 0.5);
+	color      : #ddd;
+}
 
-#mute-btn { margin-top : 12px; }
+.label-value {
+	float : right;
+}
 
-.label-value { float : right; }
-
-.scale-settings { display : inline-block; }
+.scale-settings {
+	display : inline-block;
+}
 
 /* ---/settings--- */
 
 /* ---instruments--- */
 #instr-container {
 	background : url(../img/woodtexture8.jpg);
-	cursor        : pointer;
 }
 
 .container-ru-corner#note-info {
@@ -85,10 +102,16 @@
 }
 
 .key-white {
-	width            : 6%; /*17 white keys on the screen maximum*/
+	width            : 6%; /*17 white keys on the screen*/
 	background-color : #fff;
 	height           : 300px;
 	z-index          : 1;
+}
+
+@media (max-width : 1199px) {
+	.key-white {
+		width : 10%; /*10 white keys on the screen on small devices*/
+	}
 }
 
 .key-black {
@@ -101,23 +124,43 @@
 	box-shadow       : 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.playing { background-color : #b3ffad; }
+.playing {
+	background-color : #b3ffad;
+}
 
-.playing.key-white { box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, 0.2); }
+.playing.key-white {
+	box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, 0.2);
+}
 
-.key.selected { background-color : #ccc; }
+.key.selected {
+	background-color : #ccc;
+}
 
-#keyboard.keyboard-mini { height : 120px; }
+#keyboard.keyboard-mini {
+	height : 120px;
+}
 
-.keyboard-mini .white-black { height : 100%; }
+.keyboard-mini .white-black {
+	height : 100%;
+}
 
-.keyboard-mini .key-black { height : 60%; box-shadow : 0 0 5px rgba(0, 0, 0, 0.5); }
+.keyboard-mini .key-black {
+	height     : 60%;
+	box-shadow : 0 0 5px rgba(0, 0, 0, 0.5);
+}
 
-#keyboard::-webkit-scrollbar { width : 10px; height : 24px; }
+#keyboard::-webkit-scrollbar {
+	width  : 10px;
+	height : 24px;
+}
 
-#keyboard::-webkit-scrollbar-track { background : url(../img/piano-down.jpg); }
+#keyboard::-webkit-scrollbar-track {
+	background : url(../img/piano-down.jpg);
+}
 
-#keyboard::-webkit-scrollbar-thumb { background-color : rgba(88, 46, 22, 0.7); }
+#keyboard::-webkit-scrollbar-thumb {
+	background-color : rgba(88, 46, 22, 0.7);
+}
 
 /* ---/keyboard--- */
 
@@ -141,25 +184,47 @@
 /* ---/oscillograph--- */
 
 /* ---more--- */
-#more { padding : 0; opacity : 0.95; }
+#more {
+	padding : 0;
+	opacity : 0.95;
+}
 
-#more .panel-heading { cursor : pointer; }
+#more .panel-heading {
+	cursor : pointer;
+}
 
-#more ul { padding-left : 0; margin-bottom : 0; }
+#more ul {
+	padding-left  : 0;
+	margin-bottom : 0;
+}
 
-#more li { list-style-type : none; font-size : 14px; }
+#more li {
+	list-style-type : none;
+	font-size       : 14px;
+}
 
 /* ---/more--- */
 
-input[type=range] { -webkit-appearance : none; margin : 14px 0; }
+input[type=range] {
+	-webkit-appearance : none;
+	margin             : 14px 0 18px 0;
+}
 
-input[type=range]:focus { outline : none; }
+input[type=range]:focus {
+	outline : none;
+}
 
-input[type=range]:focus::-webkit-slider-runnable-track { background : #367ebd; }
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background : #367ebd;
+}
 
-input[type=range][disabled]::-webkit-slider-runnable-track { background : #aaa; }
+input[type=range][disabled]::-webkit-slider-runnable-track {
+	background : #aaa;
+}
 
-input[type=range][disabled]::-webkit-slider-thumb { background : #ddd; }
+input[type=range][disabled]::-webkit-slider-thumb {
+	background : #ddd;
+}
 
 input[type=range]::-webkit-slider-runnable-track {
 	width      : 100%;

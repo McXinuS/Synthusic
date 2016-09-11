@@ -4,28 +4,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Virtual Keyboard</title>
 	<link rel="manifest" href="/manifest.json">
-	<link rel="shortcut icon" href="img/icon.png"/>
+	<link rel="shortcut icon" href="img/favicon.png"/>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<script src="js/libs/jquery-2.2.1.js"></script>
 	<script src="js/libs/bootstrap.min.js"></script>
-	<script src="js/constants.js"></script>
+	<script src="js/string_format.js"></script>
+	<script src="js/values.js"></script>
 	<script src="js/note.js"></script>
 	<script src="js/keyboard.js"></script>
 	<script src="js/sound.js"></script>
 	<script src="js/oscilloscope.js"></script>
 	<script src="js/main.js"></script>
-	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
-	<script>
-		var OneSignal = OneSignal || [];
-		OneSignal.push(["init", {
-			appId: "8b457d1b-e42d-4fec-b00a-05507623c2ad",
-			autoRegister: false,
-			notifyButton: {
-				enable: true
-			}
-		}]);
-	</script>
 </head>
 
 <body>
@@ -43,18 +33,12 @@
 					<span class="label-desc">Gain (master)</span>
 					<span class="label-value">Value</span>
 				</div>
-				<input type="range" id="master-gain-range" min="0" max="0.1" step="0.005">
+				<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01">
+				<button id="stop-btn" class="btn btn-default">Reset</button>
 				<button id="mute-btn" class="btn btn-default">Play</button>
 			</div>
 			<div class="col-md-4">
 				<div>
-					<div class="dropdown inline-block" id="scale-list">
-						<button class="btn btn-default dropdown-toggle" type="button"
-								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-							Scale<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" aria-labelledby="scale-list"></ul>
-					</div>
 					<div class="dropdown inline-block" id="instr-list">
 						<button class="btn btn-default dropdown-toggle" type="button"
 								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -69,7 +53,7 @@
 					<span class="label-desc">BPM</span>
 					<span class="label-value">Value</span>
 				</div>
-				<input type="range" id="bpm" min="20" max="200" step="0.01">
+				<input type="range" id="bpm-range" min="20" max="260" step="0.01">
 				<button id="random-btn" class="btn btn-default">Random note</button>
 			</div>
 		</div>
@@ -92,7 +76,7 @@
 			<div class="col-md-3">
 				<div id="note-info" class="container-ru-corner well">
 					<div id="note-info-collapsable" class='collapse in'>
-						<label for="note-range">Current note</label>
+						<label for="note-info-note-range">Current note</label>
 						<div class="note-info note">
 							<span class="label-desc">Note:</span>
 							<span class="label-value">Select a note</span>
@@ -101,14 +85,14 @@
 							<span class="label-desc">Frequency:</span>
 							<span class="label-value">Select a note</span>
 						</div>
-						<input type="range" id="note-range" step="1" disabled>
+						<input type="range" id="note-info-note-range" step="1" disabled>
 					</div>
-					<label for="gain-range">Gain</label>
+					<label for="note-info-gain-range">Gain</label>
 					<div class="note-info gain">
 						<span class="label-desc">Gain:</span>
 						<span class="label-value">Select a note</span>
 					</div>
-					<input type="range" id="gain-range" min="0" max="1" step="0.01" disabled>
+					<input type="range" id="note-info-gain-range" min="0" max="1" step="0.01" disabled>
 				</div>
 			</div>
 		</div>

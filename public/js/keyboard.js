@@ -1,4 +1,5 @@
 function Keyboard(container) {
+	
 	var eventNote;
 	var eventKey;
 
@@ -33,10 +34,6 @@ function Keyboard(container) {
 		
 		container.appendChild(key);
 	}
-	
-    var noteRng = document.getElementById('note-range');
-    noteRng.setAttribute("min", "0");
-    noteRng.setAttribute("max", notesCount - 1);
 
 	var keyboardOverlay = document.getElementById('keyboard-up');
 	keyboardOverlay.style.width = container.scrollWidth + 'px';

@@ -67,7 +67,7 @@ function init() {
 	setMasterGain(0.25);
 	setBpm(60);
 
-	socket = new Socket(WEB_SOCKET_HOST_LOCALHOST, onSocketMessage);
+	socket = new Socket(WEB_SOCKET_HOST, onSocketMessage);
 }
 
 function reset(callback, callbackArgs) {

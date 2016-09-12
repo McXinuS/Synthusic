@@ -18,7 +18,7 @@ function Keyboard(container) {
 		};
 		key.onmousedown = function (e) {
 			eventNote = getNote(e.target.getAttribute('name'), e.target.getAttribute('oct'));
-			playing[eventNote.index] ? stopNote(eventNote) : playNote(eventNote);
+			playing[eventNote.index] ? stopNote({note: eventNote}) : playNote({note: eventNote});
 			if (e.button == 2) {
 				eventKey = document.querySelector('[name="' + eventNote.name + '"][oct="' + eventNote.octave + '"]');
 				eventKey.classList.add('selected');
@@ -27,7 +27,7 @@ function Keyboard(container) {
 		};
 		key.onmouseup = function (e) {
 			if (e.button == 2) {
-				stopNote(eventNote);
+				stopNote({note: eventNote});
 				eventKey.classList.remove('selected');
 			}
 		};

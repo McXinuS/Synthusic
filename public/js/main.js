@@ -1,7 +1,3 @@
-var keyboard;
-var sound;
-var oscilloscope;
-
 // DOM objects
 // Settings
 var masterGainLabel;
@@ -21,6 +17,11 @@ var masterGainBeforeMute;
 var playing = [];
 var instrument;
 var scale;
+
+var keyboard;
+var sound;
+var oscilloscope;
+var socket;
 
 document.addEventListener("DOMContentLoaded", function () {
 	init();
@@ -65,6 +66,8 @@ function init() {
 
 	setMasterGain(0.25);
 	setBpm(60);
+
+	socket = new Socket(WEB_SOCKET_HOST_LOCALHOST, onSocketMessage);
 }
 
 function reset(callback, callbackArgs) {
@@ -73,30 +76,27 @@ function reset(callback, callbackArgs) {
 		return;
 	}
 	var pl = playing;
-	stop();
+	stop({notify: false});
 
 	callback(callbackArgs);
 
 	for (var index in pl) {
+		if (!pl[index]) {
+			continue;
+		}
 		var note = getNote(index);
-		playNote(note);
+		playNote({note: note});
 	}
 }
 
-// display info about selected note in the 'note-info' div
-function updateNoteBox(note) {
-	noteInfoFreq.text(note.freq.toFixed(2));
-	noteInfoNote.text(note.name + note.octave);
+function playNote(parameters) {
+	var note = parameters.note;
+	var duration = parameters.duration;
+	var notify = parameters.notify;
 
-	noteInfoNoteRange.value = note.index;
-	var gain = getGain(note);
-	noteInfoGainLabel.text(gain.toFixed(2));
-	noteInfoGainRange.value = gain;
-	noteInfoGainRange.disabled = (gain == 0);
-}
+	if (playing[note.index])
+		return;
 
-// display info about selected note in the 'note-info' div
-function playNote(note, duration) {
 	playing[note.index] = true;
 	sound.playNote(note, duration);
 
@@ -104,10 +104,28 @@ function playNote(note, duration) {
 	keyboard.highlightOn(note);
 	updateNoteBox(note);
 
+	if (notify == undefined) {
+		notify = true;
+	}
+	if (notify) {
+		socket.send({
+			type: WEB_SOCKET_MESSAGE_TYPE.play_note,
+			noteName: note.name,
+			noteOctave: note.octave
+		});
+	}
+
 	console.log(note.name + note.octave + ' is now playing');
 }
 
-function stopNote(note) {
+function stopNote(parameters) {
+	var note = parameters.note;
+	var notify = parameters.notify;
+
+	console.log(playing);
+	if (!playing[note.index])
+		return;
+
 	playing[note.index] = false;
 	sound.stopNote(note);
 
@@ -115,6 +133,16 @@ function stopNote(note) {
 	keyboard.highlightOff(note);
 	updateNoteBox(note);
 
+	if (notify == undefined) {
+		notify = true;
+	}
+	if (notify) {
+		socket.send({
+			type: WEB_SOCKET_MESSAGE_TYPE.stop_note,
+			noteName: note.name,
+			noteOctave: note.octave
+		});
+	}
 	console.log(note.name + note.octave + ' has been stopped');
 }
 
@@ -148,15 +176,26 @@ function playRandomFromScale(key, sc) {
 	if (ok) {
 		var bpm = getBpm();
 		var duration = 60 * 1000 / bpm;
-		playNote(note, duration);
+		playNote({note: note, duration: duration});
 	}
 }
 
-function stop() {
+function stop(parameters) {
+	var notify = parameters.notify;
+
 	oscilloscope.reset();
 	sound.stop();
 	keyboard.highlightClear();
 	playing = [];
+
+	if (notify == undefined) {
+		notify = true;
+	}
+	if (notify) {
+		socket.send({
+			type: WEB_SOCKET_MESSAGE_TYPE.stop,
+		});
+	}
 	console.log('Stop');
 }
 
@@ -193,15 +232,6 @@ function setMasterGain(gain) {
 	document.getElementById("mute-btn").innerText = gain == 0 ? "Play" : "Mute";
 }
 
-function toggleMute() {
-	if (masterGainRange.value > 0) {
-		masterGainBeforeMute = masterGainRange.value;
-		setMasterGain(0);
-	} else {
-		setMasterGain(masterGainBeforeMute);
-	}
-}
-
 function getScale() {
 	return scale;
 }
@@ -220,19 +250,66 @@ function getInstrument() {
 	return instrument;
 }
 
-function setInstrument(ins) {
-	if (getInstrument() != undefined && getInstrument().name == ins)
+function setInstrument(instrumentName) {
+	if (getInstrument() != undefined && getInstrument().name == instrumentName)
 		return;
 
 	for (var index in INSTRUMENTS) {
-		if (INSTRUMENTS[index].name == ins) {
-			reset(function(ins){
-				instrument = ins;
+		if (INSTRUMENTS[index].name == instrumentName) {
+			reset(function (instrumentName) {
+				instrument = instrumentName;
 			}, INSTRUMENTS[index]);
-			instrumentListLabel.html(ins + '<span class="caret"></span>');
-			console.log("Instrument has been changed to", ins);
+			instrumentListLabel.html(instrumentName + '<span class="caret"></span>');
+			console.log("Instrument has been changed to", instrumentName);
 			break;
 		}
+	}
+}
+
+function toggleMute() {
+	if (masterGainRange.value > 0) {
+		masterGainBeforeMute = masterGainRange.value;
+		setMasterGain(0);
+	} else {
+		setMasterGain(masterGainBeforeMute);
+	}
+}
+
+// display info about selected note in the 'note-info' div
+function updateNoteBox(note) {
+	noteInfoFreq.text(note.freq.toFixed(2));
+	noteInfoNote.text(note.name + note.octave);
+
+	noteInfoNoteRange.value = note.index;
+	var gain = getGain(note);
+	noteInfoGainLabel.text(gain.toFixed(2));
+	noteInfoGainRange.value = gain;
+	noteInfoGainRange.disabled = (gain == 0);
+}
+
+function onSocketMessage(data) {
+	var type = data.type;
+
+	switch (type) {
+		case WEB_SOCKET_MESSAGE_TYPE.play_note:
+			var name = data.noteName;
+			var octave = data.noteOctave;
+			var note = getNote(name, octave);
+			playNote({note: note, notify: false});
+			break;
+		case WEB_SOCKET_MESSAGE_TYPE.stop_note:
+			var name = data.noteName;
+			var octave = data.noteOctave;
+			var note = getNote(name, octave);
+			stopNote({note: note, notify: false});
+			break;
+		case WEB_SOCKET_MESSAGE_TYPE.stop:
+			stop({notify: false});
+			break;
+		case WEB_SOCKET_MESSAGE_TYPE.change_instrument:
+			var instr = data.instrumentName;
+			setInstrument(instr, false);
+			break;
 	}
 }
 
@@ -254,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	var stopButton = document.getElementById('stop-btn');
 	stopButton.onclick = function () {
-		stop();
+		stop({notify: true});
 	};
 
 	var randomButton = document.getElementById('random-btn');

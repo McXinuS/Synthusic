@@ -3,6 +3,9 @@ var NOTE_END = ['B', 5];
 
 var MAX_GAIN = 0.5;
 
+var WEB_SOCKET_HOST = 'ws://simple-synthesizer.herokuapp.com:5001';
+var WEB_SOCKET_HOST_LOCALHOST = 'ws://127.0.0.1:5001';
+
 var INSTRUMENTS = {
 	piano: {
 		name: 'Piano',
@@ -18,6 +21,13 @@ var INSTRUMENTS = {
 		osc_freq: [1, 2],
 		osc_gain: [1, 0.4]
 	}
+};
+
+var WEB_SOCKET_MESSAGE_TYPE = {
+	play_note: 0,
+	stop_note: 1,
+	stop: 5,
+	change_instrument: 10
 };
 
 var ACCIDENTALS = {

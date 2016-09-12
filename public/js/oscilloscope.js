@@ -109,13 +109,14 @@ Oscilloscope.prototype.getWaveFunction = function (funcName) {
 };
 
 Oscilloscope.prototype.draw = function () {
+	var start = new Date().getTime();
+
 	// clear screen
 	this.ctx.beginPath();
 	this.ctx.fillStyle = '#000';
 	this.ctx.fillRect(0, 0, this.width, this.height);
 
-	// grid
-	// TODO: make a grid
+	// axis
 	this.ctx.strokeStyle = '#aaa';
 	this.ctx.beginPath();
 	this.ctx.moveTo(0, this.center.y);
@@ -134,6 +135,10 @@ Oscilloscope.prototype.draw = function () {
 	this.ctx.shadowColor = "#060";
 	this.ctx.drawImage(this.mask, 0, 0, this.width, this.height);
 	this.ctx.shadowBlur = 0;
+
+	var end = new Date().getTime();
+	var time = end - start;
+	console.log('Oscillator draw finished in ' + time + 'ms.');
 };
 
 Oscilloscope.prototype.drawSourceWaves = function (note) {

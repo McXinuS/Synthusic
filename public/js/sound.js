@@ -33,7 +33,7 @@ Sound.prototype.playNote = function (note, duration) {
 		if (duration) {
 			setTimeout(function () {
 				// without 'this' qualifier! stop it using main.js function
-				stopNote(note);
+				stopNote({note: note});
 			}, duration);
 		}	// TODO
 	}

@@ -1,3 +1,5 @@
+require('./webSocketServer.js');
+
 var fs = require('fs');
 var express = require('express'),
 	app = express();

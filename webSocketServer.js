@@ -1,18 +1,15 @@
-//var wsPort = (process.env.PORT || 5000) + 1;
-var wsPort = 5001;
+var webSocketServer;
+//var wsPort = process.env.PORT || 5000;
 
 // TODO try import on later nodejs version
 // import {WEB_SOCKET_MESSAGE_TYPE} from 'public/js/values.js';
+
 var WEB_SOCKET_MESSAGE_TYPE = {
 	play_note: 0,
 	stop_note: 1,
 	stop: 5,
 	change_instrument: 10
 };
-
-var webSocketServer = new require('ws').Server({
-	port: wsPort
-});
 
 var wsClients = [];
 var wsLastId = 0;
@@ -22,24 +19,32 @@ var stateObject = {
 	instrument: undefined
 };
 
-webSocketServer.on('connection', function (ws) {
-
-	var id = wsLastId;
-	wsLastId++;
-
-	wsClients[id] = ws;
-	console.log("New connection : id " + id);
-
-	ws.on('message', function (message) {
-		processWebSocketMessage(message, {ws: ws, id: id});
+module.exports.Server = function (server) {
+	webSocketServer = new require('ws').Server({
+		server: server
 	});
 
-	ws.on('close', function () {
-		console.log('Connection closed : id ' + id);
-		delete wsClients[id];
+	webSocketServer.on('connection', function (ws) {
+
+		var id = wsLastId;
+		wsLastId++;
+
+		wsClients[id] = ws;
+		console.log("New connection : id " + id);
+
+		ws.on('message', function (message) {
+			processWebSocketMessage(message, {ws: ws, id: id});
+		});
+
+		ws.on('close', function () {
+			console.log('Connection closed : id ' + id);
+			delete wsClients[id];
+		});
+
 	});
 
-});
+	return webSocketServer;
+};
 
 function processWebSocketMessage(message, sender) {
 	var data = JSON.parse(message);

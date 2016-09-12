@@ -1,5 +1,3 @@
-require('./webSocketServer.js');
-
 var fs = require('fs');
 var express = require('express'),
 	app = express();
@@ -7,7 +5,11 @@ var path = require('path');
 
 var port = process.env.PORT || 5000;
 
-require("http").Server(app).listen(port);
+var server = require("http").Server(app);
+server.listen(port);
+
+var webSocketServer = require(path.join(__dirname, '/webSocketServer.js')).Server(server);
+console.log("WebSocket server is running @ " + port);
 
 app.use(express.static('public'));
 
@@ -35,4 +37,4 @@ app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '/index.html'));
 });
 
-console.log("The server is running @ " + port);
+console.log("HTTP server is running @ " + port);

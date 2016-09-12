@@ -3,8 +3,8 @@ var NOTE_END = ['B', 5];
 
 var MAX_GAIN = 0.5;
 
-var WEB_SOCKET_HOST = 'ws://simple-synthesizer.herokuapp.com:5001';
-var WEB_SOCKET_HOST_LOCALHOST = 'ws://127.0.0.1:5001';
+var WEB_SOCKET_HOST = 'ws://simple-synthesizer.herokuapp.com:5000';
+var WEB_SOCKET_HOST_LOCALHOST = 'ws://127.0.0.1:5000';
 
 var INSTRUMENTS = {
 	piano: {

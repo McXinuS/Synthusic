@@ -44,15 +44,6 @@ function init() {
 	noteLibInit(NOTE_START[0], NOTE_START[1], NOTE_END[0], NOTE_END[1], ACCIDENTALS.flat.scale);
 
 	var oscCanvas = document.getElementById('osc-canvas');
-	var oscDiv = oscCanvas.parentNode;
-	// hack: get oscDiv content width by creating a new div and getting its width
-	var oscDivTemp = document.createElement('div');
-	oscDiv.appendChild(oscDivTemp);
-	var oscDivTempStyle = window.getComputedStyle(oscDivTemp, null);
-	var oscDivW = oscDivTempStyle.getPropertyValue("width");
-	oscDiv.removeChild(oscDivTemp);
-	oscCanvas.setAttribute('width', oscDivW);
-	oscCanvas.setAttribute('height', '500px');
 	oscilloscope = new Oscilloscope(oscCanvas);
 
 	var keyboardContainer = document.getElementById("keyboard");
@@ -64,10 +55,13 @@ function init() {
 	window.audioContext = audioContext;
 	sound = new Sound(audioContext);
 
-	setMasterGain(0.25);
+	masterGainRange.setAttribute("min", "0");
+	masterGainRange.setAttribute("max", MASTER_GAIN_MAX);
+	setMasterGain(MASTER_GAIN_MAX/2);
 	setBpm(60);
 
-	socket = new Socket(WEB_SOCKET_HOST, onSocketMessage);
+	socket = new Socket(WEB_SOCKET_HOST);
+	socket.onmessage = onSocketMessage;
 }
 
 function reset(callback, callbackArgs) {
@@ -122,7 +116,6 @@ function stopNote(parameters) {
 	var note = parameters.note;
 	var notify = parameters.notify;
 
-	console.log(playing);
 	if (!playing[note.index])
 		return;
 
@@ -329,6 +322,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	$("#keyboard-up").attachKeyboardDragger();
 
+	masterGainRange.oninput = function () {
+		setMasterGain(masterGainRange.value);
+	};
+
 	var stopButton = document.getElementById('stop-btn');
 	stopButton.onclick = function () {
 		stop({notify: true});
@@ -342,10 +339,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	noteInfoGainRange.oninput = function () {
 		var n = getNote(noteInfoNoteRange.value);
 		setGain(n, noteInfoGainRange.value);
-	};
-
-	masterGainRange.oninput = function () {
-		setMasterGain(masterGainRange.value);
 	};
 
 	var mute = document.getElementById('mute-btn');

@@ -1,30 +1,30 @@
 function Oscilloscope(canvas) {
 	this.canvas = canvas;
-	this.ctx = this.canvas.getContext("2d");
-
-	this.width = canvas.width;
-	this.height = canvas.height;
-	this.amplitude = canvas.height / 2;
-	this.center = {x: canvas.width / 2, y: canvas.height / 2};
-
-	this.notes = [];
-	this.amplBuf = [];	// values of each oscillator waves
-
-	this.lineWidthRes = 2;
-	this.lineWidthSrc = 0.7;
 
 	this.mask = new Image();
+	this.mask.src = 'img/osc_overlay.png';
+
+	this.resize();
+	this.reset();
+	
 	var self = this;
 	this.mask.onload = function () {
 		self.draw();
 	};
-	this.mask.src = 'img/osc_overlay.png';
-
-	this.scale = 0.00001;
-	this.setSampleRate(300);
-
-	this.draw();
 }
+
+Oscilloscope.prototype.resize = function() {
+	// hack: get oscDiv content width by creating a new div and getting its width
+	var oscDiv = this.canvas.parentNode;
+	var oscDivTemp = document.createElement('div');
+	oscDiv.appendChild(oscDivTemp);
+	var oscDivTempStyle = window.getComputedStyle(oscDivTemp, null);
+	var oscDivW = oscDivTempStyle.getPropertyValue("width");
+	oscDiv.removeChild(oscDivTemp);
+
+	this.canvas.setAttribute('width', oscDivW);
+	this.canvas.setAttribute('height', '500px');
+};
 
 Oscilloscope.prototype.reset = function () {
 	this.ctx = this.canvas.getContext("2d");
@@ -35,9 +35,12 @@ Oscilloscope.prototype.reset = function () {
 	this.center = {x: this.canvas.width / 2, y: this.canvas.height / 2};
 
 	this.notes = [];
-	this.amplBuf = [];
+	this.amplBuf = [];	// values of each oscillator waves
 
-	this.scale = 0.00001;
+	this.lineWidthRes = 2;
+	this.lineWidthSrc = 0.7;
+
+	this.scale = 0.00001; // used in amplitude calculation when
 	this.setSampleRate(300);
 
 	this.draw();
@@ -88,29 +91,14 @@ Oscilloscope.prototype.calcAmplitudes = function (note) {
 		this.amplBuf[index][i] = [];
 		var ampl = this.amplitude * instrument.osc_gain[i];
 		var freq = baseFreq * instrument.osc_freq[i] * this.scale;
-		var waveFunc = this.getWaveFunction(instrument.osc_type[i]);
+		var waveFunc = GetWaveFunction(instrument.osc_type[i]);
 		for (var j = 0; j <= this.width; j += this.step) {
 			this.amplBuf[index][i][j] = ampl * waveFunc(freq * (j - this.center.x)) + this.amplitude;
 		}
 	}
 };
 
-Oscilloscope.prototype.getWaveFunction = function (funcName) {
-	switch (funcName) {
-		case 'sine':
-			return Math.sin;
-		case 'square':
-			return function (val) {
-				return (Math.sin(val) > 0) ? 1 : -1
-			};
-		default:
-			return Math.sin;
-	}
-};
-
 Oscilloscope.prototype.draw = function () {
-	var start = new Date().getTime();
-
 	// clear screen
 	this.ctx.beginPath();
 	this.ctx.fillStyle = '#000';
@@ -135,10 +123,6 @@ Oscilloscope.prototype.draw = function () {
 	this.ctx.shadowColor = "#060";
 	this.ctx.drawImage(this.mask, 0, 0, this.width, this.height);
 	this.ctx.shadowBlur = 0;
-
-	var end = new Date().getTime();
-	var time = end - start;
-	console.log('Oscillator draw finished in ' + time + 'ms.');
 };
 
 Oscilloscope.prototype.drawSourceWaves = function (note) {
@@ -157,7 +141,6 @@ Oscilloscope.prototype.drawSourceWaves = function (note) {
 	var g = (relIndex < 0.5) ? Math.floor(256 * (relIndex / 0.5)) : Math.floor(256 * ((1 - relIndex) / 0.5));
 	var b = Math.floor(256 * relIndex);
 	var strokeColor = 'rgb({0}, {1}, {2})'.format(r, g, b);
-
 	this.ctx.strokeStyle = strokeColor;
 
 	this.ctx.beginPath();

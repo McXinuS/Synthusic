@@ -7,6 +7,7 @@ var port = process.env.PORT || 5000;
 
 var server = require("http").Server(app);
 server.listen(port);
+console.log("HTTP server is running @ " + port);
 
 var webSocketServer = require(path.join(__dirname, '/webSocketServer.js')).Server(server);
 console.log("WebSocket server is running @ " + port);
@@ -36,5 +37,3 @@ app.get('/favicon', function (req, res) {
 app.get('/', function (req, res) {
 	res.sendFile(path.join(__dirname, '/index.html'));
 });
-
-console.log("HTTP server is running @ " + port);

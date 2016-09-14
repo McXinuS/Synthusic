@@ -8,7 +8,8 @@ var WEB_SOCKET_MESSAGE_TYPE = {
 	play_note: 0,
 	stop_note: 1,
 	stop: 5,
-	change_instrument: 10
+	change_instrument: 10,
+	get_state: 20
 };
 
 var wsClients = [];
@@ -47,40 +48,52 @@ module.exports.Server = function (server) {
 };
 
 function processWebSocketMessage(message, sender) {
-	var data = JSON.parse(message);
-	var logMsg = 'New message from id ' + sender.id + '. Message ';
+	try {
+		var data = JSON.parse(message);
+		var logMsg = 'New message from id ' + sender.id + '. Message ';
+		var broadcast = true;
 
-	if (data == undefined || data.type == undefined) {
-		logMsg += ' : ' + JSON.stringify(data);
-	} else {
-		var note;
-		switch (data.type) {
-			case WEB_SOCKET_MESSAGE_TYPE.play_note:
-				note = data.noteName + data.noteOctave;
-				logMsg += 'type : play_note, note : ' + note;
-				stateObject[note] = true;
-				break;
-			case WEB_SOCKET_MESSAGE_TYPE.stop_note:
-				note = data.noteName + data.noteOctave;
-				logMsg += 'type : stop_note, note : ' + note;
-				stateObject[note] = false;
-				break;
-			case WEB_SOCKET_MESSAGE_TYPE.stop:
-				logMsg += 'type : stop';
-				stateObject.playing = [];
-				break;
-			case WEB_SOCKET_MESSAGE_TYPE.change_instrument:
-				logMsg += 'type : change_instrument, new instrument : ' + data.instrumentName;
-				stateObject.instrument = data.instrumentName;
-				break;
+		if (data == undefined || data.type == undefined) {
+			logMsg += ' : ' + JSON.stringify(data);
+		} else {
+			var note;
+			switch (data.type) {
+				case WEB_SOCKET_MESSAGE_TYPE.play_note:
+					note = data.noteName + data.noteOctave;
+					logMsg += 'type : play_note, note : ' + note;
+					stateObject[note] = true;
+					break;
+				case WEB_SOCKET_MESSAGE_TYPE.stop_note:
+					note = data.noteName + data.noteOctave;
+					logMsg += 'type : stop_note, note : ' + note;
+					stateObject[note] = false;
+					break;
+				case WEB_SOCKET_MESSAGE_TYPE.stop:
+					logMsg += 'type : stop';
+					stateObject.playing = [];
+					break;
+				case WEB_SOCKET_MESSAGE_TYPE.change_instrument:
+					logMsg += 'type : change_instrument, new instrument : ' + data.instrumentName;
+					stateObject.instrument = data.instrumentName;
+					break;
+				case WEB_SOCKET_MESSAGE_TYPE.get_state:
+					broadcast = false;
+					logMsg += 'type : get_state';
+					sender.ws.send(JSON.stringify(stateObject));
+					break;
+			}
 		}
+
+		console.log(logMsg);
+
+		if (broadcast) {
+			wsClients.forEach(function (client) {
+				if (client !== sender.ws) {
+					client.send(message);
+				}
+			});
+		}
+	} catch (e) {
+		console.log('Exception in WebSocket.send: ' + e.name + ': ' + e.message);
 	}
-
-	wsClients.forEach(function (client) {
-		if (client !== sender.ws) {
-			client.send(message);
-		}
-	});
-
-	console.log(logMsg);
 }

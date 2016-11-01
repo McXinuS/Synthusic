@@ -6,21 +6,16 @@
 	<link rel="shortcut icon" href="img/favicon.png"/>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<script src="js/libs/jquery-2.2.1.js"></script>
-	<script src="js/libs/bootstrap.min.js"></script>
-	<script src="js/string_format.js"></script>
-	<script src="js/values.js"></script>
 	<script src="js/note.js"></script>
-	<script src="js/keyboard.js"></script>
-	<script src="js/sound.js"></script>
-	<script src="js/oscilloscope.js"></script>
-	<script src="js/websocket.js"></script>
-	<script src="js/main.js"></script>
+	<script src="js/build.js"></script>
 </head>
 
 <body>
 <div class="background-image"></div>
 <div class="content">
+
+	<!-- SETTINGS -->
+
 	<div id="settings" class="container container-block">
 		<div class="container-title" data-toggle="collapse" data-target="#settings-row">
 			<h3>Settings
@@ -28,36 +23,72 @@
 			</h3>
 		</div>
 		<div id="settings-row" class="row collapse in">
-			<div class="col-md-4">
-				<div id="master-gain" class="note-info master-gain">
-					<span class="label-desc">Gain (master)</span>
-					<span class="label-value">Value</span>
-				</div>
-				<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01">
-				<button id="stop-btn" class="btn btn-default">Reset</button>
-				<button id="mute-btn" class="btn btn-default">Play</button>
+
+			<div class="col-sm-4 col-md-4 col-lg-4">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div id="master-gain" class="note-info master-gain">
+							<span class="label-desc" >Gain (master)</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01">
+					</li>
+
+					<li class="list-group-item">
+						<button id="stop-btn" class="btn btn-default">Reset</button>
+						<button id="mute-btn" class="btn btn-default">Play</button>
+					</li>
+
+					<li class="list-group-item">
+						<div>
+							<div class="dropdown inline-block" id="instr-list">
+								<button class="btn btn-default dropdown-toggle" type="button"
+										data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+									Instrument <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
+							</div>
+						</div>
+					</li>
+				</ul>
 			</div>
-			<div class="col-md-4">
-				<div>
-					<div class="dropdown inline-block" id="instr-list">
-						<button class="btn btn-default dropdown-toggle" type="button"
-								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-							Instrument<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
-					</div>
-				</div>
+
+			<div class="col-sm-4 col-md-4 col-lg-4">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div id="bpm-label" class="note-info bpm">
+							<span class="label-desc">BPM</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="bpm-range" min="20" max="260" step="0.01">
+					</li>
+					<li class="list-group-item">
+						<button id="random-btn" class="btn btn-default">Random note</button>
+					</li>
+				</ul>
 			</div>
-			<div class="col-md-4">
-				<div id="bpm-label" class="note-info bpm">
-					<span class="label-desc">BPM</span>
-					<span class="label-value">Value</span>
+
+			<div class="col-sm-4 col-md-4 col-lg-4">
+				<div id="oscilloscope-settings">
+					<li class="list-group-item">
+						<div class="dropdown inline-block" id="osc-render-type-list">
+							<button class="btn btn-default dropdown-toggle" type="button"
+									data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								Oscilloscope render type <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
+								<li><a href="#">Theory</a></li>
+								<li><a href="#">Live</a></li>
+								<li><a href="#">Disable</a></li>
+							</ul>
+						</div>
+					</li>
 				</div>
-				<input type="range" id="bpm-range" min="20" max="260" step="0.01">
-				<button id="random-btn" class="btn btn-default">Random note</button>
 			</div>
 		</div>
 	</div>
+
+	<!-- KEYBOARD -->
 
 	<div id="instr-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
@@ -98,11 +129,13 @@
 		</div>
 	</div>
 
+	<!-- OSCILLOSCOPE -->
+
 	<div id="oscilloscope" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#oscilloscope-content">
 			<h3>Oscilloscope
-				<div id="ocs-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
+				<div id="osc-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
 
@@ -113,17 +146,18 @@
 		</div>
 	</div>
 
+	<!-- MORE INFO -->
+
 	<div id="more" class="container panel panel-info">
 		<div class="panel-heading panel-title" data-toggle="collapse" data-target="#more div.panel-body">More info</div>
 		<div id="more-body" class="panel-body collapse in">
 			<ul>
-				<li><a href="https://github.com/cwilso/WebAudio/tree/master/js">HTML5 audio 1</a>
-				</li>
+				<li><a href="https://github.com/cwilso/WebAudio/tree/master/js">HTML5 audio 1</a></li>
 				<li><a href="http://html5.by/blog/audio/">HTML5 audio 2</a></li>
 				<li><a href="https://academo.org/demos/virtual-oscilloscope/">Oscilloscope</a></li>
 				<li><a href="https://academo.org/demos/spectrum-analyzer/">Spectrum analyzer</a></li>
-				<li><a href="http://jsfiddle.net/m1erickson/bfUPr/">Masking</a></li>
 				<li><a href="http://www.w3schools.com/html/html5_webworkers.asp">Web worker</a></li>
+				<li><a href="https://habrahabr.ru/post/311750/">ADSR-огибающая сигнала</a></li>
 			</ul>
 		</div>
 	</div>

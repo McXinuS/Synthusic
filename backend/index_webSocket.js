@@ -1,10 +1,6 @@
 var webSocketServer;
-//var wsPort = process.env.PORT || 5000;
 
-// TODO try import on later nodejs version
-// import {WEB_SOCKET_MESSAGE_TYPE} from 'public/js/values.js';
-
-var WEB_SOCKET_MESSAGE_TYPE = {
+WEB_SOCKET_MESSAGE_TYPE = {
 	play_note: 0,
 	stop_note: 1,
 	stop: 5,
@@ -20,7 +16,7 @@ var stateObject = {
 	instrument: undefined
 };
 
-module.exports.Server = function (server) {
+exports.Server = function (server) {
 	webSocketServer = new require('ws').Server({
 		server: server
 	});
@@ -47,11 +43,19 @@ module.exports.Server = function (server) {
 	return webSocketServer;
 };
 
+function broadcast(message, sender){
+	wsClients.forEach(function (client) {
+		if (client !== sender.ws) {
+			client.send(message);
+		}
+	});
+}
+
 function processWebSocketMessage(message, sender) {
 	try {
 		var data = JSON.parse(message);
 		var logMsg = 'New message from id ' + sender.id + '. Message ';
-		var broadcast = true;
+		var bCast = true;	// whether or not the server should broadcast incoming message
 
 		if (data == undefined || data.type == undefined) {
 			logMsg += ' : ' + JSON.stringify(data);
@@ -77,7 +81,7 @@ function processWebSocketMessage(message, sender) {
 					stateObject.instrument = data.instrumentName;
 					break;
 				case WEB_SOCKET_MESSAGE_TYPE.get_state:
-					broadcast = false;
+					bCast = false;
 					logMsg += 'type : get_state';
 					sender.ws.send(JSON.stringify(stateObject));
 					break;
@@ -86,14 +90,10 @@ function processWebSocketMessage(message, sender) {
 
 		console.log(logMsg);
 
-		if (broadcast) {
-			wsClients.forEach(function (client) {
-				if (client !== sender.ws) {
-					client.send(message);
-				}
-			});
+		if (bCast) {
+			broadcast(message, sender);
 		}
 	} catch (e) {
-		console.log('Exception in WebSocket.send: ' + e.name + ': ' + e.message);
+		console.log('Exception in WebSocket.send: ' + e.message);
 	}
 }

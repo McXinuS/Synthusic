@@ -1,23 +1,33 @@
 {
+  "author": "McXinuS",
   "name": "simple-synthesizer",
   "version": "1.0.0",
-  "engines": {
-    "node": "5.9.1"
-  },
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
+  "license": "ISC",
+  "description": "",
   "keywords": [
     "synth",
     "synthesizer"
   ],
+  "engines": {
+    "node": "5.9.1"
+  },
   "dependencies": {
-    "express": "^4.13.3",
+    "babel-cli": "6.16.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "bootstrap": "^3.3.7",
+    "express": "4.13.3",
+    "jquery": "^3.1.1",
+    "webpack": "^1.13.2",
     "ws": "1.1.1"
   },
-  "author": "McXinuS",
-  "license": "ISC",
-  "description": ""
+  "main": "./backend/index.js",
+  "scripts": {
+    "start": "webpack && node backend/index.js"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
 }

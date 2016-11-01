@@ -15,6 +15,10 @@ function Note(name, octave) {
 	this.__defineGetter__("index", function () {
 		return getIndex(this.name, this.octave);
 	});
+
+	this.toString = function() {
+		return this.name + this.octave;
+	}
 }
 
 function noteLibInit(nameFirst, octFirst, nameLast, octLast, sc) {

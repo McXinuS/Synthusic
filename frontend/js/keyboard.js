@@ -1,5 +1,8 @@
+// TODO: create 'key' class to enable multitouch
+
+exports.Keyboard = Keyboard;
+
 function Keyboard(container) {
-	
 	var eventNote;
 	var eventKey;
 
@@ -12,26 +15,28 @@ function Keyboard(container) {
 		key.setAttribute('oct', note.octave);
 		key.setAttribute('data-toggle', 'tooltip');
 		key.setAttribute('data-placement', 'top');
-		key.setAttribute('title', note.name+note.octave);
+		key.setAttribute('title', note.name + note.octave);
+
 		key.oncontextmenu = function (e) {
 			return false;
 		};
 		key.onmousedown = function (e) {
 			eventNote = getNote(e.target.getAttribute('name'), e.target.getAttribute('oct'));
-			playing[eventNote.index] ? stopNote({note: eventNote}) : playNote({note: eventNote});
+			main.playing[eventNote.index] ?
+				main.stopNote({note: eventNote}) : main.playNote({note: eventNote});
 			if (e.button == 2) {
 				eventKey = document.querySelector('[name="' + eventNote.name + '"][oct="' + eventNote.octave + '"]');
 				eventKey.classList.add('selected');
 			}
-			updateNoteBox(eventNote);
+			main.updateNoteBox(eventNote);
 		};
 		key.onmouseup = function (e) {
 			if (e.button == 2) {
-				stopNote({note: eventNote});
+				main.stopNote({note: eventNote});
 				eventKey.classList.remove('selected');
 			}
 		};
-		
+
 		container.appendChild(key);
 	}
 
@@ -62,7 +67,7 @@ Keyboard.prototype.highlightOff = function (note) {
 
 // remove all highlights
 Keyboard.prototype.highlightClear = function () {
-	for (var i=0; i<notesCount; i++) {
+	for (var i = 0; i < notesCount; i++) {
 		var note = getNote(i);
 		var el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
 		if (el)

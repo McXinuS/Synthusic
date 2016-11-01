@@ -9,7 +9,7 @@ var server = require("http").Server(app);
 server.listen(port);
 console.log("HTTP server is running @ " + port);
 
-var webSocketServer = require(path.join(__dirname, '/webSocketServer.js')).Server(server);
+var webSocketServer = require(path.join(__dirname, '/index_webSocket.js')).Server(server);
 console.log("WebSocket server is running @ " + port);
 
 app.use(express.static('public'));
@@ -31,7 +31,7 @@ if (useSsl) {
 }
 
 app.get('/favicon', function (req, res) {
-	res.sendFile(path.join(__dirname, '/img/icon_highres.png'));
+	res.sendFile(path.join(__dirname, '/img/favicon.png'));
 });
 
 app.get('/', function (req, res) {

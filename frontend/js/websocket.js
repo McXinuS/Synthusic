@@ -1,30 +1,39 @@
-function Socket(host, onmessageCallback) {
+// TODO: add onMessageListener
+
+exports.Socket = Socket;
+
+function Socket(host) {
 	var self = this;
 
 	this.onmessage = null;
 	this.reconnectTime = 10000;
 
+	this.host = host;
 	this.socket = connect();
 
 	function connect() {
-		var ws = new WebSocket(host);
+		var ws = new WebSocket(self.host);
+
+		ws.onconnect = function () {
+			console.warn(`Connected to ${self.host}`);
+		};
 
 		ws.onopen = function () {
 			// get initial data
-			ws.send(JSON.stringify({
-				type: WEB_SOCKET_MESSAGE_TYPE.get_state
+			this.send(JSON.stringify({
+				type: constants.WEB_SOCKET_MESSAGE_TYPE.get_state
 			}));
 		};
 
 		ws.onmessage = function (event) {
 			var data = JSON.parse(event.data);
-			if (self.onmessage != null){
+			if (self.onmessage != null) {
 				self.onmessage(data);
 			}
 		};
 
-		ws.onclose = function (e) {
-			console.log('Socket is closed. Next attempt to reconnect in ' + self.reconnectTime / 1000 + ' seconds.', e.reason);
+		ws.onclose = function () {
+			console.warn(`Socket is closed. Next attempt to reconnect in  ${self.reconnectTime / 1000} seconds`);
 			setTimeout(function () {
 				self.socket = connect();
 			}, self.reconnectTime)
@@ -38,7 +47,6 @@ function Socket(host, onmessageCallback) {
 			if (callback != null) {
 				callback(socket);
 			}
-			return;
 
 		} else {
 			setTimeout(function () {

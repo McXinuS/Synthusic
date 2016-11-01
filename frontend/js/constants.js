@@ -13,7 +13,7 @@ function Constants() {
 		attack: 150,
 		decay: 250,
 		sustain: 0.7,
-		release: 2350
+		release: 550
 	};
 
 	this.WEB_SOCKET_MESSAGE_TYPE = {

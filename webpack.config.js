@@ -19,7 +19,7 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery',
-			constants: './constants.js'
+			config: './config.js'
 		})
 	],
 	module: {

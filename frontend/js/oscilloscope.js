@@ -129,7 +129,7 @@ Oscilloscope.prototype.calcAmplitudes = function (note) {
 	var baseFreq = note.freq * 2 * Math.PI;
 
 	for (var i = 0; i < main.instrument.osc_count; i++) {
-		var waveFunc = constants.WAVE_FUNCTION(main.instrument.osc_type[i]);
+		var waveFunc = config.WAVE_FUNCTION(main.instrument.osc_type[i]);
 		this.canvasAmplitudeBuffer[note][i] = [];
 		// reverse value of amplitude because the lower point of canvas (j,0)
 		// is the highest possible amplitude of wave

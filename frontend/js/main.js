@@ -77,11 +77,11 @@ function Main() {
 				if (this.instrument != undefined && this.instrument.name == instrumentName)
 					return;
 
-				for (var index in constants.INSTRUMENTS) {
-					if (constants.INSTRUMENTS[index].name == instrumentName) {
+				for (var index in config.INSTRUMENTS) {
+					if (config.INSTRUMENTS[index].name == instrumentName) {
 						self.reset(function (instrumentName) {
 							self._instrument = instrumentName;
-						}, constants.INSTRUMENTS[index]);
+						}, config.INSTRUMENTS[index]);
 						instrumentListLabel.html(`${instrumentName} <span class="caret"></span>`);
 						console.log(`Instrument has been changed to ${instrumentName}`);
 						break;
@@ -115,9 +115,9 @@ Main.prototype.init = function () {
 	this.initDomEvents();
 
 	this.instrument = 'Organ';
-	noteLibInit(constants.NOTE_START[0], constants.NOTE_START[1],
-		constants.NOTE_END[0], constants.NOTE_END[1],
-		constants.ACCIDENTALS.sharp.scale);
+	noteLibInit(config.NOTE_START[0], config.NOTE_START[1],
+		config.NOTE_END[0], config.NOTE_END[1],
+		config.ACCIDENTALS.sharp.scale);
 
 	var oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild ;
 	this.oscilloscope = new Oscilloscope(oscCanvas);
@@ -132,10 +132,10 @@ Main.prototype.init = function () {
 	window.audioContext = audioContext;
 	this.sound = new Sound(audioContext);
 
-	this.masterGain = constants.MASTER_GAIN_MAX / 2;
+	this.masterGain = config.MASTER_GAIN_MAX / 2;
 	this.bpm = 60;
 
-	this.socket = new Socket(constants.WEB_SOCKET_HOST);
+	this.socket = new Socket(config.WEB_SOCKET_HOST);
 	this.socket.onmessage = onSocketMessage;
 
 };
@@ -173,7 +173,7 @@ Main.prototype.initDomEvents = function () {
 	};
 
 	masterGainRange.setAttribute("min", "0");
-	masterGainRange.setAttribute("max", constants.MASTER_GAIN_MAX.toString());
+	masterGainRange.setAttribute("max", config.MASTER_GAIN_MAX.toString());
 	masterGainRange.oninput = function () {
 		main.masterGain = masterGainRange.value;
 	};
@@ -185,7 +185,7 @@ Main.prototype.initDomEvents = function () {
 
 	var randomButton = document.getElementById('random-btn');
 	randomButton.onclick = function () {
-		main.playRandomFromScale('C', constants.SCALES.pentatonicMajor);
+		main.playRandomFromScale('C', config.SCALES.pentatonicMajor);
 	};
 
 	noteInfoNoteRange.setAttribute("min", "0");
@@ -205,11 +205,11 @@ Main.prototype.initDomEvents = function () {
 	};
 
 	var instrItems = instrumentList.find('ul');
-	for (var index in constants.INSTRUMENTS) {
+	for (var index in config.INSTRUMENTS) {
 		var li = document.createElement('li');
 		var a = document.createElement('a');
 		a.setAttribute('href', '#');
-		a.innerText = constants.INSTRUMENTS[index].name;
+		a.innerText = config.INSTRUMENTS[index].name;
 		li.appendChild(a);
 		instrItems.append(li);
 	}
@@ -267,7 +267,7 @@ Main.prototype.playNote = function (parameters) {
 	}
 	if (notify) {
 		this.socket.send({
-			type: constants.WEB_SOCKET_MESSAGE_TYPE.play_note,
+			type: config.WEB_SOCKET_MESSAGE_TYPE.play_note,
 			noteName: note.name,
 			noteOctave: note.octave
 		});
@@ -295,7 +295,7 @@ Main.prototype.stopNote = function (parameters) {
 	}
 	if (notify) {
 		this.socket.send({
-			type: constants.WEB_SOCKET_MESSAGE_TYPE.stop_note,
+			type: config.WEB_SOCKET_MESSAGE_TYPE.stop_note,
 			noteName: note.name,
 			noteOctave: note.octave
 		});
@@ -347,7 +347,7 @@ Main.prototype.stop = function (parameters) {
 	if (notify == undefined) notify = true;
 	if (notify) {
 		this.socket.send({
-			type: constants.WEB_SOCKET_MESSAGE_TYPE.stop
+			type: config.WEB_SOCKET_MESSAGE_TYPE.stop
 		});
 	}
 	console.log('Stop');
@@ -382,22 +382,22 @@ function onSocketMessage(data) {
 	var type = data.type;
 
 	switch (type) {
-		case constants.WEB_SOCKET_MESSAGE_TYPE.play_note:
+		case config.WEB_SOCKET_MESSAGE_TYPE.play_note:
 			let name = data.noteName;
 			let octave = data.noteOctave;
 			let note = getNote(name, octave);
 			main.playNote({note: note, notify: false});
 			break;
-		case constants.WEB_SOCKET_MESSAGE_TYPE.stop_note:
+		case config.WEB_SOCKET_MESSAGE_TYPE.stop_note:
 			name = data.noteName;
 			octave = data.noteOctave;
 			note = getNote(name, octave);
 			main.stopNote({note: note, notify: false});
 			break;
-		case constants.WEB_SOCKET_MESSAGE_TYPE.stop:
+		case config.WEB_SOCKET_MESSAGE_TYPE.stop:
 			main.stop({notify: false});
 			break;
-		case constants.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
+		case config.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
 			main.instrument = data.instrumentName;
 			break;
 	}

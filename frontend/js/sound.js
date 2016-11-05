@@ -8,7 +8,7 @@ function Sound(audioContext) {
 	this.masterGainNode = this.audioContext.createGain();
 	this.masterGainNode.connect(this.audioContext.destination);
 
-	this.enveloper = new _enveloper(constants.ENVELOPER_OPTIONS, audioContext);
+	this.enveloper = new _enveloper(config.ENVELOPER_OPTIONS, audioContext);
 	this.enveloperGainNode = this.enveloper.getGainNode();
 	this.enveloperGainNode.connect(this.masterGainNode);
 
@@ -73,7 +73,7 @@ Sound.prototype.stopNote = function (note) {
 		// if the only note is stopped, release the enveloper
 		if (oscCount == 1){
 			this.enveloper.release();
-			stopTime = constants.ENVELOPER_OPTIONS.release;
+			stopTime = config.ENVELOPER_OPTIONS.release;
 		}
 
 		this._noteToStop = note;

@@ -3,7 +3,6 @@ exports.Oscilloscope = Oscilloscope;
 const RENDER_DISABLED = 0;
 const RENDER_LIVE = 1;
 const RENDER_THEORY = 2;
-
 function Oscilloscope(canvas) {
 
 	var self = this;
@@ -20,13 +19,18 @@ function Oscilloscope(canvas) {
 
 	this.renderType = RENDER_DISABLED;
 	this.canvas = canvas;
+	this.canvas.setAttribute('style', "z-index: 0");
+
 	this.mask = new Image();
 	this.mask.src = 'img/osc_overlay.png';
 	this.mask.onload = function () {
-		self.draw();
+		self.applyMask();
 	};
-	this.onResize();
+	this.maskCanvas = createMaskCanvas();
+	this.canvas.parentNode.appendChild(this.maskCanvas);
+
 	this.reset();
+	this.onResize();
 
 	this.renderType = RENDER_THEORY;
 	this.draw();
@@ -43,6 +47,8 @@ Oscilloscope.prototype.onResize = function () {
 
 	this.canvas.setAttribute('width', oscDivW);
 	this.canvas.setAttribute('height', '500px');
+	this.maskCanvas.setAttribute('width', oscDivW);
+	this.maskCanvas.setAttribute('height', '500px');
 
 	this.width = this.canvas.width;
 	this.height = this.canvas.height;
@@ -51,6 +57,7 @@ Oscilloscope.prototype.onResize = function () {
 
 	this.setSampleRate(this.sampleRate);
 
+	this.applyMask();
 	this.draw();
 };
 
@@ -61,15 +68,17 @@ Oscilloscope.prototype.setScale = function (scale) {
 
 // calculate number of measures per wave
 Oscilloscope.prototype.setSampleRate = function (sampleRate) {
-	if (typeof(sampleRate) == 'undefined') return;
 	if (sampleRate < 0 || sampleRate > 100000) return;
 
 	this.sampleRate = sampleRate;
-	this.step = this.width / this.sampleRate;
+	if (this.width > 0) {
+		this.step = this.width / this.sampleRate;
+	}
 };
 
 Oscilloscope.prototype.reset = function () {
 	this.ctx = this.canvas.getContext("2d");
+	this.mctx = this.maskCanvas.getContext("2d");
 
 	this.lineWidthRes = 2;
 	this.lineWidthSrc = 0.7;
@@ -134,37 +143,50 @@ Oscilloscope.prototype.calcAmplitudes = function (note) {
 	}
 };
 
+Oscilloscope.prototype.applyMask = function () {
+	if (typeof(this.maskCanvas) == 'undefined') return;
+
+	// clear screen
+	this.mctx.beginPath();
+	this.mctx.fillStyle = 'rgba(0, 0, 0, 0)';
+	this.mctx.fillRect(0, 0, this.width, this.height);
+	this.mctx.fill();
+
+	// axis
+	this.mctx.strokeStyle = '#aaa';
+	this.mctx.beginPath();
+	this.mctx.moveTo(0, this.center.y);
+	this.mctx.lineTo(this.width, this.center.y);
+	this.mctx.moveTo(this.center.x, 0);
+	this.mctx.lineTo(this.center.x, this.height);
+	this.mctx.stroke();
+
+	// apply blur image
+	this.mctx.shadowBlur = 11;
+	this.mctx.shadowColor = "#060";
+	this.mctx.drawImage(this.mask, 0, 0, this.width, this.height);
+	this.mctx.shadowBlur = 0;
+};
+
+
 Oscilloscope.prototype.draw = function () {
+	this.ctx.beginPath();
+	this.ctx.fillStyle = '#000';
+	this.ctx.fillRect(0, 0, this.width, this.height);
+	this.ctx.fill();
+
 	// check for proper initialization of oscilloscope
 	if (typeof(this.width) == 'undefined') return;
 	if (typeof(this.ctx) == 'undefined') return;
 
-	// clear screen
-	this.ctx.beginPath();
-	this.ctx.fillStyle = '#000';
-	this.ctx.fillRect(0, 0, this.width, this.height);
-
-	// axis
-	this.ctx.strokeStyle = '#aaa';
-	this.ctx.beginPath();
-	this.ctx.moveTo(0, this.center.y);
-	this.ctx.lineTo(this.width, this.center.y);
-	this.ctx.moveTo(this.center.x, 0);
-	this.ctx.lineTo(this.center.x, this.height);
-	this.ctx.stroke();
-
-	if (this.renderType != RENDER_DISABLED && this.notes.length > 0) {
+	if (this.renderType == RENDER_THEORY && this.notes.length > 0) {
 		for (var i = 0; i < this.notes.length; i++) {
 			this.drawSourceWaves(this.notes[i]);
 		}
 		this.drawResultingWave();
+	} else if (this.renderType == RENDER_LIVE) {
+		this.drawFromBuffer();
 	}
-
-	// apply mask
-	this.ctx.shadowBlur = 11;
-	this.ctx.shadowColor = "#060";
-	this.ctx.drawImage(this.mask, 0, 0, this.width, this.height);
-	this.ctx.shadowBlur = 0;
 };
 
 Oscilloscope.prototype.drawSourceWaves = function (note) {
@@ -182,20 +204,6 @@ Oscilloscope.prototype.drawSourceWaves = function (note) {
 	}
 	this.ctx.stroke();
 };
-
-/**
- * color is based on the note index:
- * bass - red
- * middle - green
- * treble - blue
- */
-function getWaveColor(index) {
-	var relIndex = index / (notesCount - 1);
-	var r = Math.floor(256 * (1 - relIndex));
-	var g = (relIndex < 0.5) ? Math.floor(256 * (relIndex / 0.5)) : Math.floor(256 * ((1 - relIndex) / 0.5));
-	var b = Math.floor(256 * relIndex);
-	return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-}
 
 Oscilloscope.prototype.drawResultingWave = function () {
 	this.ctx.lineWidth = this.lineWidthRes;
@@ -229,3 +237,29 @@ Oscilloscope.prototype.drawResultingWave = function () {
 	this.ctx.shadowBlur = 0;
 	this.ctx.shadowOffsetY = 0;
 };
+
+// TODO
+Oscilloscope.prototype.drawFromBuffer = function () {
+
+};
+
+/**
+ * color is based on the note index:
+ * bass - red
+ * middle - green
+ * treble - blue
+ */
+function getWaveColor(index) {
+	var relIndex = index / (notesCount - 1);
+	var r = Math.floor(256 * (1 - relIndex));
+	var g = (relIndex < 0.5) ? Math.floor(256 * (relIndex / 0.5)) : Math.floor(256 * ((1 - relIndex) / 0.5));
+	var b = Math.floor(256 * relIndex);
+	return 'rgb(' + r + ', ' + g + ', ' + b + ')';
+}
+
+function createMaskCanvas() {
+	var maskCanvas = document.createElement('canvas');
+	maskCanvas.classList.add('osc-canvas');
+	maskCanvas.setAttribute('style', 'position: absolute; top: 30px; z-index: 1');
+	return maskCanvas;
+}

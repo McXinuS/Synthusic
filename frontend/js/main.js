@@ -119,7 +119,7 @@ Main.prototype.init = function () {
 		constants.NOTE_END[0], constants.NOTE_END[1],
 		constants.ACCIDENTALS.sharp.scale);
 
-	var oscCanvas = document.getElementById('osc-canvas');
+	var oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild ;
 	this.oscilloscope = new Oscilloscope(oscCanvas);
 	window.addEventListener('resize', function () {
 		main.oscilloscope.onResize();

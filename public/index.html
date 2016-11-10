@@ -28,15 +28,16 @@
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div id="master-gain" class="note-info master-gain">
-							<span class="label-desc" >Gain (master)</span>
+							<span class="label-desc">Gain (master)</span>
 							<span class="label-value">Value</span>
 						</div>
-						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01">
+						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
+							   oninput="main.masterGain = this.value">
 					</li>
 
 					<li class="list-group-item">
-						<button id="stop-btn" class="btn btn-default">Reset</button>
-						<button id="mute-btn" class="btn btn-default">Play</button>
+						<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset</button>
+						<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
 					</li>
 
 					<li class="list-group-item">
@@ -60,10 +61,13 @@
 							<span class="label-desc">BPM</span>
 							<span class="label-value">Value</span>
 						</div>
-						<input type="range" id="bpm-range" min="20" max="260" step="0.01">
+						<input type="range" id="bpm-range" min="20" max="260" step="0.01"
+							   oninput="main.bpm = this.value;">
 					</li>
 					<li class="list-group-item">
-						<button id="random-btn" class="btn btn-default">Random note</button>
+						<button id="random-btn" class="btn btn-default"
+								onclick="main.playRandomNote()">Random note
+						</button>
 					</li>
 				</ul>
 			</div>
@@ -77,9 +81,9 @@
 								Oscilloscope render type <span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
-								<li><a href="#">Theory</a></li>
-								<li><a href="#">Live</a></li>
-								<li><a href="#">Disable</a></li>
+								<li><a href="#" data="0">Theory</a></li>
+								<li><a href="#" data="1">Live</a></li>
+								<li><a href="#" data="2">Disable</a></li>
 							</ul>
 						</div>
 					</li>

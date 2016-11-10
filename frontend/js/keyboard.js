@@ -22,13 +22,16 @@ function Keyboard(container) {
 		};
 		key.onmousedown = function (e) {
 			eventNote = getNote(e.target.getAttribute('name'), e.target.getAttribute('oct'));
-			main.playing[eventNote.index] ?
-				main.stopNote({note: eventNote}) : main.playNote({note: eventNote});
+
 			if (e.button == 2) {
 				eventKey = document.querySelector('[name="' + eventNote.name + '"][oct="' + eventNote.octave + '"]');
 				eventKey.classList.add('selected');
 			}
-			main.updateNoteBox(eventNote);
+			if (e.button != 1) {
+				main.playing[eventNote.index] ?
+					main.stopNote({note: eventNote}) : main.playNote({note: eventNote});
+			}
+			main.observeInNoteBox(eventNote);
 		};
 		key.onmouseup = function (e) {
 			if (e.button == 2) {

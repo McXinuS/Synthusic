@@ -5,26 +5,22 @@ import {Socket}       from "./websocket.js";
 import {Oscilloscope} from "./oscilloscope.js";
 import {Sound}        from "./sound.js";
 import {Keyboard}     from "./keyboard.js";
+import {Ui}           from "./ui.js";
 
 var _main = new Main();
-// babel6 workaround http://stackoverflow.com/questions/34736771/webpack-umd-library-return-object-default/34778391
+
+// Babel6 workaround http://stackoverflow.com/questions/34736771/webpack-umd-library-return-object-default/34778391
 export default _main;
 module.exports = _main;
-
-//  *** DOM objects ***
-// Settings
-var masterGainLabel, masterGainRange,
-	instrumentListLabel, instrumentList,
-	bpmLabel, bpmRange;
-// Instrument box
-var noteInfoFreq, noteInfoNote,
-	noteInfoGainLabel, noteInfoGainRange,
-	noteInfoNoteRange;
 
 var masterGainBeforeMute;
 
 
 function Main() {
+
+	this._bpm = 0;
+	this._instrument = undefined;
+	this._scale = undefined;
 
 	var self = this;
 
@@ -35,54 +31,52 @@ function Main() {
 		},
 		bpm: {
 			get: function () {
-				return bpmRange.value;
+				return self._bpm;
 			},
 			set: function (bpm) {
-				bpmRange.value = bpm;
-				bpmLabel.text(bpm);
+				self._bpm = bpm;
+				self.ui.updateBpm(bpm)
 			}
 		},
 		masterGain: {
 			get: function () {
-				return this.sound.getMasterGain();
+				return self.sound.getMasterGain();
 			},
 			set: function (gain) {
 				if (self.masterGain == gain)
 					return;
 
-				this.sound.setMasterGain(gain);
-				masterGainLabel.text(gain);
-				masterGainRange.value = gain;
-				document.getElementById("mute-btn").innerText = gain == 0 ? "Play" : "Mute";
+				self.sound.setMasterGain(gain);
+				self.ui.updateMasterGain(gain);
 			}
 		},
 		scale: {
 			get: function () {
-				return this._scale;
+				return self._scale;
 			},
 			set: function (sc) {
-				if (this._scale == sc)
+				if (self._scale == sc)
 					return;
 
-				this._instrument = sc;
-				// TODO
-				//scaleLabel.text(sc.name);
+				self._scale = sc;
+				self.ui.updateScale(sc);
 			}
 		},
 		instrument: {
 			get: function () {
-				return this._instrument;
+				return self._instrument;
 			},
 			set: function (instrumentName) {
-				if (this.instrument != undefined && this.instrument.name == instrumentName)
+				if (self.instrument != undefined && self.instrument.name == instrumentName)
 					return;
 
 				for (var index in config.INSTRUMENTS) {
 					if (config.INSTRUMENTS[index].name == instrumentName) {
+						if (typeof(self.sound) != 'undefined') self.sound.instrument = config.INSTRUMENTS[index];
 						self.reset(function (instrumentName) {
 							self._instrument = instrumentName;
 						}, config.INSTRUMENTS[index]);
-						instrumentListLabel.html(`${instrumentName} <span class="caret"></span>`);
+						self.ui.updateInstrument(config.INSTRUMENTS[index]);
 						console.log(`Instrument has been changed to ${instrumentName}`);
 						break;
 					}
@@ -97,8 +91,8 @@ function Main() {
 		},
 		set: function (target, note, gain) {
 			self.sound.setGain(note, gain);
-			noteInfoGainLabel.text(gain);
-			noteInfoGainRange.value = gain;
+			self.ui.noteInfoGainLabel.text(gain);
+			self.ui.noteInfoGainRange.value = gain;
 			return true;
 		}
 	});
@@ -112,121 +106,30 @@ function Main() {
 
 Main.prototype.init = function () {
 
-	this.initDomEvents();
+	this.ui = new Ui();
 
 	this.instrument = 'Organ';
 	noteLibInit(config.NOTE_START[0], config.NOTE_START[1],
 		config.NOTE_END[0], config.NOTE_END[1],
 		config.ACCIDENTALS.sharp.scale);
+	this.scale = config.SCALES.pentatonicMajor;
+	this.bpm = 60;
 
-	var oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild ;
-	this.oscilloscope = new Oscilloscope(oscCanvas);
+	this.oscilloscope = new Oscilloscope(this.ui.oscCanvas);
 	window.addEventListener('resize', function () {
 		main.oscilloscope.onResize();
 	}, true);
 
-	var keyboardContainer = document.getElementById("keyboard");
-	this.keyboard = new Keyboard(keyboardContainer);
+	this.keyboard = new Keyboard(this.ui.keyboardContainer);
 
 	var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 	window.audioContext = audioContext;
-	this.sound = new Sound(audioContext);
+	this.sound = new Sound(audioContext, this.instrument);
 
 	this.masterGain = config.MASTER_GAIN_MAX / 2;
-	this.bpm = 60;
 
 	this.socket = new Socket(config.WEB_SOCKET_HOST);
 	this.socket.onmessage = onSocketMessage;
-
-};
-
-Main.prototype.initDomEvents = function () {
-
-	var self = this;
-
-	instrumentList = $('#instr-list');
-	instrumentListLabel = instrumentList.find('> button');
-	masterGainRange = document.getElementById('master-gain-range');
-	masterGainLabel = $('div.master-gain > span.label-value');
-	bpmRange = document.getElementById('bpm-range');
-	bpmLabel = $('#bpm-label').find('> span.label-value');
-	noteInfoNoteRange = document.getElementById("note-info-note-range");
-	noteInfoFreq = $('div.freq > span.label-value');
-	noteInfoNote = $('div.note > span.label-value');
-	noteInfoGainRange = document.getElementById("note-info-gain-range");
-	noteInfoGainLabel = $('div.gain > span.label-value');
-
-	var setTitle = document.getElementById('settings').getElementsByClassName('container-title')[0];
-	setTitle.onclick = function () {
-		$('#settings-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-	};
-
-	var insTitle = document.getElementById('instr-container').getElementsByClassName('container-title')[0];
-	insTitle.onclick = function () {
-		$('#keyboard').toggleClass('keyboard-mini');
-		$('#instr-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-	};
-
-	var oscTitle = document.getElementById('oscilloscope').getElementsByClassName('container-title')[0];
-	oscTitle.onclick = function () {
-		$('#osc-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-	};
-
-	masterGainRange.setAttribute("min", "0");
-	masterGainRange.setAttribute("max", config.MASTER_GAIN_MAX.toString());
-	masterGainRange.oninput = function () {
-		main.masterGain = masterGainRange.value;
-	};
-
-	var stopButton = document.getElementById('stop-btn');
-	stopButton.onclick = function () {
-		main.stop({notify: true});
-	};
-
-	var randomButton = document.getElementById('random-btn');
-	randomButton.onclick = function () {
-		main.playRandomFromScale('C', config.SCALES.pentatonicMajor);
-	};
-
-	noteInfoNoteRange.setAttribute("min", "0");
-	noteInfoNoteRange.setAttribute("max", (notesCount - 1).toString());
-	noteInfoGainRange.oninput = function () {
-		var n = getNote(noteInfoNoteRange.value);
-		main.gain[n] = noteInfoGainRange.value;
-	};
-
-	var mute = document.getElementById('mute-btn');
-	mute.onclick = function () {
-		main.toggleMute();
-	};
-
-	bpmRange.oninput = function () {
-		main.bpm = bpmRange.value;
-	};
-
-	var instrItems = instrumentList.find('ul');
-	for (var index in config.INSTRUMENTS) {
-		var li = document.createElement('li');
-		var a = document.createElement('a');
-		a.setAttribute('href', '#');
-		a.innerText = config.INSTRUMENTS[index].name;
-		li.appendChild(a);
-		instrItems.append(li);
-	}
-	instrumentList.find("> .dropdown-menu").on("click", "li", function (event) {
-		main.instrument = event.target.innerHTML;
-	});
-
-	var renderTypeList = $('#osc-render-type-list');
-	renderTypeList.find("> .dropdown-menu").on("click", "li", function (event) {
-		main.instrument = event.target.innerHTML;
-	});
-
-	$("#keyboard-up").attachKeyboardDragger();
-
-	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-	})
 
 };
 
@@ -260,7 +163,7 @@ Main.prototype.playNote = function (parameters) {
 
 	this.oscilloscope.addNote(note);
 	this.keyboard.highlightOn(note);
-	this.updateNoteBox(note);
+	this.observeInNoteBox(note);
 
 	if (notify == undefined) {
 		notify = true;
@@ -288,7 +191,7 @@ Main.prototype.stopNote = function (parameters) {
 
 	this.oscilloscope.removeNote(note);
 	this.keyboard.highlightOff(note);
-	this.updateNoteBox(note);
+	this.observeInNoteBox(note);
 
 	if (notify == undefined) {
 		notify = true;
@@ -305,7 +208,7 @@ Main.prototype.stopNote = function (parameters) {
 
 // play a random note from a scale
 // Warning! This function is full of dirty hacks =/
-Main.prototype.playRandomFromScale = function (key, sc) {
+Main.prototype.playRandomNote = function () {
 	var note;
 
 	// try to get a note within a range of currently playable notes
@@ -313,19 +216,20 @@ Main.prototype.playRandomFromScale = function (key, sc) {
 	var iter = 0;
 	var iter_max = 20;
 	var ok = false;
-	while (iter < iter_max && !ok) {
+	while (iter < iter_max) {
 		var interval = 0;
-		var step = Math.round(Math.random() * sc.intervals.length);
+		var step = Math.round(Math.random() * this.scale.intervals.length);
 		for (var i = 0; i < step; i++)
-			interval += sc.intervals[i];
+			interval += this.scale.intervals[i];
 
 		var oct_max = notesCount / 12;
 		var octave = Math.round(Math.random() * oct_max) - 1;
 
-		var index = scale.indexOf(key) + interval + octave * 12;
+		var index = scale.indexOf('C') + interval + octave * 12;
 		if (index < notesCount && index >= 0) {
 			ok = true;
 			note = getNote(index);
+			break;
 		}
 		iter++;
 	}
@@ -362,20 +266,8 @@ Main.prototype.toggleMute = function () {
 	}
 };
 
-// display info about selected note in the 'note-info' div
-Main.prototype.updateNoteBox = function (note) {
-	var noteName = note.name + note.octave;
-	var gain = this.gain[note];
-	var isDisabled = gain == 0;
-	if (noteInfoFreq.text != noteName && isDisabled) return;
-
-	noteInfoFreq.text(note.freq.toFixed(2));
-	noteInfoNote.text(noteName);
-
-	noteInfoNoteRange.value = note.index;
-	noteInfoGainLabel.text(gain.toFixed(2));
-	noteInfoGainRange.value = gain;
-	noteInfoGainRange.disabled = isDisabled;
+Main.prototype.observeInNoteBox = function (note) {
+	this.ui.noteBox.observe(note);
 };
 
 function onSocketMessage(data) {
@@ -402,26 +294,3 @@ function onSocketMessage(data) {
 			break;
 	}
 }
-
-// scroll keyboard by dragging object
-$.fn.attachKeyboardDragger = function () {
-	var attachment = false;
-	var lastPosition;
-	var obj = $(this);
-	var kb = $("#keyboard");
-
-	obj.on("mousedown", function (e) {
-		attachment = true;
-		lastPosition = e.clientX;
-	});
-	$(window).on("mousemove", function (e) {
-		if (attachment == true) {
-			var difference = e.clientX - lastPosition;
-			kb.scrollLeft(kb.scrollLeft() - difference);
-			lastPosition = e.clientX;
-		}
-	});
-	$(window).on("mouseup", function () {
-		attachment = false;
-	});
-};

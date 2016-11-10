@@ -11,7 +11,7 @@ function Note(name, octave) {
 	this.octave = octave;
 	this.isAccidental = (this.name[1] && (this.name[1] === '♭' || this.name[1] === '♯'));
 	this.freq = getFrequency(this.name, octave);
-	
+
 	this.__defineGetter__("index", function () {
 		return getIndex(this.name, this.octave);
 	});

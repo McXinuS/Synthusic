@@ -65,6 +65,13 @@ function Constants() {
 			osc_freq: [1],
 			osc_gain: [1]
 		},
+		test1: {
+			name: 'Sine bass + triangle',
+			osc_count: 4,
+			osc_type: ['sine', 'triangle', 'triangle', 'triangle'],
+			osc_freq: [0.5, 1, 3, 4],
+			osc_gain: [1, 1, 0.6, 0.4]
+		},
 		square: {
 			name: 'Square',
 			osc_count: 1,

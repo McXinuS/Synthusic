@@ -34,6 +34,12 @@
 	border           : 1px solid rgb(101, 64, 38);
 }
 
+@media (max-width : 991px) {
+	.container-ru-corner#note-info {
+		display : none
+	}
+}
+
 /* Keyboard */
 #keyboard {
 	height        : 504px;
@@ -68,7 +74,7 @@
 	z-index          : 1;
 }
 
-@media (max-width : 1199px) {
+@media (max-width : 991px) {
 	.key-white {
 		width : 10%; /*10 white keys on the screen on small devices*/
 	}
@@ -160,28 +166,6 @@
 
 /* /Oscilloscope */
 
-/* More */
-#more {
-	padding : 0;
-	opacity : 0.95;
-}
-
-#more .panel-heading {
-	cursor : pointer;
-}
-
-#more ul {
-	padding-left  : 0;
-	margin-bottom : 0;
-}
-
-#more li {
-	list-style-type : none;
-	font-size       : 14px;
-}
-
-/* /More */
-
 /* Common */
 
 .background-image {
@@ -212,6 +196,10 @@
 
 .inline-block {
 	display : inline-block;
+}
+
+.hidden {
+	display : none;
 }
 
 .list-group-item {

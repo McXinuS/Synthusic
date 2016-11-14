@@ -2,10 +2,10 @@
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import {Socket}       from "./websocket.js";
-import {Oscilloscope} from "./oscilloscope.js";
-import {Sound}        from "./sound.js";
-import {Keyboard}     from "./keyboard.js";
-import {Ui}           from "./ui.js";
+import {Oscilloscope} from "./ui/oscilloscope.js";
+import {Sound}        from "./sound/sound.js";
+import {Keyboard}     from "./ui/keyboard.js";
+import {Ui}           from "./ui/ui.js";
 
 var _main = new Main();
 
@@ -267,7 +267,7 @@ Main.prototype.toggleMute = function () {
 };
 
 Main.prototype.observeInNoteBox = function (note) {
-	this.ui.noteBox.observe(note);
+	this.ui.noteBox.setObserve(note);
 };
 
 function onSocketMessage(data) {

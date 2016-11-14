@@ -19,7 +19,7 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery',
-			config: './config.js'
+			config: path.resolve(__dirname + '/frontend/js/config.js')
 		})
 	],
 	module: {

@@ -61,6 +61,17 @@ function Main() {
 				self.ui.updateScale(sc);
 			}
 		},
+		mode: {
+			get: function () {
+				return __config.MODE;
+			},
+			set: function (mode) {
+				if (__config.MODE == mode)
+					return;
+
+				__config.MODE = mode;
+			}
+		},
 		instrument: {
 			get: function () {
 				return __config.instrument;
@@ -213,14 +224,14 @@ Main.prototype.playRandomNote = function () {
 	var ok = false;
 	while (iter < iter_max) {
 		var interval = 0;
-		var step = Math.round(Math.random() * this.scale.intervals.length);
+		var step = Math.round(Math.random() * this.mode.intervals.length);
 		for (var i = 0; i < step; i++)
-			interval += this.scale.intervals[i];
+			interval += this.mode.intervals[i];
 
 		var oct_max = __config.NOTES_COUNT / 12;
 		var octave = Math.round(Math.random() * oct_max) - 1;
 
-		var index = scale.indexOf('C') + interval + octave * 12;
+		var index = this.scale.indexOf('C') + interval + octave * 12;
 		if (index < __config.NOTES_COUNT && index >= 0) {
 			ok = true;
 			note = __note.getNote(index);

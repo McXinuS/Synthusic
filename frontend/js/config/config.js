@@ -33,7 +33,7 @@ function Constants() {
 
 	this.INSTRUMENTS = instruments;
 
-	this.SCALES = {
+	this.MODES = {
 		minor: {
 			name: 'Minor',
 			intervals: [2, 1, 2, 2, 1, 2, 2]
@@ -52,9 +52,9 @@ function Constants() {
 		}
 	};
 
-	this.SCALE = this.SCALES.pentatonicMajor;
+	this.MODE = this.MODES.pentatonicMajor;
 
-	this.ACCIDENTALS = {
+	this.SCALES = {
 		natural: {
 			name: 'Natural',
 			scale: ['C', 'D', 'E', 'F', 'G', 'A', 'B']
@@ -69,12 +69,12 @@ function Constants() {
 		}
 	};
 
-	this.ACCIDENTAL = this.ACCIDENTALS.sharp.scale;
+	this.SCALE = this.SCALES.sharp.scale;
 
 	// will be translated to a Note object during compilation
 	this.NOTE_START = ['C', 2];
 	this.NOTE_END = ['B', 5];
 
-	this.NOTES_COUNT = (this.NOTE_END[1] - this.NOTE_START[1]) * this.ACCIDENTAL.length
-		- this.ACCIDENTAL.indexOf(this.NOTE_START[0]) + this.ACCIDENTAL.indexOf(this.NOTE_END[0]) + 1;
+	this.NOTES_COUNT = (this.NOTE_END[1] - this.NOTE_START[1]) * this.SCALE.length
+		- this.SCALE.indexOf(this.NOTE_START[0]) + this.SCALE.indexOf(this.NOTE_END[0]) + 1;
 }

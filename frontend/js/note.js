@@ -34,11 +34,11 @@ function getNote(name, octave) {
 	let note;
 	if (arguments.length == 1) {
 		let oct = __config.NOTE_START.octave +
-			Math.floor((index + __config.ACCIDENTAL.indexOf(__config.NOTE_START.name)) / __config.ACCIDENTAL.length);
-		let scaleIndex = __config.ACCIDENTAL.indexOf(__config.NOTE_START.name) + index % __config.ACCIDENTAL.length;
-		if (scaleIndex >= __config.ACCIDENTAL.length)
-			scaleIndex -= __config.ACCIDENTAL.length;
-		let n = __config.ACCIDENTAL[scaleIndex];
+			Math.floor((index + __config.SCALE.indexOf(__config.NOTE_START.name)) / __config.SCALE.length);
+		let scaleIndex = __config.SCALE.indexOf(__config.NOTE_START.name) + index % __config.SCALE.length;
+		if (scaleIndex >= __config.SCALE.length)
+			scaleIndex -= __config.SCALE.length;
+		let n = __config.SCALE[scaleIndex];
 		note = new Note(n, oct);
 	} else {
 		note = new Note(name, octave);
@@ -72,8 +72,8 @@ function getFrequency(name, octave) {
 }
 
 function getIndex(name, octave) {
-	return (octave - __config.NOTE_START.octave) * __config.ACCIDENTAL.length -
-		__config.ACCIDENTAL.indexOf(__config.NOTE_START.name) + __config.ACCIDENTAL.indexOf(name)
+	return (octave - __config.NOTE_START.octave) * __config.SCALE.length -
+		__config.SCALE.indexOf(__config.NOTE_START.name) + __config.SCALE.indexOf(name)
 }
 
 __config.NOTE_START = new Note(__config.NOTE_START[0], __config.NOTE_START[1]);

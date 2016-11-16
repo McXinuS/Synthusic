@@ -25,16 +25,16 @@ Ui.prototype.initDom = function () {
 
     this.masterGainRange = document.getElementById('master-gain-range');
     this.masterGainLabel = $('div.master-gain > span.label-value');
-    this.masterGainRange.setAttribute("max", config.MASTER_GAIN_MAX.toString());
+    this.masterGainRange.setAttribute("max", __config.MASTER_GAIN_MAX.toString());
 
     this.instrumentList = $('#instr-list');
     this.instrumentListLabel = this.instrumentList.find('> button');
     var instrItems = this.instrumentList.find('ul');
-    for (var index in config.INSTRUMENTS) {
+    for (var index in __config.INSTRUMENTS) {
         var li = document.createElement('li');
         var a = document.createElement('a');
         a.setAttribute('href', '#');
-        a.innerText = config.INSTRUMENTS[index].name;
+        a.innerText = __config.INSTRUMENTS[index].name;
         li.appendChild(a);
         instrItems.append(li);
     }
@@ -56,11 +56,10 @@ Ui.prototype.initDom = function () {
         noteLabel: this.noteInfoNote,
         freqLabel: this.noteInfoFreq,
         gainRange: this.noteInfoGainRange,
-        gainLabel: this.noteInfoGainLabel,
-        notesCount: notesCount - 1
+        gainLabel: this.noteInfoGainLabel
     });
     this.noteInfoGainRange.oninput = function () {
-        var n = getNote(self.noteInfoNoteRange.value);
+        var n = __note.getNote(self.noteInfoNoteRange.value);
         main.gain[n] = self.noteInfoGainRange.value;
     };
 

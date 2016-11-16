@@ -246,7 +246,7 @@ Oscilloscope.prototype.calcAmplitudes = function (note) {
     var baseFreq = note.freq * 2 * Math.PI;
 
     for (var i = 0; i < main.instrument.osc_count; i++) {
-        var waveFunc = config.WAVE_FUNCTION(main.instrument.osc_type[i]);
+        var waveFunc = __config.WAVE_FUNCTION(main.instrument.osc_type[i]);
         this.canvasAmplitudeBuffer[note][i] = [];
         // reverse value of amplitude because the lower point of canvas (j,0)
         // is the highest possible amplitude of wave
@@ -292,7 +292,7 @@ Oscilloscope.prototype.applyMask = function () {
  * treble - blue
  */
 function getWaveColor(index) {
-    var relIndex = index / (notesCount - 1);
+    var relIndex = index / (__config.NOTES_COUNT - 1);
     var r = Math.floor(256 * (1 - relIndex));
     var g = (relIndex < 0.5) ? Math.floor(256 * (relIndex / 0.5)) : Math.floor(256 * ((1 - relIndex) / 0.5));
     var b = Math.floor(256 * relIndex);

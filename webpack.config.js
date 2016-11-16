@@ -19,14 +19,15 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery',
-			config: path.resolve(__dirname + '/frontend/js/config.js')
+			__config: path.resolve(__dirname + '/frontend/js/config/config.js'),
+			__note: path.resolve(__dirname + '/frontend/js/note.js')
 		})
 	],
 	module: {
 		loaders: [{
 			test: /\.js$/,
 			exclude: /node_modules/,
-			loader: 'babel-loader'
+			loader: 'babel-loader?cacheDirectory'
 		}]
 	},
 	devtool: NODE_ENV_DEV ? 'eval' : null,

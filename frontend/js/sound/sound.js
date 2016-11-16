@@ -2,7 +2,7 @@ exports.Sound = Sound;
 import Enveloper from './enveloper';
 import Analyser from './analyser';
 
-var RAMP_STOP_TIME = 50; // time when a note will be stopped (removes click when changing one note to another)
+const RAMP_STOP_TIME = 50; // time when a note will be stopped (removes click when changing one note to another)
 
 function Sound(audioContext, instrument) {
     this.oscillators = [];
@@ -20,7 +20,7 @@ function Sound(audioContext, instrument) {
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.analyserNode);
 
-    this.enveloper = new Enveloper(config.ENVELOPER_OPTIONS, audioContext);
+    this.enveloper = new Enveloper(__config.envelope, audioContext);
     this.enveloper.onFinished = function () {
         this.stop()
     }.bind(this);
@@ -32,11 +32,11 @@ function Sound(audioContext, instrument) {
 }
 
 Sound.prototype.createOscillators = function (note) {
-    var oscillators = [];
-    var pitch = note.freq;
-    var osc;
-    for (var i = 0; i < this.instrument.osc_count; i++) {
-        var gainNode = audioContext.createGain();
+	let oscillators = [];
+	let pitch = note.freq;
+	let osc;
+    for (let i = 0; i < this.instrument.osc_count; i++) {
+		let gainNode = audioContext.createGain();
         gainNode.connect(this.enveloperGainNode);
         gainNode.gain.value = 0;
 
@@ -77,7 +77,7 @@ Sound.prototype.playNote = function (note, duration) {
 Sound.prototype.stopNote = function (note) {
     if (!this.oscillators[note]) return;
 
-    var oscCount = Object.keys(this.oscillators).length;
+	let oscCount = Object.keys(this.oscillators).length;
     // if the only note is stopped, release the enveloper
     if (oscCount == 1) {
         this.enveloper.release();
@@ -97,7 +97,7 @@ Sound.prototype.stopNote = function (note) {
 Sound.prototype.stopNoteImmediately = function (note) {
     if (!this.oscillators[note]) return;
 
-    for (var j = 0; j < this.instrument.osc_count; j++) {
+    for (let j = 0; j < this.instrument.osc_count; j++) {
         this.oscillators[note][j].stop(0);
         this.oscillators[note][j].disconnect();
     }
@@ -107,10 +107,10 @@ Sound.prototype.stopNoteImmediately = function (note) {
 Sound.prototype.stop = function () {
     this.noteToStop = undefined;
 
-    for (var name in this.oscillators) {
+    for (let name in this.oscillators) {
         if (this.oscillators[name] == null)
             continue;
-        for (var j = 0; j < this.instrument.osc_count; j++) {
+        for (let j = 0; j < this.instrument.osc_count; j++) {
             this.oscillators[name][j].stop(0);
             this.oscillators[name][j].disconnect();
         }
@@ -134,7 +134,7 @@ Sound.prototype.setGain = function (note, gain, linear) {
     } else {
         // grow gain to 'gain' value in RAMP_STOP_TIME milliseconds
         for (let j = 0; j < this.instrument.osc_count; j++) {
-            var gainNode = this.oscillators[note][j].gainNode;
+            let gainNode = this.oscillators[note][j].gainNode;
             gainNode.gain.linearRampToValueAtTime(gain * this.instrument.osc_gain[j],
                 this.audioContext.currentTime + RAMP_STOP_TIME / 1000.0);
         }

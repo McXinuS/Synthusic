@@ -21,7 +21,7 @@ function Socket(host) {
 		ws.onopen = function () {
 			// get initial data
 			this.send(JSON.stringify({
-				type: config.WEB_SOCKET_MESSAGE_TYPE.get_state
+				type: __config.WEB_SOCKET_MESSAGE_TYPE.get_state
 			}));
 		};
 

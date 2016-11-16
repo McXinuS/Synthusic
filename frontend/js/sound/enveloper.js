@@ -1,5 +1,6 @@
 export default Enveloper;
 
+// TODO reference options to an object in __config
 function Enveloper(adsr, audioCtx) {
 	this.STATE_STARTED = 0;
 	this.STATE_DECAYING = 1;

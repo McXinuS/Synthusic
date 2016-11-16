@@ -1,14 +1,14 @@
-// TODO: create 'key' class to enable multitouch
+// TODO: enable multitouch
 
 exports.Keyboard = Keyboard;
 
 function Keyboard(container) {
-	var eventNote;
-	var eventKey;
+	let eventNote;
+	let eventKey;
 
-	for (var i = 0; i < notesCount; i++) {
-		var note = getNote(i);
-		var key = document.createElement('div');
+	for (let i = 0; i < __config.NOTES_COUNT; i++) {
+		let note = __note.getNote(i);
+		let key = document.createElement('div');
 		key.classList.add('key');
 		key.classList.add(note.isAccidental ? 'key-black' : 'key-white');
 		key.setAttribute('name', note.name);
@@ -21,7 +21,7 @@ function Keyboard(container) {
 			return false;
 		};
 		key.onmousedown = function (e) {
-			eventNote = getNote(e.target.getAttribute('name'), e.target.getAttribute('oct'));
+			eventNote = __note.getNote(e.target.getAttribute('name'), e.target.getAttribute('oct'));
 
 			if (e.button == 2) {
 				eventKey = document.querySelector('[name="' + eventNote.name + '"][oct="' + eventNote.octave + '"]');
@@ -43,12 +43,12 @@ function Keyboard(container) {
 		container.appendChild(key);
 	}
 
-	var keyboardOverlay = document.getElementById('keyboard-up');
+	let keyboardOverlay = document.getElementById('keyboard-up');
 	keyboardOverlay.style.width = container.scrollWidth + 'px';
 }
 
 Keyboard.prototype.destroy = function () {
-	var container = document.getElementById("keyboard");
+	let container = document.getElementById("keyboard");
 	while (container.firstChild) {
 		container.removeChild(container.firstChild);
 	}
@@ -56,24 +56,21 @@ Keyboard.prototype.destroy = function () {
 
 // set highlight on key
 Keyboard.prototype.highlightOn = function (note) {
-	var el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
-	if (el)
-		el.classList.add('playing');
+	let el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
+	if (el) el.classList.add('playing');
 };
 
 // remove highlight on key
 Keyboard.prototype.highlightOff = function (note) {
-	var el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
-	if (el)
-		el.classList.remove('playing');
+	let el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
+	if (el) el.classList.remove('playing');
 };
 
 // remove all highlights
 Keyboard.prototype.highlightClear = function () {
-	for (var i = 0; i < notesCount; i++) {
-		var note = getNote(i);
-		var el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
-		if (el)
-			el.classList.remove('playing');
+	for (let i = 0; i < __config.NOTES_COUNT; i++) {
+		let note = __note.getNote(i);
+		let el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
+		if (el) el.classList.remove('playing');
 	}
 };

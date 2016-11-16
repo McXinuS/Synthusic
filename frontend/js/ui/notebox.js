@@ -11,14 +11,11 @@ function NoteBox(parameters) {
 	}
 
 	this.noteRange.setAttribute("min", "0");
-	this.noteRange.setAttribute("max", (parameters.notesCount).toString());
+	this.noteRange.setAttribute("max", (__config.NOTES_COUNT).toString());
 
-	this._updateRate = 5;
 	this._note = undefined;
 
 	this.update();
-
-
 }
 
 NoteBox.prototype.setObserve = function (note) {
@@ -28,8 +25,8 @@ NoteBox.prototype.setObserve = function (note) {
 // display info about selected note in the 'note-info' div
 NoteBox.prototype.update = function () {
 	if (typeof(this._note) !== 'undefined') {
-		var noteName = this._note.toString();
-		var gain = main.gain[this._note];
+		let noteName = this._note.toString();
+		let gain = main.gain[this._note];
 
 		this.freqLabel.text(this._note.freq.toFixed(2));
 		this.noteLabel.text(noteName);

@@ -2,6 +2,8 @@
 exports.getNote = getNote;
 
 let noteCache = [];
+__constants.NOTES_COUNT = (__constants.NOTE_END[1] - __constants.NOTE_START[1]) * __config.scale.length
+- __config.scale.indexOf(__constants.NOTE_START[0]) + __config.scale.indexOf(__constants.NOTE_END[0]) + 1;
 
 function Note(name, octave) {
 	this.name = name.toUpperCase();
@@ -33,12 +35,12 @@ function getNote(name, octave) {
 
 	let note;
 	if (arguments.length == 1) {
-		let oct = __config.NOTE_START.octave +
-			Math.floor((index + __config.SCALE.indexOf(__config.NOTE_START.name)) / __config.SCALE.length);
-		let scaleIndex = __config.SCALE.indexOf(__config.NOTE_START.name) + index % __config.SCALE.length;
-		if (scaleIndex >= __config.SCALE.length)
-			scaleIndex -= __config.SCALE.length;
-		let n = __config.SCALE[scaleIndex];
+		let oct = __constants.NOTE_START.octave +
+			Math.floor((index + __config.scale.indexOf(__constants.NOTE_START.name)) / __config.scale.length);
+		let scaleIndex = __config.scale.indexOf(__constants.NOTE_START.name) + index % __config.scale.length;
+		if (scaleIndex >= __config.scale.length)
+			scaleIndex -= __config.scale.length;
+		let n = __config.scale[scaleIndex];
 		note = new Note(n, oct);
 	} else {
 		note = new Note(name, octave);
@@ -72,11 +74,11 @@ function getFrequency(name, octave) {
 }
 
 function getIndex(name, octave) {
-	return (octave - __config.NOTE_START.octave) * __config.SCALE.length -
-		__config.SCALE.indexOf(__config.NOTE_START.name) + __config.SCALE.indexOf(name)
+	return (octave - __constants.NOTE_START.octave) * __config.scale.length -
+		__config.scale.indexOf(__constants.NOTE_START.name) + __config.scale.indexOf(name)
 }
 
-__config.NOTE_START = new Note(__config.NOTE_START[0], __config.NOTE_START[1]);
-__config.NOTE_END = new Note(__config.NOTE_END[0], __config.NOTE_END[1]);
-noteCache[0] = __config.NOTE_START;
-noteCache[__config.NOTES_COUNT] = __config.NOTE_END;
+__constants.NOTE_START = new Note(__constants.NOTE_START[0], __constants.NOTE_START[1]);
+__constants.NOTE_END = new Note(__constants.NOTE_END[0], __constants.NOTE_END[1]);
+noteCache[0] = __constants.NOTE_START;
+noteCache[__constants.NOTES_COUNT] = __constants.NOTE_END;

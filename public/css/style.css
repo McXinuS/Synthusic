@@ -34,19 +34,11 @@
 	background : url(../img/woodtexture8.jpg);
 }
 
-.container-ru-corner#note-info {
-	float            : right;
-	display          : inline-block;
+#note-info {
 	min-width        : 100px;
 	width            : 100%;
 	background-color : rgba(165, 124, 94, 0.7);
 	border           : 1px solid rgb(101, 64, 38);
-}
-
-@media (max-width : 991px) {
-	.container-ru-corner#note-info {
-		display : none
-	}
 }
 
 /* Keyboard */
@@ -220,7 +212,7 @@
 
 .list-group-item {
 	background-color : inherit !important;
-	border           : inherit !important;;
+	border           : inherit !important;
 }
 
 .title-arrow {

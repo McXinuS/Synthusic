@@ -6,7 +6,7 @@ function Keyboard(container) {
 	let eventNote;
 	let eventKey;
 
-	for (let i = 0; i < __config.NOTES_COUNT; i++) {
+	for (let i = 0; i < __constants.NOTES_COUNT; i++) {
 		let note = __note.getNote(i);
 		let key = document.createElement('div');
 		key.classList.add('key');
@@ -68,7 +68,7 @@ Keyboard.prototype.highlightOff = function (note) {
 
 // remove all highlights
 Keyboard.prototype.highlightClear = function () {
-	for (let i = 0; i < __config.NOTES_COUNT; i++) {
+	for (let i = 0; i < __constants.NOTES_COUNT; i++) {
 		let note = __note.getNote(i);
 		let el = document.querySelector('[name="' + note.name + '"][oct="' + note.octave + '"]');
 		if (el) el.classList.remove('playing');

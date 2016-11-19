@@ -1,9 +1,9 @@
 export default Analyser;
 
-function Analyser(parameters) {
-    this.audioCtx = parameters.audioCtx;
-    this._analyserNode = parameters.audioCtx.createAnalyser();
-    this._analyserNode.fftSize = parameters.fftSize;
+function Analyser(audioCtx) {
+    this.audioCtx = audioCtx;
+    this._analyserNode = audioCtx.createAnalyser();
+    this._analyserNode.fftSize = __constants.ANALYZER_FFT_SIZE;
 }
 
 Analyser.prototype.getAnalyserNode = function () {

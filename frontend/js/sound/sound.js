@@ -10,10 +10,7 @@ function Sound(audioContext, instrument) {
 
     this.audioContext = audioContext;
 
-    this.analyser = new Analyser({
-        audioCtx: audioContext,
-        fftSize: 2048
-    });
+    this.analyser = new Analyser(audioContext);
     this.analyserNode = this.analyser.getAnalyserNode();
     this.analyserNode.connect(this.audioContext.destination);
 
@@ -123,10 +120,10 @@ Sound.prototype.getGain = function (note) {
     if (!this.oscillators[note]) return 0;
     return this.oscillators[note][0].gainNode.gain.value / this.instrument.osc_gain[0];
 };
-Sound.prototype.setGain = function (note, gain, linear) {
+Sound.prototype.setGain = function (note, gain, ramp) {
     if (!this.oscillators[note]) return;
 
-    if (!linear) {
+    if (!ramp) {
         // stop instantly
         for (let j = 0; j < this.instrument.osc_count; j++) {
             this.oscillators[note][j].gainNode.gain.value = gain * this.instrument.osc_gain[j];

@@ -19,8 +19,6 @@ var masterGainBeforeMute;
 
 function Main() {
 
-	this._bpm = 0;
-
 	var self = this;
 
 	Object.defineProperties(this, {
@@ -28,13 +26,12 @@ function Main() {
 			value: [],
 			writable: true
 		},
-		//TODO move to config
 		bpm: {
 			get: function () {
-				return self._bpm;
+				return __config.bpm;
 			},
 			set: function (bpm) {
-				self._bpm = bpm;
+                __config.bpm = bpm;
 				self.ui.updateBpm(bpm)
 			}
 		},
@@ -52,24 +49,24 @@ function Main() {
 		},
 		scale: {
 			get: function () {
-				return __config.SCALE;
+				return __config.scale;
 			},
 			set: function (sc) {
-				if (__config.SCALE == sc)
+				if (__config.scale == sc)
 					return;
 
-				__config.SCALE = sc;
+				__config.scale = sc;
 			}
 		},
 		mode: {
 			get: function () {
-				return __config.MODE;
+				return __config.mode;
 			},
 			set: function (mode) {
-				if (__config.MODE == mode)
+				if (__config.mode == mode)
 					return;
 
-				__config.MODE = mode;
+				__config.mode = mode;
 			}
 		},
 		instrument: {
@@ -81,13 +78,13 @@ function Main() {
 				if (__config.instrument != undefined && __config.instrument.name == instrumentName)
 					return;
 
-				for (let index in __config.INSTRUMENTS) {
-					if (__config.INSTRUMENTS[index].name == instrumentName) {
-						if (typeof(self.sound) != 'undefined') self.sound.instrument = __config.INSTRUMENTS[index];
+				for (let index in __config.instruments) {
+					if (__config.instruments[index].name == instrumentName) {
+						if (typeof(self.sound) != 'undefined') self.sound.instrument = __config.instruments[index];
 						self.reset(function (instrumentName) {
 							__config.instrument = instrumentName;
-						}, __config.INSTRUMENTS[index]);
-						self.ui.updateInstrument(__config.INSTRUMENTS[index]);
+						}, __config.instruments[index]);
+						self.ui.updateInstrument(__config.instruments[index]);
 						console.log(`Instrument has been changed to ${instrumentName}`);
 						break;
 					}
@@ -129,7 +126,9 @@ Main.prototype.init = function () {
 
 	this.ui = new Ui();
 
-	this.instrument = 'Organ';
+    //TODO
+    // this.instrument = 'test1';
+	this.instrument = 'Sine bass + triangle';
 	this.bpm = 60;
 
 	this.oscilloscope = new Oscilloscope(this.ui.oscCanvas);
@@ -143,9 +142,9 @@ Main.prototype.init = function () {
 	window.audioContext = audioContext;
 	this.sound = new Sound(audioContext, this.instrument);
 
-	this.masterGain = __config.MASTER_GAIN_MAX / 2;
+	this.masterGain = __constants.MASTER_GAIN_MAX / 2;
 
-	this.socket = new Socket(__config.WEB_SOCKET_HOST);
+	this.socket = new Socket(__constants.WEB_SOCKET_HOST);
 	this.socket.onmessage = onSocketMessage;
 
 };
@@ -187,7 +186,7 @@ Main.prototype.playNote = function (parameters) {
 	}
 	if (notify) {
 		this.socket.send({
-			type: __config.WEB_SOCKET_MESSAGE_TYPE.play_note,
+			type: __constants.WEB_SOCKET_MESSAGE_TYPE.play_note,
 			noteName: note.name,
 			noteOctave: note.octave
 		});
@@ -215,7 +214,7 @@ Main.prototype.stopNote = function (parameters) {
 	}
 	if (notify) {
 		this.socket.send({
-			type: __config.WEB_SOCKET_MESSAGE_TYPE.stop_note,
+			type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note,
 			noteName: note.name,
 			noteOctave: note.octave
 		});
@@ -239,11 +238,11 @@ Main.prototype.playRandomNote = function () {
 		for (var i = 0; i < step; i++)
 			interval += this.mode.intervals[i];
 
-		var oct_max = __config.NOTES_COUNT / 12;
+		var oct_max = __constants.NOTES_COUNT / 12;
 		var octave = Math.round(Math.random() * oct_max) - 1;
 
 		var index = this.scale.indexOf('C') + interval + octave * 12;
-		if (index < __config.NOTES_COUNT && index >= 0) {
+		if (index < __constants.NOTES_COUNT && index >= 0) {
 			ok = true;
 			note = __note.getNote(index);
 			break;
@@ -268,7 +267,7 @@ Main.prototype.stop = function (parameters) {
 	if (notify == undefined) notify = true;
 	if (notify) {
 		this.socket.send({
-			type: __config.WEB_SOCKET_MESSAGE_TYPE.stop
+			type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop
 		});
 	}
 	console.log('Stop');
@@ -291,22 +290,22 @@ function onSocketMessage(data) {
 	var type = data.type;
 
 	switch (type) {
-		case __config.WEB_SOCKET_MESSAGE_TYPE.play_note:
+		case __constants.WEB_SOCKET_MESSAGE_TYPE.play_note:
 			let name = data.noteName;
 			let octave = data.noteOctave;
 			let note = __note.getNote(name, octave);
 			main.playNote({note: note, notify: false});
 			break;
-		case __config.WEB_SOCKET_MESSAGE_TYPE.stop_note:
+		case __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note:
 			name = data.noteName;
 			octave = data.noteOctave;
 			note = __note.getNote(name, octave);
 			main.stopNote({note: note, notify: false});
 			break;
-		case __config.WEB_SOCKET_MESSAGE_TYPE.stop:
+		case __constants.WEB_SOCKET_MESSAGE_TYPE.stop:
 			main.stop({notify: false});
 			break;
-		case __config.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
+		case __constants.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
 			main.instrument = data.instrumentName;
 			break;
 	}

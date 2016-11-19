@@ -17,78 +17,95 @@
 	<!-- SETTINGS -->
 
 	<div id="settings" class="container container-block">
-		<div class="container-title" data-toggle="collapse" data-target="#settings-row">
+		<div class="container-title" data-toggle="collapse" data-target="#settings-rows">
 			<h3>Settings
 				<div id="settings-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-		<div id="settings-row" class="row collapse in">
+		<div id="settings-rows" class="collapse in">
 
-			<div class="col-sm-4 col-md-4 col-lg-4">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="master-gain" class="note-info master-gain">
-							<span class="label-desc">Gain (master)</span>
-							<span class="label-value">Value</span>
-						</div>
-						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
-							   oninput="main.masterGain = this.value">
-					</li>
+			<div class="row">
 
-					<li class="list-group-item">
-						<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset</button>
-						<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
-					</li>
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<div id="master-gain" class="note-info master-gain">
+								<span class="label-desc">Gain (master)</span>
+								<span class="label-value">Value</span>
+							</div>
+							<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
+								   oninput="main.masterGain = this.value">
+						</li>
 
-					<li class="list-group-item">
-						<div>
-							<div class="dropdown inline-block" id="instr-list">
+						<li class="list-group-item">
+							<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset
+							</button>
+							<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
+						</li>
+
+						<li class="list-group-item">
+							<div>
+								<div class="dropdown inline-block" id="instr-list">
+									<button class="btn btn-default dropdown-toggle" type="button"
+											data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										Instrument <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<ul class="list-group">
+						<li class="list-group-item">
+							<div id="bpm-label" class="note-info bpm">
+								<span class="label-desc">BPM</span>
+								<span class="label-value">Value</span>
+							</div>
+							<input type="range" id="bpm-range" min="20" max="260" step="0.01"
+								   oninput="main.bpm = this.value;">
+							<button id="random-btn" class="btn btn-default"
+									onclick="main.playRandomNote()">Random note
+							</button>
+						</li>
+					</ul>
+				</div>
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+					<div id="oscilloscope-settings">
+						<li class="list-group-item">
+							<div class="dropdown inline-block" id="osc-render-type-list">
 								<button class="btn btn-default dropdown-toggle" type="button"
 										data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-									Instrument <span class="caret"></span>
+									Oscilloscope render type <span class="caret"></span>
 								</button>
-								<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
+								<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
+									<li><a href="#" data="0">Theory</a></li>
+									<li><a href="#" data="1">Live (amplitude)</a></li>
+									<li><a href="#" data="2">Live (frequency)</a></li>
+									<li><a href="#" data="3">Image (todo)</a></li>
+									<li><a href="#" data="-1">Disable</a></li>
+								</ul>
 							</div>
-						</div>
-					</li>
-				</ul>
+						</li>
+					</div>
+				</div>
+
 			</div>
 
-			<div class="col-sm-4 col-md-4 col-lg-4">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="bpm-label" class="note-info bpm">
-							<span class="label-desc">BPM</span>
-							<span class="label-value">Value</span>
-						</div>
-						<input type="range" id="bpm-range" min="20" max="260" step="0.01"
-							   oninput="main.bpm = this.value;">
-					</li>
-					<li class="list-group-item">
-						<button id="random-btn" class="btn btn-default"
-								onclick="main.playRandomNote()">Random note
-						</button>
-					</li>
-				</ul>
-			</div>
+			<div class="row">
+				<div class="col-sm-4 col-md-4 col-lg-4">
 
-			<div class="col-sm-4 col-md-4 col-lg-4">
-				<div id="oscilloscope-settings">
-					<li class="list-group-item">
-						<div class="dropdown inline-block" id="osc-render-type-list">
-							<button class="btn btn-default dropdown-toggle" type="button"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Background <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
-								<li><a href="#" data="0">Theory</a></li>
-								<li><a href="#" data="1">Live (amplitude)</a></li>
-								<li><a href="#" data="2">Live (frequency)</a></li>
-								<li><a href="#" data="3">Image</a></li>
-								<li><a href="#" data="-1">Disable</a></li>
-							</ul>
-						</div>
-					</li>
+				</div>
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+
+				</div>
+
+				<div class="col-sm-4 col-md-4 col-lg-4">
+
 				</div>
 			</div>
 		</div>
@@ -109,14 +126,14 @@
 				<ul class="list-group">
 					<li class="list-group-item">
 						<div id="envelope-label" class="note-info bpm">
-							<span class="label-desc">Envelope gain</span>
+							<span class="label-desc">Envelope level</span>
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="envelope-gain-range" min="0" max="1" step="0.001" disabled>
 					</li>
 					<li class="list-group-item">
 						<div id="rms-label" class="note-info bpm">
-							<span class="label-desc">RMS</span>
+							<span class="label-desc">Signal root mean square</span>
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="rms-range" min="0" max="1" step="0.001" disabled>

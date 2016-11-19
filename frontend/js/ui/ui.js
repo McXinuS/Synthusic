@@ -17,16 +17,16 @@ Ui.prototype.initDom = function () {
 
     this.masterGainRange = document.getElementById('master-gain-range');
     this.masterGainLabel = $('div.master-gain > span.label-value');
-    this.masterGainRange.setAttribute("max", __config.MASTER_GAIN_MAX.toString());
+    this.masterGainRange.setAttribute("max", __constants.MASTER_GAIN_MAX.toString());
 
     this.instrumentList = $('#instr-list');
     this.instrumentListLabel = this.instrumentList.find('> button');
     var instrItems = this.instrumentList.find('ul');
-    for (var index in __config.INSTRUMENTS) {
+    for (var index in __config.instruments) {
         var li = document.createElement('li');
         var a = document.createElement('a');
         a.setAttribute('href', '#');
-        a.innerText = __config.INSTRUMENTS[index].name;
+        a.innerText = __config.instruments[index].name;
         li.appendChild(a);
         instrItems.append(li);
     }

@@ -19,6 +19,7 @@ module.exports = {
 			jQuery: 'jquery',
 			$: 'jquery',
 			jquery: 'jquery',
+			__constants: path.resolve(__dirname + '/frontend/js/config/constants.js'),
 			__config: path.resolve(__dirname + '/frontend/js/config/config.js'),
 			__note: path.resolve(__dirname + '/frontend/js/note.js')
 		})

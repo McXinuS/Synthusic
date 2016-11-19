@@ -1,4 +1,5 @@
-// TODO: add listeners
+// TODO: consider to add listeners on 'playNote', 'stopNote' etc
+
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import {Socket}       from "./websocket.js";
@@ -58,7 +59,6 @@ function Main() {
 					return;
 
 				__config.SCALE = sc;
-				self.ui.updateScale(sc);
 			}
 		},
 		mode: {
@@ -76,6 +76,7 @@ function Main() {
 			get: function () {
 				return __config.instrument;
 			},
+            // TODO replace name to ID
 			set: function (instrumentName) {
 				if (__config.instrument != undefined && __config.instrument.name == instrumentName)
 					return;
@@ -92,7 +93,17 @@ function Main() {
 					}
 				}
 			}
-		}
+		},
+        oscilloscopeRenderType: {
+            get: () => {
+                return this.oscilloscope.renderType;
+            },
+            set: (rt) => {
+                this.oscilloscope.renderType = rt;
+                this.ui.updateOscilloscopeRenderType(rt);
+                console.log(`Render type has been changed to ${rt}`);
+            }
+        }
 	});
 
 	this.gain = new Proxy({}, {

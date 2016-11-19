@@ -45,3 +45,22 @@ Analyser.prototype.getByteTimeDomainData = function () {
 function createBuffer(length, type) {
     return type == 'float' ? new Float32Array(length) : new Uint8Array(length);
 }
+
+Analyser.prototype.getRms = function() {
+    var buffer = this.getFloatTimeDomainData();
+
+    var sum = 0;
+    for (var i=0; i<buffer.length-1; i++){
+        var val = buffer[i];
+        sum += val*val;
+    }
+    return Math.sqrt(sum/buffer.length);
+};
+
+Analyser.prototype.isClipping = function() {
+    var buffer = this.getByteTimeDomainData();
+    for (var i=0; i<buffer.length-1; i++){
+        if (buffer[i] == 0xFF && buffer[i+1] == 0xFF) return true;
+    }
+    return false;
+};

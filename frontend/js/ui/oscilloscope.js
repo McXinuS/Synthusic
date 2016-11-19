@@ -1,13 +1,12 @@
 exports.Oscilloscope = Oscilloscope;
 
-// TODO: add invalidate()
-
 function Oscilloscope(canvas) {
 
+    this.RENDER_DISABLED = -1;
     this.RENDER_THEORY = 0;
     this.RENDER_LIVE_AMPLITUDE = 1;
     this.RENDER_LIVE_FREQUENCY = 2;
-    this.RENDER_DISABLED = 3;
+    this.RENDER_IMAGE_SHAPE = 3;
 
     var self = this;
     Object.defineProperties(Oscilloscope, {
@@ -17,6 +16,9 @@ function Oscilloscope(canvas) {
             },
             set: (rt) => {
                 self._renderType = rt;
+                if (rt == this.RENDER_THEORY) {
+                    self.prepareBackgroundImage();
+                }
                 self.invalidate();
             }
         },
@@ -239,6 +241,13 @@ Oscilloscope.prototype.drawFromBuffer = function () {
 };
 
 /**
+ * Creates shape map of image.
+ */
+Oscilloscope.prototype.prepareBackgroundImage = function (image) {
+    // TODO
+};
+
+/**
  * Calculate the points of waves of the note on canvas.
  */
 Oscilloscope.prototype.calcAmplitudes = function (note) {
@@ -268,6 +277,8 @@ Oscilloscope.prototype.applyMask = function () {
     this.mctx.fillStyle = 'rgba(0, 0, 0, 0)';
     this.mctx.fillRect(0, 0, this.width, this.height);
     this.mctx.fill();
+
+    // TODO draw grid with labels
 
     // axis
     this.mctx.strokeStyle = '#aaa';

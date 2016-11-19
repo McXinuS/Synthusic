@@ -1,5 +1,3 @@
-// TODO: add onMessageListener
-
 exports.Socket = Socket;
 
 function Socket(host) {

@@ -21,6 +21,15 @@
 
 /* /Settings */
 
+/* State */
+
+#state-container {
+	background : rgba(100, 120, 100, 0.5);
+	color      : #ddd;
+}
+
+/* /State */
+
 #instr-container {
 	background : url(../img/woodtexture8.jpg);
 }
@@ -81,11 +90,11 @@
 }
 
 .key-black {
-	width            : 26px;
+	width            : 36px;
 	vertical-align   : top;
 	background-color : #000;
 	height           : 200px;
-	margin           : 0 -13px;
+	margin           : 0 -18px;
 	z-index          : 2;
 	box-shadow       : 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -182,6 +191,13 @@
 	margin : 40px 0;
 }
 
+.dropdown-menu>li>a.selected {
+	background: #f5f5f5;
+}
+.dropdown-menu>li>a.selected:focus, .dropdown-menu>li>a.selected:hover {
+	background: #eee;
+}
+
 .container-block {
 	border-radius : 5px;
 	margin-bottom : 5px;
@@ -224,9 +240,18 @@
 	border-top-color : #6ea972;
 }
 
+.input-progress-bar {
+	font-size     : 0;
+	border        : 1px solid black;
+	border-radius : 3px;
+	background    : rgba(240, 240, 240, 0.1);
+}
+
 input[type=range] {
 	-webkit-appearance : none;
 	margin             : 14px 0 14px 0;
+	height             : 22px;
+	background         : transparent;
 }
 
 input[type=range]:focus {

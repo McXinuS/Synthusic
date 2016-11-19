@@ -1,20 +1,12 @@
 import {NoteBox} from './notebox.js'
+import {convertToProgressBar, attachKeyboardDragger, updateDropdownSelection} from './ext.js'
 exports.Ui = Ui;
 
-/*
- // Settings
- var masterGainLabel, masterGainRange,
-    instrumentListLabel, instrumentList,
-    bpmLabel, bpmRange;
- // Note box
- var noteInfoFreq, noteInfoNote,
-    noteInfoGainLabel, noteInfoGainRange,
-    noteInfoNoteRange;
- */
 function Ui() {
 
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    $.fn.attachKeyboardDragger = attachKeyboardDragger;
 
     this.initDom();
 }
@@ -38,7 +30,9 @@ Ui.prototype.initDom = function () {
         li.appendChild(a);
         instrItems.append(li);
     }
-    this.instrumentList.find("> .dropdown-menu").on("click", "li", function (event) {
+    this.instrumentListDropdown = this.instrumentList.find("> .dropdown-menu");
+    this.instrumentListItems = this.instrumentListDropdown[0].getElementsByTagName('li');
+    this.instrumentListDropdown.on("click", "li", function (event) {
         main.instrument = event.target.innerHTML;
     });
 
@@ -46,8 +40,12 @@ Ui.prototype.initDom = function () {
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
     this.muteButton = document.getElementById("mute-btn");
 
-	this.envelopeGain = $('#envelope-label').find('> span.label-value');
-	this.envelopeGainRange = document.getElementById("envelope-gain-range");
+    this.envelopeGainLabel = $('#envelope-label').find('> span.label-value');
+    this.envelopeGainRange = document.getElementById("envelope-gain-range");
+    convertToProgressBar(this.envelopeGainRange, '#4f4');
+    this.rmsLabel = $('#rms-label').find('> span.label-value');
+    this.rmsRange = document.getElementById("rms-range");
+    convertToProgressBar(this.rmsRange, ['#4f4', '#ff4', '#f44'], [50,80,100]);
 
     this.noteInfoNoteRange = document.getElementById("note-info-note-range");
     this.noteInfoFreq = $('div.freq > span.label-value');
@@ -62,6 +60,7 @@ Ui.prototype.initDom = function () {
         gainRange: this.noteInfoGainRange,
         gainLabel: this.noteInfoGainLabel
     });
+
     this.noteInfoGainRange.oninput = function () {
         var n = __note.getNote(self.noteInfoNoteRange.value);
         main.gain[n] = self.noteInfoGainRange.value;
@@ -88,10 +87,12 @@ Ui.prototype.initDom = function () {
         $('#osc-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
     };
 
-
-    var renderTypeList = $('#osc-render-type-list');
-    renderTypeList.find("> .dropdown-menu").on("click", "li", function (event) {
-        main.oscilloscope.renderType = event.target.getAttribute('data');
+    this.renderTypeList = $('#osc-render-type-list');
+    this.renderTypeListLabel = this.renderTypeList.find('> button');
+    this.renderTypeListDropdown = this.renderTypeList.find("> .dropdown-menu");
+    this.renderTypeListItems = this.renderTypeListDropdown[0].getElementsByTagName('li');
+    this.renderTypeListDropdown.on("click", "li", function (event) {
+        main.oscilloscopeRenderType = event.target.getAttribute('data');
     });
 
     this.oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild;
@@ -104,20 +105,31 @@ Ui.prototype.initDom = function () {
     });
 
 	let update = function () {
-        self.noteBox.update();
-        self.updateEnvelopeGain();
-
-	    window.requestAnimationFrame(update);
+        try{
+            self.noteBox.update();
+            self.updateEnvelopeGain();
+            self.updateRms();
+        } catch (err) {
+            console.warn('Something went wrong during UI update: ' + err.name + ": " + err.message);
+        } finally {
+            window.requestAnimationFrame(update);
+        }
 	};
 	update();
 };
 
 Ui.prototype.updateEnvelopeGain = function() {
-    if (typeof(main.sound) === 'undefined') return;
-
     let gain = main.sound.enveloper.getGain().toFixed(3);
 	this.envelopeGainRange.value = gain;
-	this.envelopeGain.text(gain);
+    this.envelopeGainRange.onchange();
+	this.envelopeGainLabel.text(gain);
+};
+
+Ui.prototype.updateRms = function () {
+    let gain = main.sound.analyser.getRms().toFixed(3);
+    this.rmsRange.value = gain;
+    this.rmsRange.onchange();
+    this.rmsLabel.text(gain);
 };
 
 Ui.prototype.updateBpm = function (value) {
@@ -131,33 +143,11 @@ Ui.prototype.updateMasterGain = function (value) {
     this.muteButton.innerText = value == 0 ? "Play" : "Mute";
 };
 
-// TODO
-Ui.prototype.updateScale = function (value) {
-};
-
 Ui.prototype.updateInstrument = function (value) {
-    this.instrumentListLabel.html(`${value.name} <span class="caret"></span>`);
+    this.instrumentListLabel.html(`Instrument: ${value.name} <span class="caret"></span>`);
+    updateDropdownSelection(value.name, this.instrumentListItems);
 };
 
-// scroll keyboard by dragging object
-$.fn.attachKeyboardDragger = function () {
-    var attachment = false;
-    var lastPosition;
-    var obj = $(this);
-    var kb = $("#keyboard");
-
-    obj.on("mousedown", function (e) {
-        attachment = true;
-        lastPosition = e.clientX;
-    });
-    $(window).on("mousemove", function (e) {
-        if (attachment == true) {
-            var difference = e.clientX - lastPosition;
-            kb.scrollLeft(kb.scrollLeft() - difference);
-            lastPosition = e.clientX;
-        }
-    });
-    $(window).on("mouseup", function () {
-        attachment = false;
-    });
+Ui.prototype.updateOscilloscopeRenderType = function (value) {
+    updateDropdownSelection(value, this.renderTypeListItems, 'data');
 };

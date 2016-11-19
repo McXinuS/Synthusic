@@ -1,13 +1,9 @@
 import instruments from './instruments.js'
 import waveFunction from './wave_function.js'
 
-// TODO try export default new function Config(){}(); instead
 // TODO split into constants and config
-let constants = new Constants();
-export default constants;
-module.exports = constants;
 
-function Constants() {
+module.exports = new function () {
 	if (typeof(location) !== 'undefined') {
 		this.WEB_SOCKET_HOST = location.origin.replace(/^http/, 'ws');
 	}

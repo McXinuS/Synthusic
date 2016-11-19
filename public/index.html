@@ -12,9 +12,9 @@
 <body>
 <div class="background-image"></div>
 <div class="content">
-
+	
 	<!-- SETTINGS -->
-
+	
 	<div id="settings" class="container container-block">
 		<div class="container-title" data-toggle="collapse" data-target="#settings-row">
 			<h3>Settings
@@ -22,7 +22,7 @@
 			</h3>
 		</div>
 		<div id="settings-row" class="row collapse in">
-
+			
 			<div class="col-sm-4 col-md-4 col-lg-4">
 				<ul class="list-group">
 					<li class="list-group-item">
@@ -33,12 +33,12 @@
 						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
 							   oninput="main.masterGain = this.value">
 					</li>
-
+					
 					<li class="list-group-item">
 						<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset</button>
 						<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
 					</li>
-
+					
 					<li class="list-group-item">
 						<div>
 							<div class="dropdown inline-block" id="instr-list">
@@ -52,7 +52,7 @@
 					</li>
 				</ul>
 			</div>
-
+			
 			<div class="col-sm-4 col-md-4 col-lg-4">
 				<ul class="list-group">
 					<li class="list-group-item">
@@ -70,7 +70,7 @@
 					</li>
 				</ul>
 			</div>
-
+			
 			<div class="col-sm-4 col-md-4 col-lg-4">
 				<div id="oscilloscope-settings">
 					<li class="list-group-item">
@@ -92,21 +92,48 @@
 			</div>
 		</div>
 	</div>
-
+	
+	<!-- SYNTH STATE -->
+	
+	<div id="state-container" class="container container-block">
+		<div class="container-title" data-toggle="collapse"
+			 data-target="#state-row">
+			<h3>Keyboard
+				<div id="state-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
+			</h3>
+		</div>
+		
+		<div id="state-row" class="row collapse in">
+			<div class="col-sm-4 col-md-4 col-lg-4">
+				<ul class="list-group">
+					<li class="list-group-item">
+						<div id="envelope-label" class="note-info bpm">
+							<span class="label-desc">Envelope gain</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="envelope-gain-range" min="0" max="1" step="0.001" disabled>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
 	<!-- KEYBOARD -->
-
+	
 	<div id="instr-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
-			 data-target="#keyboard-up, #note-info-collapsable">
+			 data-target="#keyboard-up-collapse, #note-info-collapsable">
 			<h3>Keyboard
 				<div id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-
+		
 		<div class="row">
 			<div class="col-md-9">
 				<div id="keyboard">
-					<div id="keyboard-up" class="collapse in"></div>
+					<div id="keyboard-up-collapse" class="collapse in">
+						<div id="keyboard-up"></div>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-3">
@@ -133,9 +160,9 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- OSCILLOSCOPE -->
-
+	
 	<div id="oscilloscope" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#oscilloscope-content">
@@ -143,16 +170,16 @@
 				<div id="osc-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-
+		
 		<div id="oscilloscope-content" class="collapse in">
 			<div id="oscilloscope-wrapper">
 				<canvas class="osc-canvas"></canvas>
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- MORE INFO -->
-
+	
 	<!--div id="more" class="container panel panel-info">
 		<div class="panel-heading panel-title" data-toggle="collapse" data-target="#more div.panel-body">More info</div>
 		<div id="more-body" class="panel-body collapse in">

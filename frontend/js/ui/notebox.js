@@ -14,8 +14,6 @@ function NoteBox(parameters) {
 	this.noteRange.setAttribute("max", (__config.NOTES_COUNT).toString());
 
 	this._note = undefined;
-
-	this.update();
 }
 
 NoteBox.prototype.setObserve = function (note) {
@@ -35,6 +33,4 @@ NoteBox.prototype.update = function () {
 		this.gainRange.value = gain;
 		this.gainRange.disabled = gain == 0;
 	}
-
-	window.requestAnimationFrame(() => {this.update()});
 };

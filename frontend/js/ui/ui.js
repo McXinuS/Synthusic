@@ -21,7 +21,7 @@ function Ui() {
 
 Ui.prototype.initDom = function () {
 
-    var self = this;
+    let self = this;
 
     this.masterGainRange = document.getElementById('master-gain-range');
     this.masterGainLabel = $('div.master-gain > span.label-value');
@@ -45,6 +45,10 @@ Ui.prototype.initDom = function () {
     this.bpmRange = document.getElementById('bpm-range');
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
     this.muteButton = document.getElementById("mute-btn");
+
+	this.envelopeGain = $('#envelope-label').find('> span.label-value');
+	this.envelopeGainRange = document.getElementById("envelope-gain-range");
+
     this.noteInfoNoteRange = document.getElementById("note-info-note-range");
     this.noteInfoFreq = $('div.freq > span.label-value');
     this.noteInfoNote = $('div.note > span.label-value');
@@ -63,10 +67,15 @@ Ui.prototype.initDom = function () {
         main.gain[n] = self.noteInfoGainRange.value;
     };
 
-    var setTitle = document.getElementById('settings').getElementsByClassName('container-title')[0];
-    setTitle.onclick = function () {
-        $('#settings-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-    };
+	var setTitle = document.getElementById('settings').getElementsByClassName('container-title')[0];
+	setTitle.onclick = function () {
+		$('#settings-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
+	};
+
+	var stateTitle = document.getElementById('state-container').getElementsByClassName('container-title')[0];
+	stateTitle.onclick = function () {
+		$('#state-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
+	};
 
     var insTitle = document.getElementById('instr-container').getElementsByClassName('container-title')[0];
     insTitle.onclick = function () {
@@ -94,6 +103,21 @@ Ui.prototype.initDom = function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
 
+	let update = function () {
+        self.noteBox.update();
+        self.updateEnvelopeGain();
+
+	    window.requestAnimationFrame(update);
+	};
+	update();
+};
+
+Ui.prototype.updateEnvelopeGain = function() {
+    if (typeof(main.sound) === 'undefined') return;
+
+    let gain = main.sound.enveloper.getGain().toFixed(3);
+	this.envelopeGainRange.value = gain;
+	this.envelopeGain.text(gain);
 };
 
 Ui.prototype.updateBpm = function (value) {

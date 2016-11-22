@@ -1,19 +1,37 @@
+import {convertToProgressBar, attachDragger, updateDropdownSelection} from './ext.js'
 import {NoteBox} from './notebox.js'
-import {convertToProgressBar, attachKeyboardDragger, updateDropdownSelection} from './ext.js'
+import {Oscilloscope} from "./oscilloscope.js";
+import {Keyboard}     from "./keyboard.js";
+import {PageBackgroundDrawer}     from "./page_background.js";
 exports.Ui = Ui;
 
 function Ui() {
 
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-    $.fn.attachKeyboardDragger = attachKeyboardDragger;
+    $.fn.attachDragger = attachDragger;
 
     this.initDom();
+
+    let self = this;
+
+    this.pageBackgroundDrawer = new PageBackgroundDrawer(this.pageBackground);
+
+    this.oscilloscope = new Oscilloscope(this.oscCanvas);
+    window.addEventListener('resize', function () {
+        self.oscilloscope.onResize();
+    }, true);
+
+    this.keyboard = new Keyboard(this.keyboardContainer);
 }
 
 Ui.prototype.initDom = function () {
 
     let self = this;
+
+    this.pageBackground = document.getElementById('background');
+
+    this.settingsContainer = $('#nav_settings');
 
     this.masterGainRange = document.getElementById('master-gain-range');
     this.masterGainLabel = $('div.master-gain > span.label-value');
@@ -42,10 +60,10 @@ Ui.prototype.initDom = function () {
 
     this.envelopeGainLabel = $('#envelope-label').find('> span.label-value');
     this.envelopeGainRange = document.getElementById("envelope-gain-range");
-    convertToProgressBar(this.envelopeGainRange, '#4f4');
+    convertToProgressBar(this.envelopeGainRange, '#4a4');
     this.rmsLabel = $('#rms-label').find('> span.label-value');
     this.rmsRange = document.getElementById("rms-range");
-    convertToProgressBar(this.rmsRange, ['#4f4', '#ff4', '#f44'], [50,80,100]);
+    convertToProgressBar(this.rmsRange, ['#4a4', '#ff4', '#f44'], [50,80,100]);
 
     this.noteInfoNoteRange = document.getElementById("note-info-note-range");
     this.noteInfoFreq = $('div.freq > span.label-value');
@@ -65,11 +83,6 @@ Ui.prototype.initDom = function () {
         var n = __note.getNote(self.noteInfoNoteRange.value);
         main.gain[n] = self.noteInfoGainRange.value;
     };
-
-	var setTitle = document.getElementById('settings').getElementsByClassName('container-title')[0];
-	setTitle.onclick = function () {
-		$('#settings-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-	};
 
 	var stateTitle = document.getElementById('state-container').getElementsByClassName('container-title')[0];
 	stateTitle.onclick = function () {
@@ -98,7 +111,7 @@ Ui.prototype.initDom = function () {
     this.oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild;
     this.keyboardContainer = document.getElementById("keyboard");
 
-    $("#keyboard-up").attachKeyboardDragger();
+    $("#keyboard-up").attachDragger($("#keyboard"));
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
@@ -116,6 +129,13 @@ Ui.prototype.initDom = function () {
         }
 	};
 	update();
+};
+
+Ui.prototype.showNav = function (nav) {
+    this.settingsContainer.slideToggle();
+};
+
+Ui.prototype.closeNav = function () {
 };
 
 Ui.prototype.updateEnvelopeGain = function() {

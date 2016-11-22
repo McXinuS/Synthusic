@@ -1,16 +1,13 @@
-// TODO: consider to add listeners on 'playNote', 'stopNote' etc
+// TODO: add listeners on 'playNote', 'stopNote' and 'stop'
 
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import {Socket}       from "./websocket.js";
-import {Oscilloscope} from "./ui/oscilloscope.js";
 import {Sound}        from "./sound/sound.js";
-import {Keyboard}     from "./ui/keyboard.js";
 import {Ui}           from "./ui/ui.js";
 
-var _main = new Main();
-
 // Babel6 workaround http://stackoverflow.com/questions/34736771/webpack-umd-library-return-object-default/34778391
+var _main = new Main();
 export default _main;
 module.exports = _main;
 
@@ -93,11 +90,11 @@ function Main() {
 		},
         oscilloscopeRenderType: {
             get: () => {
-                return this.oscilloscope.renderType;
+                return self.ui.oscilloscope.renderType;
             },
             set: (rt) => {
-                this.oscilloscope.renderType = rt;
-                this.ui.updateOscilloscopeRenderType(rt);
+                self.ui.oscilloscope.renderType = rt;
+				self.ui.updateOscilloscopeRenderType(rt);
                 console.log(`Render type has been changed to ${rt}`);
             }
         }
@@ -130,13 +127,6 @@ Main.prototype.init = function () {
     // this.instrument = 'test1';
 	this.instrument = 'Sine bass + triangle';
 	this.bpm = 60;
-
-	this.oscilloscope = new Oscilloscope(this.ui.oscCanvas);
-	window.addEventListener('resize', function () {
-		main.oscilloscope.onResize();
-	}, true);
-
-	this.keyboard = new Keyboard(this.ui.keyboardContainer);
 
 	var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 	window.audioContext = audioContext;
@@ -171,14 +161,14 @@ Main.prototype.playNote = function (parameters) {
 	var duration = parameters.duration;
 	var notify = parameters.notify;
 
-	if (this.playing[note.index])
+	if (this.playing[note])
 		return;
 
-	this.playing[note.index] = true;
+	this.playing[note] = true;
 	this.sound.playNote(note, duration);
 
-	this.oscilloscope.addNote(note);
-	this.keyboard.highlightOn(note);
+	this.ui.oscilloscope.addNote(note);
+	this.ui.keyboard.highlightOn(note);
 	this.observeInNoteBox(note);
 
 	if (notify == undefined) {
@@ -199,14 +189,14 @@ Main.prototype.stopNote = function (parameters) {
 	var note = parameters.note;
 	var notify = parameters.notify;
 
-	if (!this.playing[note.index])
+	if (!this.playing[note])
 		return;
 
-	this.playing[note.index] = false;
+	this.playing[note] = false;
 	this.sound.stopNote(note);
 
-	this.oscilloscope.removeNote(note);
-	this.keyboard.highlightOff(note);
+	this.ui.oscilloscope.removeNote(note);
+	this.ui.keyboard.highlightOff(note);
 	this.observeInNoteBox(note);
 
 	if (notify == undefined) {
@@ -220,6 +210,24 @@ Main.prototype.stopNote = function (parameters) {
 		});
 	}
 	console.log(note.name + note.octave + ' has been stopped');
+};
+
+Main.prototype.stop = function (parameters) {
+	var notify = parameters.notify;
+
+	if (typeof(this.ui.oscilloscope) != 'undefined') this.ui.oscilloscope.stop();
+	if (typeof(this.sound) != 'undefined') this.sound.stop();
+	if (typeof(this.ui.keyboard) != 'undefined') this.ui.keyboard.highlightClear();
+
+	this.playing = [];
+
+	if (notify == undefined) notify = true;
+	if (notify) {
+		this.socket.send({
+			type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop
+		});
+	}
+	console.log('Stop');
 };
 
 // play a random note from a scale
@@ -255,27 +263,13 @@ Main.prototype.playRandomNote = function () {
 	}
 };
 
-Main.prototype.stop = function (parameters) {
-	var notify = parameters.notify;
-
-	if (typeof(this.oscilloscope) != 'undefined') this.oscilloscope.stop();
-	if (typeof(this.sound) != 'undefined') this.sound.stop();
-	if (typeof(this.keyboard) != 'undefined') this.keyboard.highlightClear();
-
-	this.playing = [];
-
-	if (notify == undefined) notify = true;
-	if (notify) {
-		this.socket.send({
-			type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop
-		});
-	}
-	console.log('Stop');
+Main.prototype.showNav = function (nav) {
+  	this.ui.showNav(nav);
 };
 
 Main.prototype.toggleMute = function () {
-	if (masterGainRange.value > 0) {
-		masterGainBeforeMute = masterGainRange.value;
+	if (this.ui.masterGainRange.value > 0) {
+		masterGainBeforeMute = this.ui.masterGainRange.value;
 		this.masterGain = 0;
 	} else {
 		this.masterGain = masterGainBeforeMute;

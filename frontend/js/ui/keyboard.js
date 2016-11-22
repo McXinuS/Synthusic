@@ -28,7 +28,7 @@ function Keyboard(container) {
 				eventKey.classList.add('selected');
 			}
 			if (e.button != 1) {
-				main.playing[eventNote.index] ?
+				main.playing[eventNote] ?
 					main.stopNote({note: eventNote}) : main.playNote({note: eventNote});
 			}
 			main.observeInNoteBox(eventNote);

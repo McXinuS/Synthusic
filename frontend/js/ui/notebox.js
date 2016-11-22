@@ -31,6 +31,6 @@ NoteBox.prototype.update = function () {
 		this.noteRange.value = this._note.index;
 		this.gainLabel.text(gain.toFixed(2));
 		this.gainRange.value = gain;
-		this.gainRange.disabled = gain == 0;
+		this.gainRange.disabled = main.playing[this._note] !== true;
 	}
 };

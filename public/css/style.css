@@ -1,25 +1,103 @@
+.content {
+	margin : 80px 0;
+}
+
+/* Background */
+
+#background {
+	background-color        : #000;
+	z-index                 : -1;
+	width                   : 100%;
+	height                  : 100%;
+	position                : fixed;
+	bottom                  : 0;
+	-webkit-background-size : cover;
+}
+
+#background > .star {
+	position         : absolute;
+	background-color : #000;
+	width            : 1px;
+	height           : 1px;
+	border-radius    : 50%;
+}
+
+#background > .star.grow {
+	background-color : #fff;
+}
+
+/* Navigation */
+
+#topnav {
+	position   : fixed;
+	top        : 0;
+	width      : 100%;
+	height     : 45px;
+	background : rgb(80, 80, 80);
+	color      : #ddd;
+	box-shadow : 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+	z-index    : 999;
+}
+
+#topnav .navbar {
+	list-style-type : none;
+	margin          : 0;
+	padding         : 0;
+	overflow        : hidden;
+	min-height      : 0;
+	border          : 0;
+	font-size       : 17px;
+}
+
+.navbar li {
+	float       : left;
+	font-family : "Segoe UI", Arial, sans-serif;
+}
+
+.navbar li a {
+	color           : inherit;
+	cursor          : pointer;
+	text-decoration : none;
+	display         : block;
+	padding         : 10px 15px 11px 15px;
+	letter-spacing  : 1px;
+	transition      : background-color .3s, color .15s, box-shadow .3s, opacity 0.3s, filter 0.3s;
+}
+
+.navbar li a:hover {
+	background-color : #000000;
+	color            : #ffffff;
+}
+
 /* Settings */
 
-#settings {
-	background : rgba(100, 100, 100, 0.5);
-	color      : #ddd;
+#nav_settings {
+	background : rgba(60, 60, 60, 0.9);
+	padding    : 24px 48px;
 }
 
-#settings .btn {
+#nav_settings .btn {
 	background   : rgba(100, 100, 100, 0.5);
-	color        : #ddd;
 	border-color : #3a3a3a;
+	color        : inherit;
 }
 
-.label-value {
-	float : right;
+#nav_settings .dropdown-menu {
+	background : #646464;
+	width      : 100%;
+}
+
+#nav_settings .dropdown-menu > li > a:focus, #nav_settings .dropdown-menu > li > a:hover {
+	background : #888;
+}
+
+#nav_settings .dropdown-menu > li > a.selected {
+	background : #888;
 }
 
 .scale-settings {
 	display : inline-block;
 }
-
-/* /Settings */
 
 /* State */
 
@@ -28,7 +106,7 @@
 	color      : #ddd;
 }
 
-/* /State */
+/* Keyboard */
 
 #instr-container {
 	background : url(../img/woodtexture8.jpg);
@@ -41,7 +119,6 @@
 	border           : 1px solid rgb(101, 64, 38);
 }
 
-/* Keyboard */
 #keyboard {
 	height        : 504px;
 	margin-bottom : 15px;
@@ -144,8 +221,6 @@
 	background-color : rgba(88, 46, 22, 0.7);
 }
 
-/* /Keyboard */
-
 /* Oscilloscope */
 #oscilloscope {
 	background : rgba(141, 195, 138, 0.95);
@@ -163,31 +238,21 @@
 .osc-canvas {
 	border-radius : 30px;
 	box-shadow    : 0 0 40px 30px rgba(0, 0, 0, 0.25);
+	position      : relative;
 }
 
-/* /Oscilloscope */
+.osc-canvas.blend-mode {
+	mix-blend-mode : color-dodge;
+}
 
 /* Common */
 
-.background-image {
-	background              : url(../img/piano.jpg);
-	z-index                 : -1;
-	width                   : 100%;
-	height                  : 100%;
-	position                : fixed;
-	bottom                  : 0;
-	-webkit-background-size : cover;
+.dropdown-menu > li > a {
+	color : inherit !important;
 }
 
-.content {
-	margin : 40px 0;
-}
-
-.dropdown-menu>li>a.selected {
-	background: #f5f5f5;
-}
-.dropdown-menu>li>a.selected:focus, .dropdown-menu>li>a.selected:hover {
-	background: #eee;
+.dropdown-menu > li > a.selected {
+	background : #f5f5f5;
 }
 
 .container-block {
@@ -202,12 +267,20 @@
 	cursor        : pointer;
 }
 
+.label-value {
+	float : right;
+}
+
 .inline-block {
 	display : inline-block;
 }
 
 .hidden {
 	display : none;
+}
+
+.list-group {
+	margin : 0;
 }
 
 .list-group-item {
@@ -281,5 +354,3 @@ input[type=range]::-webkit-slider-thumb {
 	-webkit-appearance : none;
 	margin-top         : -13px;
 }
-
-/* /Common */

@@ -1,4 +1,4 @@
-import {convertToProgressBar, attachDragger, updateDropdownSelection} from './ext.js'
+import {convertToProgressBar, attachDragger, updateDropdownSelection, floatEqual} from './ext.js'
 import {NoteBox} from './notebox.js'
 import {Oscilloscope} from "./oscilloscope.js";
 import {Keyboard}     from "./keyboard.js";
@@ -18,9 +18,6 @@ function Ui() {
     //this.pageBackgroundDrawer = new PageBackgroundDrawer(this.pageBackground);
 
     this.oscilloscope = new Oscilloscope(this.oscCanvas);
-    window.addEventListener('resize', function () {
-        self.oscilloscope.onResize();
-    }, true);
 
     this.keyboard = new Keyboard(this.keyboardContainer);
 
@@ -58,6 +55,7 @@ Ui.prototype.initDom = function () {
         var li = document.createElement('li');
         var a = document.createElement('a');
         a.setAttribute('href', '#');
+        a.setAttribute('data', __config.instruments[index].id);
         a.innerText = __config.instruments[index].name;
         li.appendChild(a);
         instrItems.append(li);
@@ -65,7 +63,7 @@ Ui.prototype.initDom = function () {
     this.instrumentListDropdown = this.instrumentList.find("> .dropdown-menu");
     this.instrumentListItems = this.instrumentListDropdown[0].getElementsByTagName('li');
     this.instrumentListDropdown.on("click", "li", function (event) {
-        main.instrument = event.target.innerHTML;
+        main.instrument = event.target.getAttribute('data');
     });
 
     this.bpmRange = document.getElementById('bpm-range');
@@ -141,7 +139,7 @@ Ui.prototype.closeNav = function () {
 
 Ui.prototype.updateEnvelopeGain = function() {
     let gain = main.sound.enveloper.getGain();
-    if (Math.abs(gain - this.envelopeGainRange.value) < 1e-3) return;
+    if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;
 	this.envelopeGainRange.value = gain;
     this.envelopeGainRange.onchange();
 	this.envelopeGainLabel.text(gain.toFixed(3));
@@ -149,7 +147,7 @@ Ui.prototype.updateEnvelopeGain = function() {
 
 Ui.prototype.updateRms = function () {
     let rms = main.sound.analyser.getRms();
-    if (Math.abs(rms - this.rmsRange.value) < 1e-3) return;
+    if (floatEqual(rms, parseFloat(this.rmsRange.value), 1e-3)) return;
     this.rmsRange.value = rms;
     this.rmsRange.onchange();
     this.rmsLabel.text(rms.toFixed(3));
@@ -168,7 +166,7 @@ Ui.prototype.updateMasterGain = function (value) {
 
 Ui.prototype.updateInstrument = function (value) {
     this.instrumentListLabel.html(`Instrument: ${value.name} <span class="caret"></span>`);
-    updateDropdownSelection(value.name, this.instrumentListItems);
+    updateDropdownSelection(value.id, this.instrumentListItems, 'data');
 };
 
 Ui.prototype.updateOscilloscopeRenderType = function (value) {

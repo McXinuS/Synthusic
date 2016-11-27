@@ -48,7 +48,11 @@
 								</button>
 								<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
 							</li>
+						</ul>
+					</div>
 
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<ul class="list-group">
 							<li class="list-group-item">
 								<div>
 									<div class="dropdown inline-block" id="instr-list">
@@ -58,6 +62,21 @@
 										</button>
 										<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
 									</div>
+								</div>
+							</li>
+							<li id="oscilloscope-settings" class="list-group-item">
+								<div class="dropdown inline-block" id="osc-render-type-list">
+									<button class="btn btn-default dropdown-toggle" type="button"
+											data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										Oscilloscope render type <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
+										<li><a href="#" data="0">Theory</a></li>
+										<li><a href="#" data="1">Live (amplitude)</a></li>
+										<li><a href="#" data="2">Live (frequency)</a></li>
+										<li><a href="#" data="3">Image - work in progress</a></li>
+										<li><a href="#" data="-1">Disable</a></li>
+									</ul>
 								</div>
 							</li>
 						</ul>
@@ -76,27 +95,6 @@
 										onclick="main.playRandomNote()">Random note
 								</button>
 							</li>
-						</ul>
-					</div>
-
-					<div class="col-sm-4 col-md-4 col-lg-4">
-						<div id="oscilloscope-settings">
-							<li class="list-group-item">
-								<div class="dropdown inline-block" id="osc-render-type-list">
-									<button class="btn btn-default dropdown-toggle" type="button"
-											data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										Oscilloscope render type <span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
-										<li><a href="#" data="0">Theory</a></li>
-										<li><a href="#" data="1">Live (amplitude)</a></li>
-										<li><a href="#" data="2">Live (frequency)</a></li>
-										<li><a href="#" data="3">Image - work in progress</a></li>
-										<li><a href="#" data="-1">Disable</a></li>
-									</ul>
-								</div>
-							</li>
-						</div>
 					</div>
 
 				</div>

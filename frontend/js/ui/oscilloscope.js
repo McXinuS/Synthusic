@@ -65,13 +65,16 @@ function Oscilloscope(canvas) {
 
         this.loadMask('img/osc_overlay.png');
 
-        this.reset();
+        this.reload();
         this.onResize();
 
         this.draw();
     }.bind(this);
     init();
 
+    window.addEventListener('resize', function () {
+        this.onResize();
+    }.bind(this), true);
 }
 
 function getRandomImageUrl(w, h) {
@@ -83,7 +86,7 @@ function getRandomImageUrl(w, h) {
     return urls[ind];
 }
 
-Oscilloscope.prototype.reset = function () {
+Oscilloscope.prototype.reload = function () {
     this.scale = 0.00002;
     this.sampleRate = 300;
     this.renderType = this.RENDER_THEORY;

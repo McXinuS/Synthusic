@@ -1,7 +1,8 @@
 exports.convertToProgressBar = convertToProgressBar;
 exports.attachDragger = attachDragger;
 exports.updateDropdownSelection = updateDropdownSelection;
-
+exports.floatEqual = floatEqual;
+// colors
 exports.RGBtoHSV = RGBtoHSV;
 exports.HSVtoRGB = HSVtoRGB;
 exports.RGBtoSaturation = RGBtoSaturation;
@@ -95,11 +96,16 @@ function attachDragger(scrolldObj) {
 }
 
 function updateDropdownSelection(newValue, liArray, attributeName) {
+    if (typeof(newValue) === 'undefined') return;
+
+    if (attributeName) {
+        newValue = newValue.toString();
+    }
+
     for (var i = 0; i < liArray.length; i++) {
         var a = liArray[i].children[0];
         if (attributeName) {
-            var attrValue = a.getAttribute(attributeName);
-            if (attrValue !== newValue) {
+            if (a.getAttribute(attributeName) !== newValue) {
                 a.classList.remove('selected');
             } else {
                 a.classList.add('selected');
@@ -111,6 +117,21 @@ function updateDropdownSelection(newValue, liArray, attributeName) {
                 a.classList.add('selected');
             }
         }
+    }
+}
+
+function floatEqual(a, b, epsilon) {
+    var diff = Math.abs(a - b);
+
+    if (a == b) { // shortcut, handles infinities
+        return true;
+    } else if (a == 0 || b == 0 || diff < Number.MIN_VALUE) {
+        // a or b is zero or both are extremely close to it
+        // relative error is less meaningful here
+        return diff < (epsilon * Number.MIN_VALUE);
+    } else {
+        return diff < epsilon; // use relative error
+        //return diff / (Math.abs(a) + Math.abs(b)) < epsilon; // use relative error
     }
 }
 

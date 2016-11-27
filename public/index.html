@@ -13,9 +13,9 @@
 <div id="background"></div>
 
 <div class="content">
-
+	
 	<div id="topnav" class="collapse in">
-
+		
 		<ul class="navbar">
 			<li>
 				<a onclick="main.showNav('chat')">Chat (todo)</a>
@@ -24,14 +24,14 @@
 				<a onclick="main.showNav('settings')">Settings</a>
 			</li>
 		</ul>
-
+		
 		<!-- SETTINGS -->
-
+		
 		<div id="nav_settings" class="container-fluid" style="display: none;">
 			<div id="settings-rows" class="collapse in">
-
+				
 				<div class="row">
-
+					
 					<div class="col-sm-4 col-md-4 col-lg-4">
 						<ul class="list-group">
 							<li class="list-group-item">
@@ -42,7 +42,7 @@
 								<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
 									   oninput="main.masterGain = this.value">
 							</li>
-
+							
 							<li class="list-group-item">
 								<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset
 								</button>
@@ -50,7 +50,7 @@
 							</li>
 						</ul>
 					</div>
-
+					
 					<div class="col-sm-4 col-md-4 col-lg-4">
 						<ul class="list-group">
 							<li class="list-group-item">
@@ -81,7 +81,31 @@
 							</li>
 						</ul>
 					</div>
-
+					
+					<div class="col-sm-4 col-md-4 col-lg-4">
+						<ul class="list-group">
+							<li class="list-group-item">
+								<div id="envelope-attack-label" class="note-info master-gain">
+									<span class="label-desc">Gain (master)</span>
+									<span class="label-value">Value</span>
+								</div>
+								<input type="range" id="envelope-attack-range" min="0" max="2500" step="10"
+									   oninput="main.updateEnvelopeConfig()">
+							</li>
+						</ul>
+					</div>
+				
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-4 col-md-4 col-lg-4">
+					
+					</div>
+					
+					<div class="col-sm-4 col-md-4 col-lg-4">
+					
+					</div>
+					
 					<div class="col-sm-4 col-md-4 col-lg-4">
 						<ul class="list-group">
 							<li class="list-group-item">
@@ -95,30 +119,16 @@
 										onclick="main.playRandomNote()">Random note
 								</button>
 							</li>
-					</div>
-
-				</div>
-
-				<div class="row">
-					<div class="col-sm-4 col-md-4 col-lg-4">
-
-					</div>
-
-					<div class="col-sm-4 col-md-4 col-lg-4">
-
-					</div>
-
-					<div class="col-sm-4 col-md-4 col-lg-4">
-
+						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-
+	
 	</div>
-
+	
 	<!-- SYNTH STATE -->
-
+	
 	<div id="state-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#state-row">
@@ -126,7 +136,7 @@
 				<div id="state-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-
+		
 		<div id="state-row" class="row collapse in">
 			<div class="col-sm-4 col-md-4 col-lg-4">
 				<ul class="list-group">
@@ -174,9 +184,9 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- OSCILLOSCOPE -->
-
+	
 	<div id="oscilloscope" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#oscilloscope-content">
@@ -184,16 +194,16 @@
 				<div id="osc-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-
+		
 		<div id="oscilloscope-content" class="collapse in">
 			<div id="oscilloscope-wrapper">
 				<canvas class="osc-canvas"></canvas>
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- KEYBOARD -->
-
+	
 	<div id="instr-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#keyboard-up-collapse">
@@ -201,16 +211,16 @@
 				<div id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-
+		
 		<div id="keyboard">
 			<div id="keyboard-up-collapse" class="collapse in">
 				<div id="keyboard-up"></div>
 			</div>
 		</div>
 	</div>
-
+	
 	<!-- MORE INFO -->
-
+	
 	<!--div id="more" class="container panel panel-info">
 		<div class="panel-heading panel-title" data-toggle="collapse" data-target="#more div.panel-body">More info</div>
 		<div id="more-body" class="panel-body collapse in">

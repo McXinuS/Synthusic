@@ -17,7 +17,7 @@ function Sound(audioContext, instrument) {
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.analyserNode);
 
-    this.enveloper = new Enveloper(__config.envelope, audioContext);
+    this.enveloper = new Enveloper(audioContext);
     this.enveloper.onFinished = function () {
         this.stop()
     }.bind(this);

@@ -137,6 +137,14 @@ Ui.prototype.showNav = function (nav) {
 Ui.prototype.closeNav = function () {
 };
 
+Ui.prototype.updateEnvelopeConfig = function() {
+    let gain = main.sound.enveloper.getGain();
+    if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;
+	this.envelopeGainRange.value = gain;
+    this.envelopeGainRange.onchange();
+	this.envelopeGainLabel.text(gain.toFixed(3));
+};
+
 Ui.prototype.updateEnvelopeGain = function() {
     let gain = main.sound.enveloper.getGain();
     if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;

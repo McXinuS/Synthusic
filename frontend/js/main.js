@@ -182,8 +182,7 @@ Main.prototype.playNote = function (parameters) {
     if (notify) {
         this.socket.send({
             type: __constants.WEB_SOCKET_MESSAGE_TYPE.play_note,
-            noteName: note.name,
-            noteOctave: note.octave
+            note: note.fullname
         });
     }
 
@@ -290,15 +289,13 @@ function onSocketMessage(data) {
 
     switch (type) {
         case __constants.WEB_SOCKET_MESSAGE_TYPE.play_note:
-            let name = data.noteName;
-            let octave = data.noteOctave;
-            let note = __note.getNote(name, octave);
+            let name = data.note;
+            let note = __note.getNote(name);
             main.playNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note:
-            name = data.noteName;
-            octave = data.noteOctave;
-            note = __note.getNote(name, octave);
+            name = data.note;
+            note = __note.getNote(name);
             main.stopNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop:

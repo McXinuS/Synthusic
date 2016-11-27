@@ -12,7 +12,7 @@ function Keyboard(container) {
         let key = document.createElement('div');
         key.classList.add('key');
         key.classList.add(note.isAccidental ? 'key-black' : 'key-white');
-        key.setAttribute('name', note.toString());
+        key.setAttribute('name', note.fullname);
         key.setAttribute('data-toggle', 'tooltip');
         key.setAttribute('data-placement', 'top');
         key.setAttribute('title', note.toString());
@@ -45,7 +45,10 @@ function Keyboard(container) {
 
     let keyboardOverlay = document.getElementById('keyboard-up');
     keyboardOverlay.style.width = container.scrollWidth + 'px';
-    window
+    window.addEventListener('resize', function () {
+        console.log()
+        keyboardOverlay.style.width = container.scrollWidth + 'px';
+    }.bind(this), true);
 }
 
 Keyboard.prototype.destroy = function () {
@@ -57,13 +60,13 @@ Keyboard.prototype.destroy = function () {
 
 // set highlight on key
 Keyboard.prototype.highlightOn = function (note) {
-    let el = document.querySelector(`[name="${note.toString()}"]`);
+    let el = document.querySelector(`[name="${note.fullname}"]`);
     if (el) el.classList.add('playing');
 };
 
 // remove highlight on key
 Keyboard.prototype.highlightOff = function (note) {
-    let el = document.querySelector(`[name="${note.toString()}"]`);
+    let el = document.querySelector(`[name="${note.fullname}"]`);
     if (el) el.classList.remove('playing');
 };
 
@@ -71,7 +74,7 @@ Keyboard.prototype.highlightOff = function (note) {
 Keyboard.prototype.highlightClear = function () {
     for (let i = 0; i < __constants.NOTES_COUNT; i++) {
         let note = __note.getNote(i);
-        let el = document.querySelector(`[name="${note.toString()}"]`);
+        let el = document.querySelector(`[name="${note.fullname}"]`);
         if (el) el.classList.remove('playing');
     }
 };

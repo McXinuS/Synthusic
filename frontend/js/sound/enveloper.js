@@ -1,34 +1,32 @@
 export default Enveloper;
 
-function Enveloper(adsr, audioCtx) {
+function Enveloper(audioCtx) {
     this.STATE_STARTED = 0;
     this.STATE_DECAYING = 1;
     this.STATE_SUSTAINED = 2;
     this.STATE_RELEASING = 3;
     this.STATE_FINISHED = 4;
 
-    this._config = adsr;
-
     Object.defineProperties(this, {
         _attack: {
             get: () => {
-                return this._config.attack;
+                return __config.envelope.attack;
             }
         },
         _decay: {
             get: () => {
-                return this._config.decay;
+                return __config.envelope.decay;
             }
         },
         _sustain: {
             get: () => {
                 // restrict sustain in [0;1] interval
-                return Math.max(0, Math.min(this._config.sustain, 1));
+                return Math.max(0, Math.min(__config.envelope.sustain, 1));
             }
         },
         _release: {
             get: () => {
-                return this._config.release;
+                return __config.envelope.release;
             }
         },
     });

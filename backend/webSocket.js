@@ -1,3 +1,5 @@
+exports.Server = Server;
+
 // TODO add rooms
 
 var webSocketServer;
@@ -22,7 +24,7 @@ var stateObject = {
     instrument: undefined
 };
 
-exports.Server = function (server) {
+function Server(server) {
     webSocketServer = new require('ws').Server({
         server: server
     });
@@ -47,7 +49,7 @@ exports.Server = function (server) {
     });
 
     return webSocketServer;
-};
+}
 
 function broadcast(message, sender) {
     wsClients.forEach(function (client) {
@@ -59,36 +61,31 @@ function broadcast(message, sender) {
 
 function processWebSocketMessage(message, sender) {
     try {
-        var data = JSON.parse(message);
-        var logMsg = 'New message from id ' + sender.id + '. Message ';
-        var bCast = true;	// whether or not the server should broadcast incoming message
+        let data = JSON.parse(message);
+        let logMsg = 'New message from id ' + sender.id + '. Message ';
+        let bCast = true;	// whether or not the server should broadcast incoming message
 
-        if (data == undefined || data.type == undefined) {
-            logMsg += ' : ' + JSON.stringify(data);
+        if (data.type == undefined) {
+            logMsg += ': ' + JSON.stringify(data);
         } else {
-            var note;
             switch (data.type) {
                 case WEB_SOCKET_MESSAGE_TYPE.play_note:
-                    note = data.noteName + data.noteOctave;
-                    logMsg += 'type : play_note, note : ' + note;
-                    stateObject[note] = true;
+                    var note = data.note;
+                    logMsg += 'type: play_note, note: ' + note;
+                    stateObject.playing[note] = true;
                     break;
                 case WEB_SOCKET_MESSAGE_TYPE.stop_note:
-                    note = data.noteName + data.noteOctave;
-                    logMsg += 'type : stop_note, note : ' + note;
-                    stateObject[note] = false;
+                    var note = data.note;
+                    logMsg += 'type: stop_note, note: ' + note;
+                    stateObject.playing[note] = false;
                     break;
                 case WEB_SOCKET_MESSAGE_TYPE.stop:
-                    logMsg += 'type : stop';
+                    logMsg += 'type: stop';
                     stateObject.playing = [];
-                    break;
-                case WEB_SOCKET_MESSAGE_TYPE.change_instrument:
-                    logMsg += 'type : change_instrument, new instrument : ' + data.instrumentName;
-                    stateObject.instrument = data.instrumentName;
                     break;
                 case WEB_SOCKET_MESSAGE_TYPE.get_state:
                     bCast = false;
-                    logMsg += 'type : get_state';
+                    logMsg += 'type: get_state';
                     sender.ws.send(JSON.stringify(stateObject));
                     break;
             }
@@ -100,6 +97,6 @@ function processWebSocketMessage(message, sender) {
             broadcast(message, sender);
         }
     } catch (e) {
-        console.log('Exception in WebSocket.send: ' + e.message);
+        console.log('Exception in WebSocket.processWebSocketMessage: ' + e.message);
     }
 }

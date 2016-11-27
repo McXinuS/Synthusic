@@ -32,7 +32,7 @@ Sound.prototype.createOscillators = function (note) {
 	let oscillators = [];
 	let pitch = note.freq;
 	let osc;
-    for (let i = 0; i < this.instrument.osc_count; i++) {
+    for (let i = 0; i < this.instrument.oscillators.length; i++) {
 		let gainNode = audioContext.createGain();
         gainNode.connect(this.enveloperGainNode);
         gainNode.gain.value = 0;
@@ -40,8 +40,8 @@ Sound.prototype.createOscillators = function (note) {
         osc = audioContext.createOscillator();
         osc.gainNode = gainNode;
         osc.connect(gainNode);
-        osc.type = this.instrument.osc_type[i];
-        osc.frequency.value = pitch * this.instrument.osc_freq[i];
+        osc.type = this.instrument.oscillators[i].type;
+        osc.frequency.value = pitch * this.instrument.oscillators[i].freq;
         osc.start(0);
 
         oscillators.push(osc);
@@ -94,7 +94,7 @@ Sound.prototype.stopNote = function (note) {
 Sound.prototype.stopNoteImmediately = function (note) {
     if (!this.oscillators[note]) return;
 
-    for (let j = 0; j < this.instrument.osc_count; j++) {
+    for (let j = 0; j < this.instrument.oscillators.length; j++) {
         this.oscillators[note][j].stop(0);
         this.oscillators[note][j].disconnect();
     }
@@ -107,7 +107,7 @@ Sound.prototype.stop = function () {
     for (let name in this.oscillators) {
         if (this.oscillators[name] == null)
             continue;
-        for (let j = 0; j < this.instrument.osc_count; j++) {
+        for (let j = 0; j < this.instrument.oscillators.length; j++) {
             this.oscillators[name][j].stop(0);
             this.oscillators[name][j].disconnect();
         }
@@ -118,21 +118,21 @@ Sound.prototype.stop = function () {
 // 'note' is actually a name of the note, not an object
 Sound.prototype.getGain = function (note) {
     if (!this.oscillators[note]) return 0;
-    return this.oscillators[note][0].gainNode.gain.value / this.instrument.osc_gain[0];
+    return this.oscillators[note][0].gainNode.gain.value / this.instrument.oscillators[0].gain;
 };
 Sound.prototype.setGain = function (note, gain, ramp) {
     if (!this.oscillators[note]) return;
 
     if (!ramp) {
         // stop instantly
-        for (let j = 0; j < this.instrument.osc_count; j++) {
-            this.oscillators[note][j].gainNode.gain.value = gain * this.instrument.osc_gain[j];
+        for (let j = 0; j < this.instrument.oscillators.length; j++) {
+            this.oscillators[note][j].gainNode.gain.value = gain * this.instrument.oscillators[j].gain;
         }
     } else {
         // grow gain to 'gain' value in RAMP_STOP_TIME milliseconds
-        for (let j = 0; j < this.instrument.osc_count; j++) {
+        for (let j = 0; j < this.instrument.oscillators.length; j++) {
             let gainNode = this.oscillators[note][j].gainNode;
-            gainNode.gain.linearRampToValueAtTime(gain * this.instrument.osc_gain[j],
+            gainNode.gain.linearRampToValueAtTime(gain * this.instrument.oscillators[j].gain,
                 this.audioContext.currentTime + RAMP_STOP_TIME / 1000.0);
         }
     }

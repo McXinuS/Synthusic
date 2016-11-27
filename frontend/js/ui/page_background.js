@@ -1,12 +1,13 @@
 // TODO recolor stars on note play
 
-import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from './ext.js'
+//import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from './ext.js'
 
 exports.PageBackgroundDrawer = PageBackgroundDrawer;
 
 const STAR_DURATION_MIN = 8000;
 const STAR_DURATION_MAX = 15000;
 const STAR_COUNT = 15;
+const STAR_RADIUS_INNER_MIN = 1;
 const STAR_RADIUS_INNER_MAX = 2;
 const STAR_RADIUS_OUTER_MAX = 10;
 
@@ -38,12 +39,12 @@ PageBackgroundDrawer.prototype.runStar = function (star) {
     var y = Math.random() * this.container.offsetHeight;
     var xPrev = star.style.left || 0;
     var yPrev = star.style.top || 0;
-    var xMiddle = (x+xPrev)/2;
-    var yMiddle = (y+yPrev)/2;
+    var xMiddle = (x + xPrev) / 2;
+    var yMiddle = (y + yPrev) / 2;
 
     var duration = STAR_DURATION_MIN + Math.random() * (STAR_DURATION_MAX - STAR_DURATION_MIN);
     var halfPeriod = duration / 2;
-    var radius1 = Math.random() * STAR_RADIUS_INNER_MAX;
+    var radius1 = STAR_RADIUS_INNER_MIN + Math.random() * (STAR_RADIUS_INNER_MAX - STAR_RADIUS_INNER_MIN);
     var radius2 = Math.random() * STAR_RADIUS_OUTER_MAX;
 
     star.style.left = x + 'px';

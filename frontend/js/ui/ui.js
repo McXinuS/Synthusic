@@ -15,7 +15,7 @@ function Ui() {
 
     let self = this;
 
-    this.pageBackgroundDrawer = new PageBackgroundDrawer(this.pageBackground);
+    //this.pageBackgroundDrawer = new PageBackgroundDrawer(this.pageBackground);
 
     this.oscilloscope = new Oscilloscope(this.oscCanvas);
     window.addEventListener('resize', function () {
@@ -23,6 +23,20 @@ function Ui() {
     }, true);
 
     this.keyboard = new Keyboard(this.keyboardContainer);
+
+    let update = function () {
+        try{
+            self.noteBox.update();
+            self.updateEnvelopeGain();
+            self.updateRms();
+        } catch (err) {
+            console.warn('Something went wrong during UI update: ' + err.name + ": " + err.message);
+        } finally {
+            window.requestAnimationFrame(update); // high cpu load
+            //setTimeout(update, 50); // throttle fps
+        }
+    };
+    update();
 }
 
 Ui.prototype.initDom = function () {
@@ -116,19 +130,6 @@ Ui.prototype.initDom = function () {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     });
-
-	let update = function () {
-        try{
-            self.noteBox.update();
-            self.updateEnvelopeGain();
-            self.updateRms();
-        } catch (err) {
-            console.warn('Something went wrong during UI update: ' + err.name + ": " + err.message);
-        } finally {
-            window.requestAnimationFrame(update);
-        }
-	};
-	update();
 };
 
 Ui.prototype.showNav = function (nav) {
@@ -139,17 +140,19 @@ Ui.prototype.closeNav = function () {
 };
 
 Ui.prototype.updateEnvelopeGain = function() {
-    let gain = main.sound.enveloper.getGain().toFixed(3);
+    let gain = main.sound.enveloper.getGain();
+    if (Math.abs(gain - this.envelopeGainRange.value) < 1e-3) return;
 	this.envelopeGainRange.value = gain;
     this.envelopeGainRange.onchange();
-	this.envelopeGainLabel.text(gain);
+	this.envelopeGainLabel.text(gain.toFixed(3));
 };
 
 Ui.prototype.updateRms = function () {
-    let gain = main.sound.analyser.getRms().toFixed(3);
-    this.rmsRange.value = gain;
+    let rms = main.sound.analyser.getRms();
+    if (Math.abs(rms - this.rmsRange.value) < 1e-3) return;
+    this.rmsRange.value = rms;
     this.rmsRange.onchange();
-    this.rmsLabel.text(gain);
+    this.rmsLabel.text(rms.toFixed(3));
 };
 
 Ui.prototype.updateBpm = function (value) {

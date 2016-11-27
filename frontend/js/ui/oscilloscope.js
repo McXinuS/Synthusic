@@ -74,7 +74,7 @@ function Oscilloscope(canvas) {
 
 }
 
-function getRandomImageUrl(w,h) {
+function getRandomImageUrl(w, h) {
     return 'https://s3-us-west-2.amazonaws.com/boom-orca/people-deal-header.png';
     w = w || 1000;
     h = h || 500;
@@ -92,13 +92,21 @@ Oscilloscope.prototype.reset = function () {
 };
 
 Oscilloscope.prototype.onResize = function () {
-    // hack: get oscDiv content width by creating a new div and getting its width
-    var oscDiv = this.canvas.parentNode;
-    var oscDivTemp = document.createElement('div');
-    oscDiv.appendChild(oscDivTemp);
-    var oscDivTempStyle = window.getComputedStyle(oscDivTemp, null);
-    var oscDivW = oscDivTempStyle.getPropertyValue("width");
-    oscDiv.removeChild(oscDivTemp);
+    /*
+     // hack: get oscDiv content width by creating a new div and getting its width
+     var oscDiv = this.canvas.parentNode;
+     var oscDivTemp = document.createElement('div');
+     oscDiv.appendChild(oscDivTemp);
+     var oscDivTempStyle = window.getComputedStyle(oscDivTemp, null);
+     var oscDivW = oscDivTempStyle.getPropertyValue("width");
+     oscDiv.removeChild(oscDivTemp);
+     */
+
+    let oscStyle = window.getComputedStyle(this.canvas, null);
+    let oscParentStyle = window.getComputedStyle(this.canvas.parentNode, null);
+    let oscDivW = this.canvas.parentNode.clientWidth -
+        parseFloat(oscParentStyle.paddingLeft) - parseFloat(oscParentStyle.paddingRight) -
+        parseFloat(oscStyle.paddingLeft) - parseFloat(oscStyle.paddingRight);
 
     this.canvas.setAttribute('width', oscDivW);
     this.canvas.setAttribute('height', '500px');
@@ -194,7 +202,7 @@ Oscilloscope.prototype.drawSourceWaves = function (note) {
 
     this.ctx.strokeStyle = getWaveColor(note.index);
     this.ctx.beginPath();
-    for (var i = 0; i < main.instrument.osc_count; i++) {
+    for (var i = 0; i < main.instrument.oscillators.length; i++) {
         this.ctx.moveTo(0, this.canvasAmplitudeBuffer[note][i][0]);
         for (var j = 0; j < this.sampleRate; j++) {
             this.ctx.lineTo(j * this.step, this.canvasAmplitudeBuffer[note][i][j]);
@@ -225,11 +233,11 @@ Oscilloscope.prototype.drawResultingWave = function () {
         var resAmpl = 0;
         for (nInd = 0; nInd < this.notes.length; nInd++) {
             var name = names[nInd];
-            for (var i = 0; i < main.instrument.osc_count; i++) {
+            for (var i = 0; i < main.instrument.oscillators.length; i++) {
                 resAmpl += this.canvasAmplitudeBuffer[name][i][j];
             }
         }
-        this.ctx.lineTo(j * this.step, resAmpl / main.instrument.osc_count / this.notes.length);
+        this.ctx.lineTo(j * this.step, resAmpl / main.instrument.oscillators.length / this.notes.length);
     }
     this.ctx.stroke();
     this.ctx.shadowBlur = 0;
@@ -364,13 +372,13 @@ Oscilloscope.prototype.calcAmplitudes = function (note) {
     this.canvasAmplitudeBuffer[note] = [];
     var baseFreq = note.freq * 2 * Math.PI;
 
-    for (var i = 0; i < main.instrument.osc_count; i++) {
-        var waveFunc = __constants.WAVE_FUNCTION(main.instrument.osc_type[i]);
+    for (var i = 0; i < main.instrument.oscillators.length; i++) {
+        var waveFunc = __constants.WAVE_FUNCTION(main.instrument.oscillators[i].type);
         this.canvasAmplitudeBuffer[note][i] = [];
         // reverse value of amplitude because the lower point of canvas (j,0)
         // is the highest possible amplitude of wave
-        var amplMultiplier = -this.maxAmplitudeHeight * main.instrument.osc_gain[i];
-        var freq = baseFreq * main.instrument.osc_freq[i] * this.scale;
+        var amplMultiplier = -this.maxAmplitudeHeight * main.instrument.oscillators[i].gain;
+        var freq = baseFreq * main.instrument.oscillators[i].freq * this.scale;
         var center = this.center.x / this.step;
         for (var j = 0; j <= this.sampleRate; j++) {
             this.canvasAmplitudeBuffer[note][i][j] =

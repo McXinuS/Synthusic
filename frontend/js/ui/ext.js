@@ -35,6 +35,12 @@ function convertToProgressBar(slider, colors, colorStops) {
     div.appendChild(canvas);
     var ctx = canvas.getContext("2d");
 
+    window.addEventListener('resize', function () {
+        let style = window.getComputedStyle(div.parentNode, null);
+        canvas.setAttribute('width',
+            div.parentNode.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight));
+    }, true);
+
     slider.onchange = function () {
         var sliderProgress = (slider.value - minValue) / (maxValue - minValue);
         var xLast = 0;

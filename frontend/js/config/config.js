@@ -8,7 +8,7 @@ module.exports = new function () {
 		release: 550
 	};
 
-	this.instruments = instruments; // TODO allow to add/remove instruments
+	this.instruments = instruments;
 	this.instrument = instruments.sine;
 
 	this.bpm = 60;

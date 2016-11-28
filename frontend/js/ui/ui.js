@@ -22,7 +22,7 @@ function Ui() {
     this.keyboard = new Keyboard(this.keyboardContainer);
 
     let update = function () {
-        try{
+        try {
             self.noteBox.update();
             self.updateEnvelopeGain();
             self.updateRms();
@@ -45,8 +45,8 @@ Ui.prototype.initDom = function () {
     this.settingsContainer = $('#nav_settings');
 
     this.masterGainRange = document.getElementById('master-gain-range');
-    this.masterGainLabel = $('div.master-gain > span.label-value');
-    this.masterGainRange.setAttribute("max", __constants.MASTER_GAIN_MAX.toString());
+    this.masterGainLabel = $('#master-gain-label').find('> span.label-value');
+    this.masterGainRange.setAttribute("max", __constants.MASTER_GAIN_MAX);
 
     this.instrumentList = $('#instr-list');
     this.instrumentListLabel = this.instrumentList.find('> button');
@@ -66,6 +66,15 @@ Ui.prototype.initDom = function () {
         main.instrument = event.target.getAttribute('data');
     });
 
+    this.envelopeConfigElements = {};
+    let envTypes = ['attack', 'decay', 'sustain', 'release'];
+    for (let ind in envTypes) {
+        let envType = envTypes[ind];
+        this.envelopeConfigElements[envType + 'Label'] = $('#envelope-' + envType + '-label').find('> span.label-value');
+        this.envelopeConfigElements[envType + 'Range'] = document.getElementById('envelope-' + envType + '-range');
+        this.updateEnvelopeConfig(__config.envelope[envType], envType);
+    }
+
     this.bpmRange = document.getElementById('bpm-range');
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
     this.muteButton = document.getElementById("mute-btn");
@@ -75,7 +84,7 @@ Ui.prototype.initDom = function () {
     convertToProgressBar(this.envelopeGainRange, '#4a4');
     this.rmsLabel = $('#rms-label').find('> span.label-value');
     this.rmsRange = document.getElementById("rms-range");
-    convertToProgressBar(this.rmsRange, ['#4a4', '#ff4', '#f44'], [50,80,100]);
+    convertToProgressBar(this.rmsRange, ['#4a4', '#ff4', '#f44'], [50, 80, 100]);
 
     this.noteInfoNoteRange = document.getElementById("note-info-note-range");
     this.noteInfoFreq = $('div.freq > span.label-value');
@@ -96,10 +105,10 @@ Ui.prototype.initDom = function () {
         main.gain[n] = self.noteInfoGainRange.value;
     };
 
-	var stateTitle = document.getElementById('state-container').getElementsByClassName('container-title')[0];
-	stateTitle.onclick = function () {
-		$('#state-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-	};
+    var stateTitle = document.getElementById('state-container').getElementsByClassName('container-title')[0];
+    stateTitle.onclick = function () {
+        $('#state-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
+    };
 
     var insTitle = document.getElementById('instr-container').getElementsByClassName('container-title')[0];
     insTitle.onclick = function () {
@@ -121,7 +130,7 @@ Ui.prototype.initDom = function () {
     });
 
     this.oscCanvas = document.getElementById('oscilloscope-wrapper').firstElementChild;
-    this.keyboardContainer = document.getElementById("keyboard");
+    this.keyboardContainer = document.getElementById("keyboard-keys");
 
     $("#keyboard-up").attachDragger($("#keyboard"));
 
@@ -137,20 +146,18 @@ Ui.prototype.showNav = function (nav) {
 Ui.prototype.closeNav = function () {
 };
 
-Ui.prototype.updateEnvelopeConfig = function() {
-    let gain = main.sound.enveloper.getGain();
-    if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;
-	this.envelopeGainRange.value = gain;
-    this.envelopeGainRange.onchange();
-	this.envelopeGainLabel.text(gain.toFixed(3));
+Ui.prototype.updateEnvelopeConfig = function (value, type) {
+    //if (floatEqual(value, __config.envelope[type], 1e-2)) return;
+    this.envelopeConfigElements[type + 'Range'].value = value;
+    this.envelopeConfigElements[type + 'Label'].text(value.toFixed());
 };
 
-Ui.prototype.updateEnvelopeGain = function() {
+Ui.prototype.updateEnvelopeGain = function () {
     let gain = main.sound.enveloper.getGain();
     if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;
-	this.envelopeGainRange.value = gain;
+    this.envelopeGainRange.value = gain;
     this.envelopeGainRange.onchange();
-	this.envelopeGainLabel.text(gain.toFixed(3));
+    this.envelopeGainLabel.text(gain.toFixed(3));
 };
 
 Ui.prototype.updateRms = function () {

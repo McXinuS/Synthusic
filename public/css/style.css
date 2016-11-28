@@ -137,6 +137,10 @@
 	height     : 204px;
 }
 
+#keyboard-keys {
+	height: 100%;
+}
+
 .key {
 	position   : relative;
 	border     : 1px solid;

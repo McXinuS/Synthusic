@@ -147,6 +147,7 @@ Main.prototype.reload = function (callback, callbackArgs) {
     callback(callbackArgs);
 
     // TODO remove this hack -_-
+    // ex. emit 'onreload' event
     if (typeof(this.sound) !== 'undefined') {
         this.sound.instrument = __config.instrument;
     }
@@ -267,10 +268,6 @@ Main.prototype.playRandomNote = function () {
     }
 };
 
-Main.prototype.showNav = function (nav) {
-    this.ui.showNav(nav);
-};
-
 Main.prototype.toggleMute = function () {
     if (this.ui.masterGainRange.value > 0) {
         masterGainBeforeMute = this.ui.masterGainRange.value;
@@ -278,10 +275,6 @@ Main.prototype.toggleMute = function () {
     } else {
         this.masterGain = masterGainBeforeMute;
     }
-};
-
-Main.prototype.observeInNoteBox = function (note) {
-    this.ui.noteBox.setObserve(note);
 };
 
 function onSocketMessage(data) {
@@ -306,3 +299,33 @@ function onSocketMessage(data) {
             break;
     }
 }
+
+
+/* UI events */
+
+Main.prototype.observeInNoteBox = function (note) {
+    this.ui.noteBox.setObserve(note);
+};
+
+Main.prototype.showNav = function (nav) {
+    this.ui.showNav(nav);
+};
+
+Main.prototype.updateEnvelopeConfig = function (value, type) {
+    value = parseFloat(value);
+    this.ui.updateEnvelopeConfig(value, type);
+    switch (type){
+        case 'attack':
+            __config.envelope.attack = value;
+            break;
+        case 'decay':
+            __config.envelope.decay = value;
+            break;
+        case 'sustain':
+            __config.envelope.sustain = value;
+            break;
+        case 'release':
+            __config.envelope.release = value;
+            break;
+    }
+};

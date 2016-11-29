@@ -1,10 +1,12 @@
+'use strict';
+
 exports.Server = Server;
 
 // TODO add rooms
 
 var webSocketServer;
 
-WEB_SOCKET_MESSAGE_TYPE = {
+const WEB_SOCKET_MESSAGE_TYPE = {
     play_note: 0,
     stop_note: 1,
     stop: 5,

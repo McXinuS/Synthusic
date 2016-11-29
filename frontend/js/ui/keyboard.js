@@ -15,7 +15,7 @@ function Keyboard(container) {
         key.setAttribute('name', note.fullname);
         key.setAttribute('data-toggle', 'tooltip');
         key.setAttribute('data-placement', 'top');
-        key.setAttribute('title', note.toString());
+        key.setAttribute('title', note.fullname);
 
         key.oncontextmenu = function (e) {
             return false;
@@ -24,7 +24,7 @@ function Keyboard(container) {
             eventNote = __note.getNote(e.target.getAttribute('name'));
 
             if (e.button == 2) {
-                eventKey = document.querySelector(`[name="${eventNote.toString()}"]`);
+                eventKey = document.querySelector(`[name="${eventNote.fullname}"]`);
                 eventKey.classList.add('selected');
             }
             if (e.button != 1) {
@@ -46,7 +46,6 @@ function Keyboard(container) {
     let keyboardOverlay = document.getElementById('keyboard-up');
     keyboardOverlay.style.width = container.scrollWidth + 'px';
     window.addEventListener('resize', function () {
-        console.log()
         keyboardOverlay.style.width = container.scrollWidth + 'px';
     }.bind(this), true);
 }

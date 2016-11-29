@@ -187,7 +187,7 @@ Main.prototype.playNote = function (parameters) {
         });
     }
 
-    console.log(note.name + note.octave + ' is now playing');
+    console.log(note.fullname + ' is now playing');
 };
 
 Main.prototype.stopNote = function (parameters) {
@@ -210,11 +210,10 @@ Main.prototype.stopNote = function (parameters) {
     if (notify) {
         this.socket.send({
             type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note,
-            noteName: note.name,
-            noteOctave: note.octave
+            note: note.fullname
         });
     }
-    console.log(note.name + note.octave + ' has been stopped');
+    console.log(note.fullname + ' has been stopped');
 };
 
 Main.prototype.stop = function (parameters) {

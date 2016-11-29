@@ -87,7 +87,7 @@ function getRandomImageUrl(w, h) {
 }
 
 Oscilloscope.prototype.reload = function () {
-    this.scale = 0.00002;
+    this.scale = 0.00004;
     this.sampleRate = 300;
     this.renderType = this.RENDER_THEORY;
 

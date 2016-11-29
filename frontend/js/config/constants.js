@@ -1,4 +1,3 @@
-
 module.exports = new function () {
     if (typeof(location) !== 'undefined') {
         this.WEB_SOCKET_HOST = location.origin.replace(/^http/, 'ws');
@@ -25,11 +24,13 @@ module.exports = new function () {
                 };
             case 'sawtooth':
                 return function (t) {
-                    return t > 0 ? 2 * (t % 1) - 1 : 2 * (t % 1) + 1;
+                    if (t > 0) return 2 * ((t / 2 / Math.PI) % 1) - 1;
+                    else return 2 * ((t / 2 / Math.PI) % 1) + 1;
                 };
             case 'triangle':
                 return function (t) {
-                    return t > 0 ? 4 * Math.abs(t % 1 - 0.5) - 1 : 4 * Math.abs(t % 1 + 0.5) - 1;
+                    if (t > 0) return 4 * Math.abs((t / 2 / Math.PI) % 1 - 0.5) - 1;
+                    else return 4 * Math.abs((t / 2 / Math.PI) % 1 + 0.5) - 1;
                 };
             default:
                 return Math.sin;

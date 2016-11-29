@@ -13,7 +13,7 @@
 <div id="background"></div>
 
 <div id="topnav" class="collapse in">
-	
+
 	<ul class="navbar">
 		<li>
 			<a onclick="main.showNav('chat')">Chat (todo)</a>
@@ -22,139 +22,131 @@
 			<a onclick="main.showNav('settings')">Settings</a>
 		</li>
 	</ul>
-	
-	<!-- SETTINGS -->
-	
-	<div id="nav_settings" class="container-fluid collapse">
-		<div class="row">
-			
-			<div class="col-sm-4 col-md-4 col-lg-4">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="master-gain-label" class="note-info master-gain">
-							<span class="label-desc">Gain (master)</span>
-							<span class="label-value">Value</span>
-						</div>
-						<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
-							   oninput="main.masterGain = this.value">
-					</li>
-					
-					<li class="list-group-item">
-						<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset
-						</button>
-						<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
-					</li>
-				</ul>
-			</div>
-			
-			<div class="col-sm-3 col-md-3 col-lg-3">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div>
-							<div class="dropdown inline-block" id="instr-list">
-								<button class="btn btn-default dropdown-toggle" type="button"
-										data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-									Instrument <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
-							</div>
-						</div>
-					</li>
-					<li id="oscilloscope-settings" class="list-group-item">
-						<div class="dropdown inline-block" id="osc-render-type-list">
-							<button class="btn btn-default dropdown-toggle" type="button"
-									data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Oscilloscope render type <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
-								<li><a href="#" data="0">Theory</a></li>
-								<li><a href="#" data="1">Live (amplitude)</a></li>
-								<li><a href="#" data="2">Live (frequency)</a></li>
-								<li><a href="#" data="3">Image - work in progress</a></li>
-								<li><a href="#" data="-1">Disable</a></li>
-							</ul>
-						</div>
-					</li>
-				</ul>
-			</div>
-			
-			<div class="col-sm-5 col-md-5 col-lg-5">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<label>Envelope</label>
-						<div class="row">
-							<div class="col-md-3 col-lg-3">
-								<div id="envelope-attack-label">
-									<span class="label-desc">Attack</span>
-									<span class="label-value">Value</span>
-								</div>
-								<input type="range" id="envelope-attack-range" min="0" max="2500" step="10" value="1"
-									   oninput="main.updateEnvelopeConfig(this.value, 'attack')">
-							</div>
-							<div class="col-md-3 col-lg-3">
-								<div id="envelope-decay-label">
-									<span class="label-desc">Decay</span>
-									<span class="label-value">Value</span>
-								</div>
-								<input type="range" id="envelope-decay-range" min="0" max="2500" step="10" value="1"
-									   oninput="main.updateEnvelopeConfig(this.value, 'decay')">
-							</div>
-							<div class="col-md-3 col-lg-3">
-								<div id="envelope-sustain-label">
-									<span class="label-desc">Sustain</span>
-									<span class="label-value">Value</span>
-								</div>
-								<input type="range" id="envelope-sustain-range" min="0" max="1" step="0.01" value="1"
-									   oninput="main.updateEnvelopeConfig(this.value, 'sustain')">
-							</div>
-							<div class="col-md-3 col-lg-3">
-								<div id="envelope-release-label">
-									<span class="label-desc">Release</span>
-									<span class="label-value">Value</span>
-								</div>
-								<input type="range" id="envelope-release-range" min="0" max="2500" step="10" value="1"
-									   oninput="main.updateEnvelopeConfig(this.value, 'release')">
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		
-		</div>
-		
-		<div class="row">
-			<div class="col-sm-4 col-md-4 col-lg-4">
-			
-			</div>
-			
-			<div class="col-sm-4 col-md-4 col-lg-4">
-			
-			</div>
-			
-			<div class="col-sm-4 col-md-4 col-lg-4">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="bpm-label">
-							<span class="label-desc">BPM</span>
-							<span class="label-value">Value</span>
-						</div>
-						<input type="range" id="bpm-range" min="20" max="260" step="0.01"
-							   oninput="main.bpm = this.value;">
-						<button id="random-btn" class="btn btn-default"
-								onclick="main.playRandomNote()">Random note
-						</button>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
 
 </div>
 
+<!-- SETTINGS -->
+
+<div id="nav_settings" class="container-fluid collapse">
+	<div class="row">
+
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="well">
+				<div id="master-gain-label" class="note-info master-gain">
+					<span class="label-desc">Gain (master)</span>
+					<span class="label-value">Value</span>
+				</div>
+				<input type="range" id="master-gain-range" min="0" max="0.5" step="0.01"
+					   oninput="main.masterGain = this.value">
+				<button id="stop-btn" class="btn btn-default" onclick="main.stop({notify: true})">Reset
+				</button>
+				<button id="mute-btn" class="btn btn-default" onclick="main.toggleMute()">Play</button>
+			</div>
+		</div>
+
+		<div class="col-sm-3 col-md-3 col-lg-3">
+			<ul class="list-group">
+				<li class="list-group-item">
+					<div>
+						<div class="dropdown inline-block" id="instr-list">
+							<button class="btn btn-default dropdown-toggle" type="button"
+									data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								Instrument <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="instr-list"></ul>
+						</div>
+					</div>
+				</li>
+				<li id="oscilloscope-settings" class="list-group-item">
+					<div class="dropdown inline-block" id="osc-render-type-list">
+						<button class="btn btn-default dropdown-toggle" type="button"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							Oscilloscope render type <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="osc-render-type-list">
+							<li><a href="#" data="0">Theory</a></li>
+							<li><a href="#" data="1">Live (amplitude)</a></li>
+							<li><a href="#" data="2">Live (frequency)</a></li>
+							<li><a href="#" data="3">Image - work in progress</a></li>
+							<li><a href="#" data="-1">Disable</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="col-sm-5 col-md-5 col-lg-5">
+			<div class="well">
+				<label>Envelope</label>
+				<div class="row">
+					<div class="col-md-3 col-lg-3">
+						<div id="envelope-attack-label">
+							<span class="label-desc">Attack</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="envelope-attack-range" min="0" max="2500" step="10" value="1"
+							   oninput="main.updateEnvelopeConfig(this.value, 'attack')">
+					</div>
+					<div class="col-md-3 col-lg-3">
+						<div id="envelope-decay-label">
+							<span class="label-desc">Decay</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="envelope-decay-range" min="0" max="2500" step="10" value="1"
+							   oninput="main.updateEnvelopeConfig(this.value, 'decay')">
+					</div>
+					<div class="col-md-3 col-lg-3">
+						<div id="envelope-sustain-label">
+							<span class="label-desc">Sustain</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="envelope-sustain-range" min="0" max="1" step="0.01" value="1"
+							   oninput="main.updateEnvelopeConfig(this.value, 'sustain')">
+					</div>
+					<div class="col-md-3 col-lg-3">
+						<div id="envelope-release-label">
+							<span class="label-desc">Release</span>
+							<span class="label-value">Value</span>
+						</div>
+						<input type="range" id="envelope-release-range" min="0" max="2500" step="10" value="1"
+							   oninput="main.updateEnvelopeConfig(this.value, 'release')">
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="col-sm-4 col-md-4 col-lg-4">
+
+		</div>
+
+		<div class="col-sm-4 col-md-4 col-lg-4">
+
+		</div>
+
+		<div class="col-sm-4 col-md-4 col-lg-4">
+			<div class="well">
+				<div id="bpm-label">
+					<span class="label-desc">BPM</span>
+					<span class="label-value">Value</span>
+				</div>
+				<input type="range" id="bpm-range" min="20" max="260" step="0.01"
+					   oninput="main.bpm = this.value;">
+				<button id="random-btn" class="btn btn-default"
+						onclick="main.playRandomNote()">Random note
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="content">
-	
+
 	<!-- SYNTH STATE -->
-	
+
 	<div id="state-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#state-row">
@@ -162,7 +154,7 @@
 				<div id="state-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-		
+
 		<div id="state-row" class="row collapse in">
 			<div class="col-sm-4 col-md-4 col-lg-4">
 				<ul class="list-group">
@@ -210,9 +202,9 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- OSCILLOSCOPE -->
-	
+
 	<div id="oscilloscope" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#oscilloscope-content">
@@ -220,16 +212,16 @@
 				<div id="osc-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-		
+
 		<div id="oscilloscope-content" class="collapse in">
 			<div id="oscilloscope-wrapper">
 				<canvas class="osc-canvas"></canvas>
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- KEYBOARD -->
-	
+
 	<div id="instr-container" class="container container-block">
 		<div class="container-title" data-toggle="collapse"
 			 data-target="#keyboard-up-collapse">
@@ -237,7 +229,7 @@
 				<div id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
 			</h3>
 		</div>
-		
+
 		<div id="keyboard">
 			<div id="keyboard-up-collapse" class="collapse in">
 				<div id="keyboard-up"></div>
@@ -246,9 +238,9 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- MORE INFO -->
-	
+
 	<!--div id="more" class="container panel panel-info">
 		<div class="panel-heading panel-title" data-toggle="collapse" data-target="#more div.panel-body">More info</div>
 		<div id="more-body" class="panel-body collapse in">

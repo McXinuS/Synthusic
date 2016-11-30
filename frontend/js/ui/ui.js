@@ -149,7 +149,11 @@ Ui.prototype.closeNav = function () {
 Ui.prototype.updateEnvelopeConfig = function (value, type) {
     //if (floatEqual(value, __config.envelope[type], 1e-2)) return;
     this.envelopeConfigElements[type + 'Range'].value = value;
-    this.envelopeConfigElements[type + 'Label'].text(value.toFixed());
+    if (type === 'sustain') {
+        this.envelopeConfigElements[type + 'Label'].text(value.toFixed(2));
+    } else {
+        this.envelopeConfigElements[type + 'Label'].text(value.toFixed());
+    }
 };
 
 Ui.prototype.updateEnvelopeGain = function () {

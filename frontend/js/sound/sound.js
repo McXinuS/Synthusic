@@ -1,6 +1,7 @@
 exports.Sound = Sound;
 import Enveloper from './enveloper';
 import Analyser from './analyser';
+import Convolver from './convolver';
 
 const RAMP_STOP_TIME = 50; // time when a note will be stopped (removes click when changing one note to another)
 
@@ -11,20 +12,28 @@ function Sound(audioContext, instrument) {
     this.audioContext = audioContext;
 
     this.analyser = new Analyser(audioContext);
-    this.analyserNode = this.analyser.getAnalyserNode();
-    this.analyserNode.connect(this.audioContext.destination);
+    this.analyser.connect(this.audioContext.destination);
 
     this.masterGainNode = this.audioContext.createGain();
-    this.masterGainNode.connect(this.analyserNode);
+    this.masterGainNode.connect(this.analyser.getAnalyserNode());
 
     this.enveloper = new Enveloper(audioContext);
     this.enveloper.onFinished = function () {
-        this.stop()
+        this.stop();
     }.bind(this);
-    this.enveloperGainNode = this.enveloper.getGainNode();
-    this.enveloperGainNode.connect(this.masterGainNode);
+    this.enveloper.connect(this.masterGainNode);
 
-    // note that awaiting to be stopped when enveloper is faded
+    this._inputNode = this.enveloper.getGainNode();
+
+    /*
+    TODO reverb
+    this.convolver = new Convolver(audioContext);
+    this.convolver.connect(this.enveloper.getGainNode());
+
+    this._inputNode = this.convolver.getConvolverNode();
+    */
+
+    // note that will be stopped when enveloper is faded
     this.noteToStop = undefined;
 }
 
@@ -34,7 +43,7 @@ Sound.prototype.createOscillators = function (note) {
 	let osc;
     for (let i = 0; i < this.instrument.oscillators.length; i++) {
 		let gainNode = audioContext.createGain();
-        gainNode.connect(this.enveloperGainNode);
+        gainNode.connect(this._inputNode);
         gainNode.gain.value = 0;
 
         osc = audioContext.createOscillator();

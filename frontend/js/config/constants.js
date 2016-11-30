@@ -71,6 +71,8 @@ module.exports = new function () {
         }
     };
 
+    this.ENVELOPE_PROPERTIES = ['attack', 'decay', 'sustain', 'release'];
+
     // will be translated to a Note object during compilation
     this.NOTE_START = ['C', 2];
     this.NOTE_END = ['B', 5];

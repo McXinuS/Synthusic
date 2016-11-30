@@ -38,8 +38,8 @@ function convertToProgressBar(slider, colors, colorStops) {
 
     window.addEventListener('resize', function () {
         let style = window.getComputedStyle(div.parentNode, null);
-        canvas.setAttribute('width',
-            div.parentNode.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight));
+        w = div.parentNode.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+        canvas.setAttribute('width', w);
     }, true);
 
     slider.onchange = function () {

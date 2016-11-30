@@ -10,23 +10,23 @@ function Enveloper(audioCtx) {
     Object.defineProperties(this, {
         _attack: {
             get: () => {
-                return __config.envelope.attack;
+                return main.envelope.attack;
             }
         },
         _decay: {
             get: () => {
-                return __config.envelope.decay;
+                return main.envelope.decay;
             }
         },
         _sustain: {
             get: () => {
                 // restrict sustain in [0;1] interval
-                return Math.max(0, Math.min(__config.envelope.sustain, 1));
+                return Math.max(0, Math.min(main.envelope.sustain, 1));
             }
         },
         _release: {
             get: () => {
-                return __config.envelope.release;
+                return main.envelope.release;
             }
         },
     });
@@ -40,6 +40,10 @@ function Enveloper(audioCtx) {
 
     this.onFinished = undefined;
 }
+
+Enveloper.prototype.connect = function (destination) {
+    this._gainNode.connect(destination);
+};
 
 Enveloper.prototype.updateState = function (type) {
     switch (type) {

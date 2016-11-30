@@ -67,13 +67,12 @@ Ui.prototype.initDom = function () {
     });
 
     this.envelopeConfigElements = {};
-    let envTypes = ['attack', 'decay', 'sustain', 'release'];
-    for (let ind in envTypes) {
-        let envType = envTypes[ind];
+    for (let ind in __constants.ENVELOPE_PROPERTIES) {
+        let envType = __constants.ENVELOPE_PROPERTIES[ind];
         this.envelopeConfigElements[envType + 'Label'] = $('#envelope-' + envType + '-label').find('> span.label-value');
         this.envelopeConfigElements[envType + 'Range'] = document.getElementById('envelope-' + envType + '-range');
-        this.updateEnvelopeConfig(__config.envelope[envType], envType);
     }
+    //this.updateEnvelopeConfig();
 
     this.bpmRange = document.getElementById('bpm-range');
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
@@ -147,13 +146,21 @@ Ui.prototype.closeNav = function () {
 };
 
 Ui.prototype.updateEnvelopeConfig = function (value, type) {
-    //if (floatEqual(value, __config.envelope[type], 1e-2)) return;
-    this.envelopeConfigElements[type + 'Range'].value = value;
-    if (type === 'sustain') {
-        this.envelopeConfigElements[type + 'Label'].text(value.toFixed(2));
+    if (value) {
+        this.envelopeConfigElements[type + 'Range'].value = value;
+        if (type === 'sustain') {
+            this.envelopeConfigElements[type + 'Label'].text(value.toFixed(2));
+        } else {
+            this.envelopeConfigElements[type + 'Label'].text(value.toFixed());
+        }
     } else {
-        this.envelopeConfigElements[type + 'Label'].text(value.toFixed());
+        // update all fields if called w/o parameters
+        for (let ind in __constants.ENVELOPE_PROPERTIES) {
+            let type = __constants.ENVELOPE_PROPERTIES[ind];
+            this.updateEnvelopeConfig(main.envelope[type], type);
+        }
     }
+
 };
 
 Ui.prototype.updateEnvelopeGain = function () {
@@ -186,6 +193,7 @@ Ui.prototype.updateMasterGain = function (value) {
 Ui.prototype.updateInstrument = function (value) {
     this.instrumentListLabel.html(`Instrument: ${value.name} <span class="caret"></span>`);
     updateDropdownSelection(value.id, this.instrumentListItems, 'data');
+    this.updateEnvelopeConfig();
 };
 
 Ui.prototype.updateOscilloscopeRenderType = function (value) {

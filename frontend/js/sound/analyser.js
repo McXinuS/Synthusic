@@ -6,6 +6,10 @@ function Analyser(audioCtx) {
     this._analyserNode.fftSize = __constants.ANALYZER_FFT_SIZE;
 }
 
+Analyser.prototype.connect = function (destination) {
+    this._analyserNode.connect(destination);
+};
+
 Analyser.prototype.getAnalyserNode = function () {
     return this._analyserNode;
 };

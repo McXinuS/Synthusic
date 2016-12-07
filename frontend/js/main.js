@@ -11,8 +11,6 @@ var _main = new Main();
 export default _main;
 module.exports = _main;
 
-var masterGainBeforeMute;
-
 
 function Main() {
 
@@ -87,6 +85,11 @@ function Main() {
                 }
             }
         },
+        envelope: {
+            get: () => {
+                return self.instrument.envelope;
+            }
+        },
         oscilloscopeRenderType: {
             get: () => {
                 return self.ui.oscilloscope.renderType;
@@ -124,8 +127,9 @@ Main.prototype.init = function () {
 
     this.instrument = 11;
     this.bpm = 60;
+    this.masterGainBeforeMute = 0;
 
-    var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
     window.audioContext = audioContext;
     this.sound = new Sound(audioContext, this.instrument);
 
@@ -269,10 +273,10 @@ Main.prototype.playRandomNote = function () {
 
 Main.prototype.toggleMute = function () {
     if (this.ui.masterGainRange.value > 0) {
-        masterGainBeforeMute = this.ui.masterGainRange.value;
+        this.masterGainBeforeMute = this.ui.masterGainRange.value;
         this.masterGain = 0;
     } else {
-        this.masterGain = masterGainBeforeMute;
+        this.masterGain = this.masterGainBeforeMute;
     }
 };
 
@@ -315,16 +319,16 @@ Main.prototype.updateEnvelopeConfig = function (value, type) {
     this.ui.updateEnvelopeConfig(value, type);
     switch (type){
         case 'attack':
-            __config.envelope.attack = value;
+            main.envelope.attack = value;
             break;
         case 'decay':
-            __config.envelope.decay = value;
+            main.envelope.decay = value;
             break;
         case 'sustain':
-            __config.envelope.sustain = value;
+            main.envelope.sustain = value;
             break;
         case 'release':
-            __config.envelope.release = value;
+            main.envelope.release = value;
             break;
     }
 };

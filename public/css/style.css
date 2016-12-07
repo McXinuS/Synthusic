@@ -123,7 +123,6 @@
 }
 
 #keyboard {
-	height        : 504px;
 	margin-bottom : 15px;
 	border        : 5px solid #582E16;
 	max-width     : 100%;
@@ -137,11 +136,12 @@
 #keyboard-up {
 	background : url(../img/piano-up.jpg);
 	cursor     : pointer;
-	height     : 204px;
+	height     : 94px;
 }
 
 #keyboard-keys {
-	height : 100%;
+	height    : 100%;
+	font-size : 0;
 }
 
 .key {
@@ -153,24 +153,19 @@
 }
 
 .key-white {
-	width            : 6%; /*17 white keys on the screen*/
+	/*6.6 white keys on the screen on small screens*/
+	width            : 15%;
 	background-color : #fff;
 	height           : 300px;
 	z-index          : 1;
 }
 
-@media (max-width : 991px) {
-	.key-white {
-		width : 10%; /*10 white keys on the screen on small devices*/
-	}
-}
-
 .key-black {
-	width            : 36px;
+	width            : 10%;
+	margin           : 0 -5%;
 	vertical-align   : top;
 	background-color : #000;
 	height           : 200px;
-	margin           : 0 -18px;
 	z-index          : 2;
 	box-shadow       : 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -184,6 +179,30 @@
 	position   : absolute;
 	transform  : skewX(-10deg);
 	box-shadow : 0 0 50px 10px #000;
+}
+
+@media (min-width : 768px) {
+	.key-white {
+		/*10 white keys on the screen*/
+		width : 10%;
+	}
+
+	.key-black {
+		width  : 6%;
+		margin : 0 -3%;
+	}
+}
+
+@media (min-width : 992px) {
+	.key-white {
+		/*17 white keys on the screen*/
+		width : 6%;
+	}
+
+	.key-black {
+		width  : 4%;
+		margin : 0 -2%;
+	}
 }
 
 .playing {

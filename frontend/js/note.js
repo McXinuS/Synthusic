@@ -122,8 +122,12 @@ function parseNoteFullName(fullname) {
         throw new Error('Wrong full name length.');
     }
 
+    if (!['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].includes(res[0][0].toLocaleLowerCase()))
+        throw new Error(`Wrong note name: ${res[0][0]}.`);
+    if (res[0].length == 2 && (res[0][1] != __constants.SIGN_SHARP && res[0][1] != __constants.SIGN_FLAT))
+        throw new Error(`Wrong accidental: ${res[0][1]}.`);
     if (isNaN(res[1]))
-        throw new Error('Octave must be a number.');
+        throw new Error(`Octave must be a number: ${res[1]}.`);
 
     return res;
 }

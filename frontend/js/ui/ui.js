@@ -1,4 +1,4 @@
-import {convertToProgressBar, attachDragger, updateDropdownSelection, floatEqual} from './ext.js'
+import {convertToProgressBar, attachDragger, updateDropdownSelection, floatEqual} from '../ext.js'
 import {NoteBox} from './notebox.js'
 import {Oscilloscope} from "./oscilloscope.js";
 import {Keyboard}     from "./keyboard.js";
@@ -6,7 +6,6 @@ import {PageBackgroundDrawer}     from "./page_background.js";
 exports.Ui = Ui;
 
 function Ui() {
-
     window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
         window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     $.fn.attachDragger = attachDragger;
@@ -100,7 +99,7 @@ Ui.prototype.initDom = function () {
     });
 
     this.noteInfoGainRange.oninput = function () {
-        var n = __note.getNote(self.noteInfoNoteRange.value);
+        var n = __note.getNote(parseFloat(self.noteInfoNoteRange.value));
         main.gain[n] = self.noteInfoGainRange.value;
     };
 
@@ -146,7 +145,7 @@ Ui.prototype.closeNav = function () {
 };
 
 Ui.prototype.updateEnvelopeConfig = function (value, type) {
-    if (value) {
+    if (typeof(value) !== 'undefined') {
         this.envelopeConfigElements[type + 'Range'].value = value;
         if (type === 'sustain') {
             this.envelopeConfigElements[type + 'Label'].text(value.toFixed(2));

@@ -1,4 +1,4 @@
-// TODO recolor stars on note play
+// TODO use canvas
 
 //import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from './ext.js'
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 	<title>Virtual Keyboard</title>
 	<link rel="shortcut icon" href="img/favicon.png"/>
 	<link rel="stylesheet" href="css/bootstrap.min.css">
@@ -220,25 +220,6 @@
 		</div>
 	</div>
 
-	<!-- KEYBOARD -->
-
-	<div id="instr-container" class="container container-block">
-		<div class="container-title" data-toggle="collapse"
-			 data-target="#keyboard-up-collapse">
-			<h3>Keyboard
-				<div id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
-			</h3>
-		</div>
-
-		<div id="keyboard">
-			<div id="keyboard-up-collapse" class="collapse in">
-				<div id="keyboard-up"></div>
-			</div>
-			<div id="keyboard-keys">
-			</div>
-		</div>
-	</div>
-
 	<!-- MORE INFO -->
 
 	<!--div id="more" class="container panel panel-info">
@@ -253,5 +234,24 @@
 			</ul>
 		</div>
 	</div-->
+</div>
+
+<!-- KEYBOARD -->
+
+<div id="instr-container" class="container-fluid">
+	<div class="container-title" data-toggle="collapse"
+		 data-target="#keyboard-up-collapse">
+		<h3>Keyboard
+			<div id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
+		</h3>
+	</div>
+
+	<div id="keyboard">
+		<div id="keyboard-up-collapse" class="collapse in">
+			<div id="keyboard-up"></div>
+		</div>
+		<div id="keyboard-keys">
+		</div>
+	</div>
 </div>
 </body>

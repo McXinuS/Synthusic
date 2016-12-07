@@ -1,4 +1,4 @@
-import {floatEqual} from './ext.js'
+import {floatEqual} from '../ext.js'
 
 exports.NoteBox = NoteBox;
 

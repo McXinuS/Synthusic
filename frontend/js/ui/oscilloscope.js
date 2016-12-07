@@ -1,4 +1,4 @@
-import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from './ext.js'
+import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from '../ext.js'
 
 exports.Oscilloscope = Oscilloscope;
 

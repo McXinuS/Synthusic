@@ -61,7 +61,7 @@
 	display         : block;
 	padding         : 10px 15px 11px 15px;
 	letter-spacing  : 1px;
-	transition      : background-color .3s, color .15s, box-shadow .3s, opacity 0.3s, filter 0.3s;
+	transition      : all .3s;
 }
 
 .navbar li a:hover {
@@ -109,17 +109,17 @@
 	color      : #ddd;
 }
 
-/* Keyboard */
-
-#instr-container {
-	background : url(../img/woodtexture8.jpg);
-}
-
 #note-info {
 	min-width        : 100px;
 	width            : 100%;
 	background-color : rgba(165, 124, 94, 0.7);
 	border           : 1px solid rgb(101, 64, 38);
+}
+
+/* Keyboard */
+
+#instr-container {
+	background : url(../img/woodtexture8.jpg);
 }
 
 #keyboard {
@@ -140,8 +140,9 @@
 }
 
 #keyboard-keys {
-	height    : 100%;
-	font-size : 0;
+	height     : 300px;
+	font-size  : 0;
+	transition : height .5s;
 }
 
 .key {
@@ -156,7 +157,7 @@
 	/*6.6 white keys on the screen on small screens*/
 	width            : 15%;
 	background-color : #fff;
-	height           : 300px;
+	height           : 100%;
 	z-index          : 1;
 }
 
@@ -165,7 +166,7 @@
 	margin           : 0 -5%;
 	vertical-align   : top;
 	background-color : #000;
-	height           : 200px;
+	height           : 65%;
 	z-index          : 2;
 	box-shadow       : 0 0 10px rgba(0, 0, 0, 0.5);
 }
@@ -217,12 +218,8 @@
 	background-color : #ccc;
 }
 
-#keyboard.keyboard-mini {
+.keyboard-mini #keyboard-keys {
 	height : 120px;
-}
-
-.keyboard-mini .key-white {
-	height : 100%;
 }
 
 .keyboard-mini .key-black {

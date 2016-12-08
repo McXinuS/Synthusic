@@ -136,7 +136,9 @@ Main.prototype.init = function () {
     this.masterGain = __constants.MASTER_GAIN_MAX / 2;
 
     this.socket = new Socket(__constants.WEB_SOCKET_HOST);
-    this.socket.onmessage = onSocketMessage;
+    this.socket.onmessage = onSocketMessage.bind(this);
+    this.socket.onopen = onSocketOpen.bind(this);
+    this.socket.connect();
 
 };
 
@@ -287,20 +289,25 @@ function onSocketMessage(data) {
         case __constants.WEB_SOCKET_MESSAGE_TYPE.play_note:
             let name = data.note;
             let note = __note.getNote(name);
-            main.playNote({note: note, notify: false});
+            this.playNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note:
             name = data.note;
             note = __note.getNote(name);
-            main.stopNote({note: note, notify: false});
+            this.stopNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop:
-            main.stop({notify: false});
+            this.stop({notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
-            main.instrument = data.instrumentName;
+            this.instrument = data.instrumentName;
             break;
     }
+}
+
+function onSocketOpen() {
+    // get initial data
+    this.socket.send({type: __constants.WEB_SOCKET_MESSAGE_TYPE.get_state});
 }
 
 
@@ -317,7 +324,7 @@ Main.prototype.showNav = function (nav) {
 Main.prototype.updateEnvelopeConfig = function (value, type) {
     value = parseFloat(value);
     this.ui.updateEnvelopeConfig(value, type);
-    switch (type){
+    switch (type) {
         case 'attack':
             main.envelope.attack = value;
             break;

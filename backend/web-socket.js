@@ -65,6 +65,12 @@ function broadcast(message, sender) {
     });
 }
 
+function send(message, reciever) {
+    if (typeof(message) !== 'string') message = JSON.stringify(message);
+
+    reciever.ws.send(message);
+}
+
 
 let messageHandlers = [processGeneralMessage, processServiceMessage];
 
@@ -111,7 +117,7 @@ function processGeneralMessage(data, sender) {
             broadcast(data, sender);
             return 'type: stop';
         case WEB_SOCKET_MESSAGE_TYPE.get_state:
-            sender.ws.send(JSON.stringify(stateObject));
+            send(stateObject, sender);
             return 'type: get_state';
     }
 
@@ -121,7 +127,8 @@ function processGeneralMessage(data, sender) {
 function processServiceMessage(data, sender) {
     switch (data.type) {
         case WEB_SOCKET_MESSAGE_TYPE.ping:
-            sender.ws.send(`type: ${WEB_SOCKET_MESSAGE_TYPE.pong}`);
+            send({type: WEB_SOCKET_MESSAGE_TYPE.pong}, sender);
+            return 'type: ping';
     }
 
     return false;

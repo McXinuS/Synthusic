@@ -1,62 +1,70 @@
 exports.Socket = Socket;
 
 function Socket(host) {
-	var self = this;
+    this.onmessage = null;
+    this.onopen = null;
 
-	this.onmessage = null;
-	this.reconnectTime = 10000;
+    this.SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
+    this.RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
+    this.PING_TIME = 30000; // interval of ping of server to keep web socket connection
 
-	this.host = host;
-	this.socket = connect();
-
-	function connect() {
-		var ws = new WebSocket(self.host);
-
-		ws.onconnect = function () {
-			console.warn(`Connected to ${self.host}`);
-		};
-
-		ws.onopen = function () {
-			// get initial data
-			this.send(JSON.stringify({
-				type: __constants.WEB_SOCKET_MESSAGE_TYPE.get_state
-			}));
-		};
-
-		ws.onmessage = function (event) {
-			var data = JSON.parse(event.data);
-			if (self.onmessage != null) {
-				self.onmessage(data);
-			}
-		};
-
-		ws.onclose = function () {
-			console.warn(`Socket is closed. Next attempt to reconnect in  ${self.reconnectTime / 1000} seconds`);
-			setTimeout(function () {
-				self.socket = connect();
-			}, self.reconnectTime)
-		};
-
-		return ws;
-	}
-
-	this.waitForSocketConnection = function (socket, callback) {
-		if (socket.readyState === 1) {
-			if (callback != null) {
-				callback(socket);
-			}
-
-		} else {
-			setTimeout(function () {
-				self.waitForSocketConnection(socket, callback);
-			}, 1000);
-		}
-	}
+    this.host = host;
 }
 
+Socket.prototype.connect = function () {
+    var ws = new WebSocket(this.host);
+
+    var self = this;
+
+    var pingIntervalId;
+    ws.onopen = function () {
+        console.info(`Connected to server`);
+        pingIntervalId = setInterval(function() {
+            self.sendPing();
+        }, self.PING_TIME);
+        if (self.onopen != null) {
+            self.onopen();
+        }
+    };
+
+    ws.onmessage = function (event) {
+        var data = JSON.parse(event.data);
+        if (self.onmessage != null) {
+            self.onmessage(data);
+        }
+    };
+
+    ws.onclose = function () {
+        console.warn(`Socket is closed. Next attempt to reconnect in ${self.RECONNECT_TIME / 1000} seconds`);
+        clearTimeout(pingIntervalId);
+        setTimeout(function () {
+            self.connect();
+        }, self.RECONNECT_TIME)
+    };
+
+    this.socket = ws;
+};
+
 Socket.prototype.send = function (parameters) {
-	this.waitForSocketConnection(this.socket, function (socket) {
-		var message = JSON.stringify(parameters);
-		socket.send(message);
-	});
+    this.waitForSocketConnection(function (socket) {
+        var message = JSON.stringify(parameters);
+        socket.send(message);
+    });
+};
+
+/**
+ * Wait for socket state to be 'ready' and pass the socket into a callback.
+ */
+Socket.prototype.waitForSocketConnection = function (callback) {
+    if (this.socket.readyState === 1) {
+        if (callback != null) callback(this.socket);
+    } else {
+        setTimeout(function () {
+            this.waitForSocketConnection(this.socket, callback);
+        }.bind(this), this.SEND_WAIT_TIME);
+    }
+};
+
+Socket.prototype.sendPing = function () {
+    this.send({type: __constants.WEB_SOCKET_MESSAGE_TYPE.ping});
 };

@@ -4,8 +4,7 @@
 exports.Keyboard = Keyboard;
 
 function Keyboard(container) {
-    let eventNote;
-    let eventKey;
+    let mouseDown = false;
 
     for (let i = 0; i < __constants.NOTES_COUNT; i++) {
         let note = __note.getNote(i);
@@ -17,27 +16,59 @@ function Keyboard(container) {
         key.setAttribute('data-placement', 'top');
         key.setAttribute('title', note.fullname);
 
-        key.oncontextmenu = function (e) {
-            return false;
-        };
+        let eventNote = __note.getNote(key.getAttribute('name'));
+
         key.onmousedown = function (e) {
-            eventNote = __note.getNote(e.target.getAttribute('name'));
+            mouseDown = true;
 
             if (e.button == 2) {
-                eventKey = document.querySelector(`[name="${eventNote.fullname}"]`);
-                eventKey.classList.add('selected');
+                key.classList.add('selected');
             }
-            if (e.button != 1) {
+
+            if (e.button == 0 || e.button == 2) {
                 main.playing[eventNote] ?
                     main.stopNote({note: eventNote}) : main.playNote({note: eventNote});
             }
+
+            main.observeInNoteBox(eventNote);
+
+            if (e.button == 1) {
+                return false;
+            }
+        };
+
+        key.onmouseenter = function (e) {
+            if (!mouseDown) return;
+
+            if (e.button == 0 || e.button == 2) {
+                main.playNote({note: eventNote});
+            }
+
+            if (e.button == 2) {
+                key.classList.add('selected');
+            }
+
             main.observeInNoteBox(eventNote);
         };
+
+        key.onmouseleave = function (e) {
+            if (!mouseDown) return;
+
+            if (e.button == 0 || e.button == 2) {
+                main.stopNote({note: eventNote});
+            }
+        };
+
         key.onmouseup = function (e) {
+            mouseDown = false;
+
             if (e.button == 2) {
                 main.stopNote({note: eventNote});
-                eventKey.classList.remove('selected');
             }
+        };
+
+        key.oncontextmenu = function (e) {
+            return false;
         };
 
         container.appendChild(key);
@@ -60,13 +91,18 @@ Keyboard.prototype.destroy = function () {
 // set highlight on key
 Keyboard.prototype.highlightOn = function (note) {
     let el = document.querySelector(`[name="${note.fullname}"]`);
-    if (el) el.classList.add('playing');
+    if (el && !el.classList.contains('selected')) {
+        el.classList.add('playing');
+    }
 };
 
 // remove highlight on key
 Keyboard.prototype.highlightOff = function (note) {
     let el = document.querySelector(`[name="${note.fullname}"]`);
-    if (el) el.classList.remove('playing');
+    if (el) {
+        el.classList.remove('playing');
+        el.classList.remove('selected');
+    }
 };
 
 // remove all highlights

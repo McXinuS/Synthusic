@@ -99,9 +99,6 @@ Enveloper.prototype.getState = function () {
 Enveloper.prototype.getGain = function () {
     return this._gainNode.gain.value;
 };
-Enveloper.prototype.getGain = function () {
-	return this._gainNode.gain.value;
-};
 
 // converts time from millis to seconds and adds it to the current time
 Enveloper.prototype.getRampTime = function (time) {

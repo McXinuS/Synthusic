@@ -3,6 +3,7 @@ import {NoteBox} from './notebox.js'
 import {Oscilloscope} from "./oscilloscope.js";
 import {Keyboard}     from "./keyboard.js";
 import {PageBackgroundDrawer}     from "./page_background.js";
+import {PannerField} from "./panner-field";
 exports.Ui = Ui;
 
 function Ui() {
@@ -46,6 +47,7 @@ Ui.prototype.initDom = function () {
     this.masterGainRange = document.getElementById('master-gain-range');
     this.masterGainLabel = $('#master-gain-label').find('> span.label-value');
     this.masterGainRange.setAttribute("max", __constants.MASTER_GAIN_MAX);
+    this.muteButton = document.getElementById("mute-btn");
 
     this.instrumentList = $('#instr-list');
     this.instrumentListLabel = this.instrumentList.find('> button');
@@ -75,7 +77,9 @@ Ui.prototype.initDom = function () {
 
     this.bpmRange = document.getElementById('bpm-range');
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
-    this.muteButton = document.getElementById("mute-btn");
+
+    let pannerCanvas = document.getElementById('panner-field');
+    this.pannerField = new PannerField(pannerCanvas);
 
     this.envelopeGainLabel = $('#envelope-label').find('> span.label-value');
     this.envelopeGainRange = document.getElementById("envelope-gain-range");

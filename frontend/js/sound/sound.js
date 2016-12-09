@@ -2,6 +2,7 @@ exports.Sound = Sound;
 import Enveloper from './enveloper';
 import Analyser from './analyser';
 import Convolver from './convolver';
+import Panner from "./panner";
 
 const RAMP_STOP_TIME = 50; // time when a note will be stopped (removes click when changing one note to another)
 
@@ -17,13 +18,15 @@ function Sound(audioContext, instrument) {
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.analyser.getAnalyserNode());
 
+    this.panner = new Panner(audioContext);
+    this.panner.connect(this.masterGainNode);
+    this.panner.connectToField(main.ui.pannerField);
+
     this.enveloper = new Enveloper(audioContext);
     this.enveloper.onFinished = function () {
         this.stop();
     }.bind(this);
-    this.enveloper.connect(this.masterGainNode);
-
-    this._inputNode = this.enveloper.getGainNode();
+    this.enveloper.connect(this.panner.getPannerNode());
 
     /*
      TODO reverb
@@ -32,6 +35,8 @@ function Sound(audioContext, instrument) {
 
      this._inputNode = this.convolver.getConvolverNode();
      */
+
+    this._inputNode = this.enveloper.getGainNode();
 
     // note that will be stopped when enveloper is faded
     this.noteToStop = undefined;

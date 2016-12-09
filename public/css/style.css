@@ -102,6 +102,10 @@
 	background : #888;
 }
 
+#panner-field {
+	border : #eee solid;
+}
+
 /* State */
 
 #state-container {

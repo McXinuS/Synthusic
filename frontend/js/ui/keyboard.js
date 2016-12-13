@@ -5,6 +5,7 @@ exports.Keyboard = Keyboard;
 
 function Keyboard(container) {
     let mouseDown = false;
+    let mouseLeaveTimeout = -1;
 
     for (let i = 0; i < __constants.NOTES_COUNT; i++) {
         let note = __note.getNote(i);
@@ -40,31 +41,22 @@ function Keyboard(container) {
         key.onmouseenter = function (e) {
             if (!mouseDown) return;
 
-            if (e.button == 0 || e.button == 2) {
-                main.playNote({note: eventNote});
-            }
-
-            if (e.button == 2) {
-                key.classList.add('selected');
-            }
-
+            clearTimeout(mouseLeaveTimeout);
+            if (e.button == 0 || e.button == 2) main.playNote({note: eventNote});
+            if (e.button == 2) key.classList.add('selected');
             main.observeInNoteBox(eventNote);
         };
 
         key.onmouseleave = function (e) {
             if (!mouseDown) return;
 
-            if (e.button == 0 || e.button == 2) {
-                main.stopNote({note: eventNote});
-            }
+            if (e.button == 0 || e.button == 2) main.stopNote({note: eventNote});
+            mouseLeaveTimeout = setTimeout(()=>{mouseDown = false;}, 250);
         };
 
         key.onmouseup = function (e) {
             mouseDown = false;
-
-            if (e.button == 2) {
-                main.stopNote({note: eventNote});
-            }
+            if (e.button == 2) main.stopNote({note: eventNote});
         };
 
         key.oncontextmenu = function (e) {

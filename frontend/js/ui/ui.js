@@ -118,11 +118,6 @@ Ui.prototype.initDom = function () {
         $('#instr-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
     };
 
-    var oscTitle = document.getElementById('oscilloscope').getElementsByClassName('container-title')[0];
-    oscTitle.onclick = function () {
-        $('#osc-arrow').toggleClass('glyphicon-collapse-up glyphicon-collapse-down');
-    };
-
     this.renderTypeList = $('#osc-render-type-list');
     this.renderTypeListLabel = this.renderTypeList.find('> button');
     this.renderTypeListDropdown = this.renderTypeList.find("> .dropdown-menu");

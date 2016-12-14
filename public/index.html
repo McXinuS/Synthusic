@@ -85,7 +85,8 @@
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="envelope-attack-range" min="0" max="2500" step="10" value="1"
-							   oninput="main.updateEnvelopeConfig(this.value, 'attack')">
+							   oninput="main.updateEnvelopeConfig(this.value, 'attack')"
+							   onchange="// TODO main.updateEnvelopeConfig(this.value, 'attack', true)">
 					</div>
 					<div class="col-md-3 col-lg-3">
 						<div id="envelope-decay-label">
@@ -93,7 +94,8 @@
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="envelope-decay-range" min="0" max="2500" step="10" value="1"
-							   oninput="main.updateEnvelopeConfig(this.value, 'decay')">
+							   oninput="main.updateEnvelopeConfig(this.value, 'decay')"
+							   onchange="main.updateEnvelopeConfig(this.value, 'decay', true)">
 					</div>
 					<div class="col-md-3 col-lg-3">
 						<div id="envelope-sustain-label">
@@ -101,7 +103,8 @@
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="envelope-sustain-range" min="0" max="1" step="0.01" value="1"
-							   oninput="main.updateEnvelopeConfig(this.value, 'sustain')">
+							   oninput="main.updateEnvelopeConfig(this.value, 'sustain')"
+							   onchange="main.updateEnvelopeConfig(this.value, 'sustain', true)">
 					</div>
 					<div class="col-md-3 col-lg-3">
 						<div id="envelope-release-label">
@@ -109,7 +112,8 @@
 							<span class="label-value">Value</span>
 						</div>
 						<input type="range" id="envelope-release-range" min="0" max="2500" step="10" value="1"
-							   oninput="main.updateEnvelopeConfig(this.value, 'release')">
+							   oninput="main.updateEnvelopeConfig(this.value, 'release')"
+							   onchange="main.updateEnvelopeConfig(this.value, 'release', true)">
 					</div>
 				</div>
 			</div>
@@ -175,47 +179,29 @@
 				</ul>
 			</div>
 			<div class="col-sm-4 col-md-4 col-lg-4">
+				<div id="note-info" class="container-ru-corner well">
+					<label for="note-info-note-range">Current note</label>
+					<div class="note-info note">
+						<span class="label-desc">Note:</span>
+						<span class="label-value">Select a note</span>
+					</div>
+					<div class="note-info freq">
+						<span class="label-desc">Frequency:</span>
+						<span class="label-value">Select a note</span>
+					</div>
+					<input type="range" id="note-info-note-range" step="1" disabled>
+					<label for="note-info-gain-range">Gain</label>
+					<div class="note-info gain">
+						<span class="label-desc">Gain:</span>
+						<span class="label-value">Select a note</span>
+					</div>
+					<input type="range" id="note-info-gain-range" min="0" max="1" step="0.01" disabled>
+				</div>
 			</div>
 			<div class="col-sm-4 col-md-4 col-lg-4">
-				<ul class="list-group">
-					<li class="list-group-item">
-						<div id="note-info" class="container-ru-corner well">
-							<label for="note-info-note-range">Current note</label>
-							<div class="note-info note">
-								<span class="label-desc">Note:</span>
-								<span class="label-value">Select a note</span>
-							</div>
-							<div class="note-info freq">
-								<span class="label-desc">Frequency:</span>
-								<span class="label-value">Select a note</span>
-							</div>
-							<input type="range" id="note-info-note-range" step="1" disabled>
-							<label for="note-info-gain-range">Gain</label>
-							<div class="note-info gain">
-								<span class="label-desc">Gain:</span>
-								<span class="label-value">Select a note</span>
-							</div>
-							<input type="range" id="note-info-gain-range" min="0" max="1" step="0.01" disabled>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-
-	<!-- OSCILLOSCOPE -->
-
-	<div id="oscilloscope" class="container container-block">
-		<div class="container-title" data-toggle="collapse"
-			 data-target="#oscilloscope-content">
-			<h3>Oscilloscope
-				<div id="osc-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></div>
-			</h3>
-		</div>
-
-		<div id="oscilloscope-content" class="collapse in">
-			<div id="oscilloscope-wrapper">
-				<canvas class="osc-canvas"></canvas>
+				<div id="oscilloscope-wrapper">
+					<canvas class="osc-canvas"></canvas>
+				</div>
 			</div>
 		</div>
 	</div>

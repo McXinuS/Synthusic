@@ -6,19 +6,7 @@ exports.Server = Server;
 
 var webSocketServer;
 
-const WEB_SOCKET_MESSAGE_TYPE = {
-    play_note: 0,
-    stop_note: 1,
-    stop: 5,
-    change_instrument: 10,
-    // TODO
-    //instrument_add: 11,
-    //instrument_remove: 12,
-    //instrument_change_...: 1...,
-    get_state: 20,
-    ping: 100, // sent by client to keep alive connection
-    pong: 101  // sent by server
-};
+const WEB_SOCKET_MESSAGE_TYPE = require('./../shared/web-socket-message-types');
 
 var wsClients = [];
 var wsLastId = 0;

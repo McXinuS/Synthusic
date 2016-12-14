@@ -1,19 +1,10 @@
 module.exports = new function () {
-    if (typeof(location) !== 'undefined') {
-        this.WEB_SOCKET_HOST = location.origin.replace(/^http/, 'ws');
-    }
+    this.WEB_SOCKET_HOST = location.origin.replace(/^http/, 'ws');
 
     this.IS_MOBILE = isMobile(navigator.userAgent || navigator.vendor || window.opera);
 
-    this.WEB_SOCKET_MESSAGE_TYPE = {
-        play_note: 0,
-        stop_note: 1,
-        stop: 5,
-        change_instrument: 10,
-        get_state: 20,
-        ping: 100, // keep connection alive (message from client)
-        pong: 101  // keep connection alive (message from server)
-    };
+    this.WEB_SOCKET_MESSAGE_TYPE = require('./../../../shared/web-socket-message-types.js');
+    console.log(this.WEB_SOCKET_MESSAGE_TYPE)
 
     this.MASTER_GAIN_MAX = 0.5;
     this.ANALYZER_FFT_SIZE = 2048;

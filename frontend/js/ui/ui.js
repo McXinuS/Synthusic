@@ -83,10 +83,8 @@ Ui.prototype.initDom = function () {
 
     this.envelopeGainLabel = $('#envelope-label').find('> span.label-value');
     this.envelopeGainRange = document.getElementById("envelope-gain-range");
-    convertToProgressBar(this.envelopeGainRange, '#4a4');
     this.rmsLabel = $('#rms-label').find('> span.label-value');
     this.rmsRange = document.getElementById("rms-range");
-    convertToProgressBar(this.rmsRange, ['#4a4', '#ff4', '#f44'], [50, 80, 100]);
 
     this.noteInfoNoteRange = document.getElementById("note-info-note-range");
     this.noteInfoFreq = $('div.freq > span.label-value');
@@ -165,7 +163,6 @@ Ui.prototype.updateEnvelopeGain = function () {
     let gain = main.sound.enveloper.getGain();
     if (floatEqual(gain, this.envelopeGainRange.value, 1e-3)) return;
     this.envelopeGainRange.value = gain;
-    this.envelopeGainRange.onchange();
     this.envelopeGainLabel.text(gain.toFixed(3));
 };
 
@@ -173,7 +170,6 @@ Ui.prototype.updateRms = function () {
     let rms = main.sound.analyser.getRms();
     if (floatEqual(rms, parseFloat(this.rmsRange.value), 1e-3)) return;
     this.rmsRange.value = rms;
-    this.rmsRange.onchange();
     this.rmsLabel.text(rms.toFixed(3));
 };
 

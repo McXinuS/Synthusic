@@ -95,9 +95,7 @@ function Main() {
                 return self.ui.oscilloscope.renderType;
             },
             set: (rt) => {
-                self.ui.oscilloscope.renderType = rt;
                 self.ui.updateOscilloscopeRenderType(rt);
-                console.log(`Render type has been changed to ${rt}`);
             }
         }
     });

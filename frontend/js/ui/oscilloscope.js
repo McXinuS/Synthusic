@@ -1,4 +1,5 @@
-import {RGBtoHSV, HSVtoRGB, RGBtoSaturation, RGBtoValue} from '../ext.js'
+// TODO beautify visualisation
+import {RGBtoHSV, HSVtoRGB} from '../ext.js'
 
 exports.Oscilloscope = Oscilloscope;
 
@@ -8,7 +9,6 @@ function Oscilloscope(canvas) {
     this.RENDER_THEORY = 0;
     this.RENDER_LIVE_AMPLITUDE = 1;
     this.RENDER_LIVE_FREQUENCY = 2;
-    this.RENDER_IMAGE = 3;
 
     var self = this;
     Object.defineProperties(this, {
@@ -19,11 +19,6 @@ function Oscilloscope(canvas) {
             set: (rt) => {
                 var prev = self._renderType;
                 self._renderType = rt;
-                if (prev == this.RENDER_IMAGE) {
-                    self.loadMask('img/osc_overlay.png');
-                } else if (rt == this.RENDER_IMAGE) {
-                    self.loadMask(getRandomImageUrl(self.width, self.height));
-                }
                 self.invalidate();
             }
         },
@@ -55,8 +50,6 @@ function Oscilloscope(canvas) {
         this.lineWidthSrc = 0.7;
         this.lineWidthLive = 1.5;
 
-        this.canvasHeigth = 500;
-
         this.canvas = canvas;
         this.canvas.setAttribute('style', "z-index: 0");
         this.ctx = this.canvas.getContext("2d");
@@ -77,15 +70,6 @@ function Oscilloscope(canvas) {
     window.addEventListener('resize', function () {
         this.onResize();
     }.bind(this), true);
-}
-
-function getRandomImageUrl(w, h) {
-    return 'https://s3-us-west-2.amazonaws.com/boom-orca/people-deal-header.png';
-    w = w || 1000;
-    h = h || 500;
-    const urls = [`https://loremflickr.com/${w}/${h}`];
-    var ind = Math.floor(Math.random() * urls.length);
-    return urls[ind];
 }
 
 Oscilloscope.prototype.reload = function () {
@@ -114,9 +98,9 @@ Oscilloscope.prototype.onResize = function () {
         parseFloat(oscStyle.paddingLeft) - parseFloat(oscStyle.paddingRight);
 
     this.canvas.setAttribute('width', oscDivW);
-    this.canvas.setAttribute('height', this.canvasHeigth + 'px');
+    this.canvas.setAttribute('height', oscDivW);
     this.maskCanvas.setAttribute('width', oscDivW);
-    this.maskCanvas.setAttribute('height', this.canvasHeigth + 'px');
+    this.maskCanvas.setAttribute('height', oscDivW);
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -191,8 +175,6 @@ Oscilloscope.prototype.draw = function () {
         this.drawResultingWave();
     } else if (this.renderType == this.RENDER_LIVE_AMPLITUDE || this.renderType == this.RENDER_LIVE_FREQUENCY) {
         this.drawFromBuffer();
-    } else if (this.renderType == this.RENDER_IMAGE) {
-        this.drawOnMask();
     }
 
     window.requestAnimationFrame(() => {
@@ -270,27 +252,6 @@ Oscilloscope.prototype.drawFromBuffer = function () {
     this.invalidate();
 };
 
-Oscilloscope.prototype.drawOnMask = function () {
-    if (!this.shapeMask) return;
-
-    var buffer = main.sound.getAudioAmpBuffer();
-
-    // TODO image should not change
-    this.ctx.putImageData(this.shapeMask, 0, 0);
-
-    var step = this.width / (buffer.length + 1);
-    for (var i = 0; i < buffer.length; i++) {
-        this.ctx.beginPath();
-        var col = Math.floor(255 * Math.abs(buffer[i]));
-        //this.ctx.fillStyle = `hsla(${360 * Math.abs(buffer[i])},100%,${Math.round(10 * Math.abs(buffer[i]))}%, 0.01)`;
-        this.ctx.fillStyle = `rgba(${col}, ${col}, ${col}, 0.1)`;
-        this.ctx.fillRect(i * step, 0, (i + 1) * step, this.height);
-        this.ctx.fill();
-    }
-
-    this.invalidate();
-};
-
 Oscilloscope.prototype.loadMask = function (url) {
     this.mask = new Image();
     this.mask.setAttribute('crossOrigin', 'anonymous');
@@ -305,69 +266,25 @@ Oscilloscope.prototype.prepareMask = function () {
 
     // clear screen
     this.mctx.beginPath();
-    this.mctx.fillStyle = this.renderType == this.RENDER_IMAGE ? '#000' : 'rgba(0,0,0,0)';
+    this.mctx.fillStyle = 'rgba(0,0,0,0)';
     this.mctx.fillRect(0, 0, this.width, this.height);
     this.mctx.fill();
 
-    if (this.renderType == this.RENDER_IMAGE) {
-        // apply blur image
-        this.mctx.shadowBlur = 11;
-        this.mctx.shadowColor = "#060";
-        this.mctx.drawImage(this.mask, 0, 0, this.width, this.height);
-        this.mctx.shadowBlur = 0;
+    // TODO draw grid with labels
+    // axis
+    this.mctx.strokeStyle = '#aaa';
+    this.mctx.beginPath();
+    this.mctx.moveTo(0, this.center.y);
+    this.mctx.lineTo(this.width, this.center.y);
+    this.mctx.moveTo(this.center.x, 0);
+    this.mctx.lineTo(this.center.x, this.height);
+    this.mctx.stroke();
 
-        /*
-         <div style="
-         background-image: url(https://s3-us-west-2.amazonaws.com/boom-orca/people-deal-header.png);
-         width: 1060px;
-         height: 500px;
-         position: absolute;
-         top: 30px;
-         background-size: 1060px 500px;
-         z-index: 2;
-         mix-blend-mode: difference;
-         " class=""></div>
-         */
-
-        // Creates shape of image
-        this.shapeMask = this.mctx.getImageData(0, 0, this.width, this.height);
-        var maskData = this.shapeMask.data;
-
-        var value;
-        for (var i = 0; i < maskData.length; i += 4) {
-            value = RGBtoValue([maskData[i], maskData[i + 1], maskData[i + 2]]);
-            maskData[i] = maskData[i + 1] = maskData[i + 2] = value;
-            maskData[i + 3] = 255;
-        }
-
-        //this.mctx.putImageData(this.shapeMask, 0, 0);
-        this.mctx.beginPath();
-        this.mctx.fillStyle = '#000';
-        this.mctx.fillRect(0, 0, this.width, this.height);
-        this.mctx.fill();
-
-        if (!this.maskCanvas.classList.contains('blend-mode')) {
-            this.maskCanvas.classList.add('blend-mode');
-        }
-    } else {
-        this.maskCanvas.classList.remove('blend-mode');
-
-        // TODO draw grid with labels
-        // axis
-        this.mctx.strokeStyle = '#aaa';
-        this.mctx.beginPath();
-        this.mctx.moveTo(0, this.center.y);
-        this.mctx.lineTo(this.width, this.center.y);
-        this.mctx.moveTo(this.center.x, 0);
-        this.mctx.lineTo(this.center.x, this.height);
-        this.mctx.stroke();
-
-        // apply blur image
-        this.mctx.shadowBlur = 11;
-        this.mctx.shadowColor = "#060";
-        this.mctx.drawImage(this.mask, 0, 0, this.width, this.height);
-        this.mctx.shadowBlur = 0;
-    }
+    // apply blur image
+    this.mctx.shadowBlur = 11;
+    this.mctx.shadowColor = "#060";
+    this.mctx.drawImage(this.mask, 0, 0, this.width, this.height);
+    this.mctx.shadowBlur = 0;
 };
 
 /**

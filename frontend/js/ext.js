@@ -5,8 +5,6 @@ exports.floatEqual = floatEqual;
 // colors
 exports.RGBtoHSV = RGBtoHSV;
 exports.HSVtoRGB = HSVtoRGB;
-exports.RGBtoSaturation = RGBtoSaturation;
-exports.RGBtoValue = RGBtoValue;
 
 /**
  * * Unused at the moment.
@@ -220,21 +218,4 @@ function HSVtoRGB(color) {
             break;
     }
     return [r, g, b];
-}
-
-/**
- * @return {number} A saturation from HSV.
- */
-function RGBtoSaturation(color) {
-    var min = Math.min(color[0], color[1], color[2]);
-    var max = Math.max(color[0], color[1], color[2]);
-
-    return max != 0 ? (max - min) / max : 0;
-}
-
-/**
- * @return {number} A value from HSV.
- */
-function RGBtoValue(color) {
-    return Math.max(color[0], color[1], color[2]);
 }

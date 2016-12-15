@@ -191,5 +191,6 @@ Ui.prototype.updateInstrument = function (value) {
 };
 
 Ui.prototype.updateOscilloscopeRenderType = function (value) {
+    this.oscilloscope.renderType = value;
     updateDropdownSelection(value, this.renderTypeListItems, 'data');
 };

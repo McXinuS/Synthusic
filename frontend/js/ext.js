@@ -9,6 +9,7 @@ exports.RGBtoSaturation = RGBtoSaturation;
 exports.RGBtoValue = RGBtoValue;
 
 /**
+ * * Unused at the moment.
  * Converts range input element to canvas-based progress bar.
  * @param slider Input element with attribute type set to 'range'.
  * @param colors A color or a set of colors that fills progress bar as its value changes.

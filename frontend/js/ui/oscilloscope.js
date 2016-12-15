@@ -55,6 +55,8 @@ function Oscilloscope(canvas) {
         this.lineWidthSrc = 0.7;
         this.lineWidthLive = 1.5;
 
+        this.canvasHeigth = 500;
+
         this.canvas = canvas;
         this.canvas.setAttribute('style', "z-index: 0");
         this.ctx = this.canvas.getContext("2d");
@@ -112,9 +114,9 @@ Oscilloscope.prototype.onResize = function () {
         parseFloat(oscStyle.paddingLeft) - parseFloat(oscStyle.paddingRight);
 
     this.canvas.setAttribute('width', oscDivW);
-    this.canvas.setAttribute('height', '500px');
+    this.canvas.setAttribute('height', this.canvasHeigth + 'px');
     this.maskCanvas.setAttribute('width', oscDivW);
-    this.maskCanvas.setAttribute('height', '500px');
+    this.maskCanvas.setAttribute('height', this.canvasHeigth + 'px');
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;

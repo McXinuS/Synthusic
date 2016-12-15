@@ -1,5 +1,4 @@
 // TODO enable multitouch
-// TODO play note by note when the keyboard is swiped
 
 exports.Keyboard = Keyboard;
 

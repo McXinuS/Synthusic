@@ -60,7 +60,7 @@ Sound.prototype.createOscillators = function (note) {
     return oscillators;
 };
 
-Sound.prototype.playNote = function (note, duration) {
+Sound.prototype.playNote = function (note) {
     if (this.noteToStop != undefined && this.noteToStop != note) {
         this.stopNote(this.noteToStop, true);
         this.noteToStop = undefined;
@@ -69,13 +69,6 @@ Sound.prototype.playNote = function (note, duration) {
     if (!this.oscillators[note]) {
         this.oscillators[note] = this.createOscillators(note);
         this.setGain(note, 1, true);
-        // TODO remove it from here to main
-        if (duration) {
-            setTimeout(function () {
-                // stop it using function from 'main.js'
-                main.stopNote({note: note});
-            }, duration);
-        }
     }
 
     this.enveloper.start();
@@ -91,7 +84,7 @@ Sound.prototype.stopNote = function (note, forceStop) {
     forceStop = forceStop || false;
 
     // if the only note is stopped, release the enveloper
-    if (main.playingCount == 0 && !forceStop) {
+    if (main.playingCount == 1 && !forceStop) {
         this.enveloper.release();
         // the note will be stopped in enveloper's onFinished callback
         // we need to remember currently fading note to stop it

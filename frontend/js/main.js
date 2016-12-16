@@ -107,7 +107,6 @@ function Main() {
                 let count = 0;
                 for (let i in __config.playing) {
                     if (__config.playing.hasOwnProperty(i) && __config.playing[i]) count++;
-                    console.log(`i: ${i}, hOP: ${__config.playing.hasOwnProperty(i)}, playing: ${__config.playing[i]}`)
                 }
                 return count;
             }
@@ -189,15 +188,15 @@ Main.prototype.playNote = function (parameters) {
         return;
 
     this.playing[note] = true;
-    this.sound.playNote(note, duration);
+    this.sound.playNote(note);
 
     this.ui.oscilloscope.addNote(note);
     this.ui.keyboard.highlightOn(note);
     this.observeInNoteBox(note);
 
-    if (notify == undefined) {
-        notify = true;
-    }
+    console.log(note.fullname + ' is now playing');
+
+    if (notify == undefined) notify = true;
     if (notify) {
         this.socket.send({
             type: __constants.WEB_SOCKET_MESSAGE_TYPE.play_note,
@@ -205,7 +204,11 @@ Main.prototype.playNote = function (parameters) {
         });
     }
 
-    console.log(note.fullname + ' is now playing');
+    if (duration) {
+        setTimeout(() => {
+            this.stopNote({note: note});
+        }, duration);
+    }
 };
 
 Main.prototype.stopNote = function (parameters) {
@@ -215,23 +218,21 @@ Main.prototype.stopNote = function (parameters) {
     if (!this.playing[note])
         return;
 
-    this.playing[note] = false;
     this.sound.stopNote(note);
-
     this.ui.oscilloscope.removeNote(note);
     this.ui.keyboard.highlightOff(note);
     this.observeInNoteBox(note);
 
-    if (notify == undefined) {
-        notify = true;
-    }
+    this.playing[note] = false;
+    console.log(note.fullname + ' has been stopped');
+
+    if (notify == undefined) notify = true;
     if (notify) {
         this.socket.send({
             type: __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note,
             note: note.fullname
         });
     }
-    console.log(note.fullname + ' has been stopped');
 };
 
 Main.prototype.stop = function (parameters) {

@@ -29,7 +29,7 @@ function Ui() {
         } catch (err) {
             console.warn('Something went wrong during UI update: ' + err.name + ": " + err.message);
         } finally {
-            window.requestAnimationFrame(update); // high cpu load
+            window.requestAnimationFrame(update); // may cause high cpu load
             //setTimeout(update, 50); // throttle fps
         }
     };
@@ -73,7 +73,6 @@ Ui.prototype.initDom = function () {
         this.envelopeConfigElements[envType + 'Label'] = $('#envelope-' + envType + '-label').find('> span.label-value');
         this.envelopeConfigElements[envType + 'Range'] = document.getElementById('envelope-' + envType + '-range');
     }
-    //this.updateEnvelopeConfig();
 
     this.bpmRange = document.getElementById('bpm-range');
     this.bpmLabel = $('#bpm-label').find('> span.label-value');
@@ -129,9 +128,7 @@ Ui.prototype.initDom = function () {
 
     $("#keyboard-up").attachDragger($("#keyboard"));
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    });
+    $('[data-toggle="tooltip"]').tooltip();
 };
 
 Ui.prototype.showNav = function (nav) {

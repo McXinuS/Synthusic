@@ -4,7 +4,6 @@ module.exports = new function () {
     this.IS_MOBILE = isMobile(navigator.userAgent || navigator.vendor || window.opera);
 
     this.WEB_SOCKET_MESSAGE_TYPE = require('./../../../shared/web-socket-message-types.js');
-    console.log(this.WEB_SOCKET_MESSAGE_TYPE)
 
     this.MASTER_GAIN_MAX = 0.5;
     this.ANALYZER_FFT_SIZE = 2048;

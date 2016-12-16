@@ -84,11 +84,6 @@
 	color        : inherit;
 }
 
-#nav_settings .well {
-	background   : inherit;
-	border-color : #5a5a5a;
-}
-
 #nav_settings .dropdown-menu {
 	background : #646464;
 	width      : 100%;
@@ -111,13 +106,6 @@
 #state-container {
 	background : rgba(100, 120, 100, 0.5);
 	color      : #ddd;
-}
-
-#note-info {
-	min-width        : 100px;
-	width            : 100%;
-	background-color : rgba(165, 124, 94, 0.7);
-	border           : 1px solid rgb(101, 64, 38);
 }
 
 /* Keyboard */
@@ -212,8 +200,8 @@
 }
 
 .key:hover {
-	transform: scale(1.03, 1);
-	z-index: 2;
+	transform : scale(1.03, 1);
+	z-index   : 2;
 }
 
 .key-white:hover {
@@ -317,6 +305,17 @@
 	display : none;
 }
 
+.well {
+	background : rgba(255, 255, 255, 0.02);
+	border-color     : #5a5a5a;
+	transition       : all 0.2s ease-in-out;
+}
+
+.well:hover {
+	background : rgba(255, 255, 255, 0.03);
+	box-shadow : inset 0 0 6px 1px rgba(0, 0, 0, 0.15);
+}
+
 .list-group {
 	margin : 0;
 }
@@ -344,31 +343,30 @@
 }
 
 meter {
-	width: 100%;
-	height: 1.25em;
+	width  : 100%;
+	height : 1.35em;
 }
 
 meter::-webkit-meter-bar {
 	font-size     : 0;
 	border        : 1px solid black;
-	border-radius : 3px;
+	border-radius : 1px;
 	background    : rgba(240, 240, 240, 0.1);
-	box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
 }
 
 meter::-webkit-meter-optimum-value {
-	background: #86CC00; /* Green */
-	border-radius: 3px;
+	background    : #86CC00; /* Green */
+	border-radius : 1px;
 }
 
 meter::-webkit-meter-suboptimum-value {
-	background: #FFDB1A; /* Yellow */
-	border-radius: 3px;
+	background    : #FFDB1A; /* Yellow */
+	border-radius : 1px;
 }
 
 meter::-webkit-meter-even-less-good-value {
-	background: #CC4600; /* Red */
-	border-radius: 3px;
+	background    : #CC4600; /* Red */
+	border-radius : 1px;
 }
 
 input[type=range] {

@@ -11,4 +11,6 @@ module.exports = new function () {
     this.mode = __constants.MODES.pentatonicMajor;
 
     this.scale = __constants.SCALES.sharp.scale;
+
+    this.playing = [];
 };

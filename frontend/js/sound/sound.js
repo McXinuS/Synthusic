@@ -37,9 +37,6 @@ function Sound(audioContext, instrument) {
      */
 
     this._inputNode = this.enveloper.getGainNode();
-
-    // note that will be stopped when enveloper is faded
-    this.noteToStop = undefined;
 }
 
 Sound.prototype.createOscillators = function (note) {
@@ -86,16 +83,15 @@ Sound.prototype.playNote = function (note, duration) {
 
 /**
  * @param note
- * @param forceStop Don't save the note to stop it later with envelope callback, stop it now instead.
+ * @param forceStop Don't save the note to stop it later with envelope callback, stop it right now instead.
  */
 Sound.prototype.stopNote = function (note, forceStop) {
     if (!this.oscillators[note]) return;
 
     forceStop = forceStop || false;
 
-    let oscCount = Object.keys(this.oscillators).length;
     // if the only note is stopped, release the enveloper
-    if (oscCount == 1 && !forceStop) {
+    if (main.playingCount == 0 && !forceStop) {
         this.enveloper.release();
         // the note will be stopped in enveloper's onFinished callback
         // we need to remember currently fading note to stop it

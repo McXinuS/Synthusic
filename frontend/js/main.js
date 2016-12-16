@@ -17,10 +17,6 @@ function Main() {
     var self = this;
 
     Object.defineProperties(this, {
-        playing: {
-            value: [],
-            writable: true
-        },
         bpm: {
             get: function () {
                 return __config.bpm;
@@ -96,6 +92,24 @@ function Main() {
             },
             set: (rt) => {
                 self.ui.updateOscilloscopeRenderType(rt);
+            }
+        },
+        playing: {
+            get: () => {
+                return __config.playing;
+            },
+            set: (value) => {
+                __config.playing = value;
+            }
+        },
+        playingCount: {
+            get: () => {
+                let count = 0;
+                for (let i in __config.playing) {
+                    if (__config.playing.hasOwnProperty(i) && __config.playing[i]) count++;
+                    console.log(`i: ${i}, hOP: ${__config.playing.hasOwnProperty(i)}, playing: ${__config.playing[i]}`)
+                }
+                return count;
             }
         }
     });

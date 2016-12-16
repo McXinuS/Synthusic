@@ -166,7 +166,7 @@
 
 .key-black:before {
 	top        : -50px;
-	left       : 15px;
+	left       : 50%;
 	content    : " ";
 	height     : 50px;
 	width      : 0.01px;

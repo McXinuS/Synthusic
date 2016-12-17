@@ -37,6 +37,18 @@ function Sound(audioContext, instrument) {
      */
 
     this._inputNode = this.enveloper.getGainNode();
+
+    document.body.addEventListener('playnote', (e) => {
+        this.playNote(e.detail);
+    });
+
+    document.body.addEventListener('stopnote', (e) => {
+        this.stopNote(e.detail);
+    });
+
+    document.body.addEventListener('stop', (e) => {
+        this.stop();
+    });
 }
 
 Sound.prototype.createOscillators = function (note) {

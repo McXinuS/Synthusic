@@ -67,6 +67,19 @@ function Keyboard(container) {
 
     let keyboardOverlay = document.getElementById('keyboard-up');
     keyboardOverlay.style.width = container.scrollWidth + 'px';
+
+    document.body.addEventListener('playnote', (e) => {
+        this.highlightOn(e.detail);
+    });
+
+    document.body.addEventListener('stopnote', (e) => {
+        this.highlightOff(e.detail);
+    });
+
+    document.body.addEventListener('stop', (e) => {
+        this.stop();
+    });
+
     window.addEventListener('resize', function () {
         keyboardOverlay.style.width = container.scrollWidth + 'px';
     }.bind(this), true);

@@ -113,6 +113,18 @@ Oscilloscope.prototype.onResize = function () {
 
     this.prepareMask();
     this.invalidate();
+
+    document.body.addEventListener('playnote', (e) => {
+        this.addNote(e.detail);
+    });
+
+    document.body.addEventListener('stopnote', (e) => {
+        this.removeNote(e.detail);
+    });
+
+    document.body.addEventListener('stop', (e) => {
+        this.highlightClear();
+    });
 };
 
 Oscilloscope.prototype.invalidate = function () {

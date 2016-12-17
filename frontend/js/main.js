@@ -1,5 +1,3 @@
-// TODO: add listeners on 'playNote', 'stopNote' and 'stop'
-
 import 'jquery';
 import 'bootstrap/dist/js/bootstrap';
 import {Socket}       from "./websocket.js";
@@ -188,10 +186,14 @@ Main.prototype.playNote = function (parameters) {
         return;
 
     this.playing[note] = true;
-    this.sound.playNote(note);
 
-    this.ui.oscilloscope.addNote(note);
-    this.ui.keyboard.highlightOn(note);
+    let event = new CustomEvent('playnote', {
+        detail: note,
+        bubbles: false,
+        cancelable: false
+    });
+    document.body.dispatchEvent(event);
+
     this.observeInNoteBox(note);
 
     console.log(note.fullname + ' is now playing');
@@ -218,9 +220,13 @@ Main.prototype.stopNote = function (parameters) {
     if (!this.playing[note])
         return;
 
-    this.sound.stopNote(note);
-    this.ui.oscilloscope.removeNote(note);
-    this.ui.keyboard.highlightOff(note);
+    let event = new CustomEvent('stopnote', {
+        detail: note,
+        bubbles: false,
+        cancelable: false
+    });
+    document.body.dispatchEvent(event);
+
     this.observeInNoteBox(note);
 
     this.playing[note] = false;
@@ -238,9 +244,11 @@ Main.prototype.stopNote = function (parameters) {
 Main.prototype.stop = function (parameters) {
     var notify = parameters.notify;
 
-    if (typeof(this.ui.oscilloscope) != 'undefined') this.ui.oscilloscope.stop();
-    if (typeof(this.sound) != 'undefined') this.sound.stop();
-    if (typeof(this.ui.keyboard) != 'undefined') this.ui.keyboard.highlightClear();
+    let event = new CustomEvent('stop', {
+        bubbles: false,
+        cancelable: false
+    });
+    document.body.dispatchEvent(event);
 
     this.playing = [];
 

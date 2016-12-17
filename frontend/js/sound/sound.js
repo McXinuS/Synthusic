@@ -19,8 +19,7 @@ function Sound(audioContext, instrument) {
     this.masterGainNode.connect(this.analyser.getAnalyserNode());
 
     this.panner = new Panner(audioContext);
-    this.panner.connect(this.masterGainNode);
-    this.panner.connectToField(main.ui.pannerField);
+    this.panner.connect(this.masterGainNode, main.ui.pannerField);
 
     this.enveloper = new Enveloper(audioContext);
     this.enveloper.onFinished = function () {

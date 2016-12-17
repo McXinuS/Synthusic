@@ -75,13 +75,11 @@ Enveloper.prototype.changeStateAtTime = function (newState, newGain, time) {
     this._gainNode.gain.setValueAtTime(this._gainNode.gain.value, this.getRampTime(0));
     this._gainNode.gain.linearRampToValueAtTime(newGain, this.getRampTime(time));
     this._funcTimeoutId = setTimeout(this.updateState.bind(this, newState), time);
-    console.log(`changeStateAtTime: newState - ${newState}, newGain - ${newGain}`);
 };
 
 Enveloper.prototype.cancelStateChange = function () {
     this._gainNode.gain.cancelScheduledValues(this.audioCtx.currentTime);
     clearTimeout(this._funcTimeoutId);
-    console.log('cancelStateChange');
 };
 
 Enveloper.prototype.start = function () {

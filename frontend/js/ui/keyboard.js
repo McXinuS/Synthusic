@@ -12,9 +12,10 @@ function Keyboard(container) {
         key.classList.add('key');
         key.classList.add(note.isAccidental ? 'key-black' : 'key-white');
         key.setAttribute('name', note.fullname);
-        key.setAttribute('data-toggle', 'tooltip');
-        key.setAttribute('data-placement', 'top');
-        key.setAttribute('title', note.fullname);
+
+        let span = document.createElement('span');
+        span.innerText = note.fullname;
+        key.appendChild(span);
 
         let eventNote = __note.getNote(key.getAttribute('name'));
 
@@ -32,7 +33,8 @@ function Keyboard(container) {
 
             main.observeInNoteBox(eventNote);
 
-            if (e.button == 1) {
+            if (e.button == 0 || e.button == 1) {
+                // disable scroll on mouse wheel click and text selection when dragging
                 return false;
             }
         };
@@ -77,7 +79,7 @@ function Keyboard(container) {
     });
 
     document.body.addEventListener('stop', (e) => {
-        this.stop();
+        this.highlightClear();
     });
 
     window.addEventListener('resize', function () {

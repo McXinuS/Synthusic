@@ -9,7 +9,7 @@ var server = require("http").Server(app);
 server.listen(port);
 console.log("HTTP server is running @ " + port);
 
-var webSocketServer = require(path.join(__dirname, '/web-socket.js')).Server(server);
+var webSocketServer = require('./web-socket.js').Server(server);
 console.log("WebSocket server is running @ " + port);
 
 app.use(express.static('public'));

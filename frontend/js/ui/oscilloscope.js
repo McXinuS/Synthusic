@@ -123,7 +123,7 @@ Oscilloscope.prototype.onResize = function () {
     });
 
     document.body.addEventListener('stop', (e) => {
-        this.highlightClear();
+        this.stop();
     });
 };
 
@@ -338,6 +338,6 @@ function getWaveColor(index) {
 function createMaskCanvas() {
     var maskCanvas = document.createElement('canvas');
     maskCanvas.classList.add('osc-canvas');
-    maskCanvas.setAttribute('style', 'position: absolute; top: 30px; z-index: 1');
+    maskCanvas.setAttribute('style', 'position: absolute; top: 0; z-index: 1');
     return maskCanvas;
 }

@@ -48,6 +48,10 @@ function Sound(audioContext, instrument) {
     document.body.addEventListener('stop', (e) => {
         this.stop();
     });
+
+    document.body.addEventListener('reload', (e) => {
+        this.instrument = e.detail;
+    });
 }
 
 Sound.prototype.createOscillators = function (note) {

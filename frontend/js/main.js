@@ -58,25 +58,31 @@ function Main() {
                 __config.mode = mode;
             }
         },
+        instruments: {
+            get: function () {
+                return __config.instruments;
+            }
+        },
         instrument: {
             get: function () {
-                return __config.instrument;
+                return self.instruments.find((i) => {
+                    return i.id == __config.instrumentId;
+                });
             },
             set: function (id) {
-                if (__config.instrument != undefined && __config.instrument.id === id)
+                if (__config.instrumentId === id)
                     return;
 
-                for (let index in __config.instruments) {
-                    if (__config.instruments[index].id == id) {
-                        var instrument = __config.instruments[index];
-                        self.reload(function (instr) {
-                            __config.instrument = instr;
-                        }, instrument);
-                        self.ui.updateInstrument(instrument);
-                        console.log(`Instrument has been changed to ${instrument.name}`);
-                        break;
-                    }
-                }
+                let instrument = self.instruments.find((i) => {
+                    return i.id == id;
+                });
+                if (typeof instrument == 'undefined') return;
+
+                self.reload(function () {
+                    __config.instrumentId = id;
+                });
+                self.ui.updateInstrument(instrument);
+                console.log(`Instrument has been changed to ${instrument.name}`);
             }
         },
         envelope: {
@@ -154,18 +160,19 @@ Main.prototype.init = function () {
 /**
  * Call stop function and play notes again.
  */
-Main.prototype.reload = function (callback, callbackArgs) {
+Main.prototype.reload = function (callback) {
 
     var pl = this.playing;
     this.stop({notify: false});
 
-    callback(callbackArgs);
+    callback();
 
-    // TODO remove this hack -_-
-    // ex. emit 'onreload' event
-    if (typeof(this.sound) !== 'undefined') {
-        this.sound.instrument = __config.instrument;
-    }
+    let event = new CustomEvent('reload', {
+        detail: this.instrument,
+        bubbles: false,
+        cancelable: false
+    });
+    document.body.dispatchEvent(event);
 
     for (var index in pl) {
         if (pl[index]) {
@@ -321,7 +328,7 @@ function onSocketMessage(data) {
             this.stop({notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.change_instrument:
-            this.instrument = data.instrumentName;
+            this.instrument = data.instrumentId;
             break;
     }
 }

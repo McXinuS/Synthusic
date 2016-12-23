@@ -3,7 +3,6 @@ module.exports = {
     stop_note: 1,
     stop: 5,
     change_instrument: 10,
-    // TODO
     //instrument_add: 11,
     //instrument_remove: 12,
     //instrument_change_...: 1.,

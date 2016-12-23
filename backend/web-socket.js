@@ -2,22 +2,14 @@
 
 exports.Server = Server;
 
-// TODO add rooms
-
-var webSocketServer;
-
 const WEB_SOCKET_MESSAGE_TYPE = require('./../shared/web-socket-message-types');
+let synthConfig = new (require('./synth-config/config').Config);
 
-var wsClients = [];
-var wsLastId = 0;
-
-var stateObject = {
-    playing: [],
-    instrument: undefined
-};
+let wsClients = [];
+let wsLastId = 0;
 
 function Server(server) {
-    webSocketServer = new require('ws').Server({
+    let webSocketServer = require('ws').Server({
         server: server
     });
 
@@ -84,7 +76,7 @@ function processWebSocketMessage(message, sender) {
         onMessageSuccess,
         onMessageRejected
     ).catch(
-        console.log
+        onException
     );
 }
 
@@ -92,20 +84,20 @@ function processGeneralMessage(data, sender) {
     switch (data.type) {
         case WEB_SOCKET_MESSAGE_TYPE.play_note:
             var note = data.note;
-            stateObject.playing[note] = true;
+            synthConfig.addNote(note);
             broadcast(data, sender);
             return 'type: play_note, note: ' + note;
         case WEB_SOCKET_MESSAGE_TYPE.stop_note:
             var note = data.note;
-            stateObject.playing[note] = false;
+            synthConfig.removeNote(note);
             broadcast(data, sender);
             return 'type: stop_note, note: ' + note;
         case WEB_SOCKET_MESSAGE_TYPE.stop:
-            stateObject.playing = [];
+            synthConfig.removeAllNotes();
             broadcast(data, sender);
             return 'type: stop';
         case WEB_SOCKET_MESSAGE_TYPE.get_state:
-            send(stateObject, sender);
+            send(synthConfig.getStateObject(), sender);
             return 'type: get_state';
     }
 
@@ -128,4 +120,8 @@ function onMessageSuccess(result) {
 
 function onMessageRejected(error) {
     console.log(error);
+}
+
+function onException(ex) {
+    console.log(ex);
 }

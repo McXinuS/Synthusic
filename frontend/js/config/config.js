@@ -4,7 +4,7 @@ import insObj from './instruments.js'
 
 module.exports = new function () {
     this.instruments = insObj.instruments;
-    this.instrument = undefined;
+    this.instrumentId = undefined;
 
     this.bpm = 60;
 

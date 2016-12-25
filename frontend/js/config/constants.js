@@ -71,8 +71,8 @@ module.exports = new function () {
     this.ENVELOPE_PROPERTIES = ['attack', 'decay', 'sustain', 'release'];
 
     // will be translated to a Note object during compilation
-    this.NOTE_START = ['C', 2];
-    this.NOTE_END = ['B', 5];
+    this.NOTE_START = {name: 'C', octave: 2};
+    this.NOTE_END = {name: 'B', octave: 5};
     this.NOTES_COUNT = 0;
 };
 

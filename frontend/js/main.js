@@ -105,15 +105,6 @@ function Main() {
             set: (value) => {
                 __config.playing = value;
             }
-        },
-        playingCount: {
-            get: () => {
-                let count = 0;
-                for (let i in __config.playing) {
-                    if (__config.playing.hasOwnProperty(i) && __config.playing[i]) count++;
-                }
-                return count;
-            }
         }
     });
 
@@ -129,33 +120,31 @@ function Main() {
         }
     });
 
+    this.init = function () {
+
+        this.ui = new Ui();
+
+        this.instrument = 11;
+        this.bpm = 60;
+        this.masterGainBeforeMute = 0;
+
+        let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        window.audioContext = audioContext;
+        this.sound = new Sound(audioContext, this.instrument);
+        this.masterGain = __constants.MASTER_GAIN_MAX / 2;
+
+        this.socket = new Socket(__constants.WEB_SOCKET_HOST);
+        this.socket.onmessage = onSocketMessage.bind(this);
+        this.socket.onopen = onSocketOpen.bind(this);
+        this.socket.connect();
+
+    };
+
     document.addEventListener("DOMContentLoaded", function () {
         self.init();
     });
 
 }
-
-
-Main.prototype.init = function () {
-
-    this.ui = new Ui();
-
-    this.instrument = 11;
-    this.bpm = 60;
-    this.masterGainBeforeMute = 0;
-
-    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    window.audioContext = audioContext;
-    this.sound = new Sound(audioContext, this.instrument);
-
-    this.masterGain = __constants.MASTER_GAIN_MAX / 2;
-
-    this.socket = new Socket(__constants.WEB_SOCKET_HOST);
-    this.socket.onmessage = onSocketMessage.bind(this);
-    this.socket.onopen = onSocketOpen.bind(this);
-    this.socket.connect();
-
-};
 
 /**
  * Call stop function and play notes again.
@@ -227,6 +216,8 @@ Main.prototype.stopNote = function (parameters) {
     if (!this.playing[note])
         return;
 
+    delete this.playing[note];
+
     let event = new CustomEvent('stopnote', {
         detail: note,
         bubbles: false,
@@ -236,7 +227,6 @@ Main.prototype.stopNote = function (parameters) {
 
     this.observeInNoteBox(note);
 
-    this.playing[note] = false;
     console.log(note.fullname + ' has been stopped');
 
     if (notify == undefined) notify = true;
@@ -257,7 +247,7 @@ Main.prototype.stop = function (parameters) {
     });
     document.body.dispatchEvent(event);
 
-    this.playing = [];
+    this.playing = {};
 
     if (notify == undefined) notify = true;
     if (notify) {

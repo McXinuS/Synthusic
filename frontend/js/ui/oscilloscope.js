@@ -10,24 +10,26 @@ function Oscilloscope(canvas) {
     this.RENDER_LIVE_AMPLITUDE = 1;
     this.RENDER_LIVE_FREQUENCY = 2;
 
-    var self = this;
     Object.defineProperties(this, {
         renderType: {
             get: () => {
-                return self._renderType;
+                return this._renderType;
             },
             set: (rt) => {
-                var prev = self._renderType;
-                self._renderType = rt;
-                self.invalidate();
+                this._renderType = rt;
+                if (rt == this.RENDER_THEORY) {
+                    this.recalcAmplitudes();
+                }
+                this.invalidate();
             }
         },
         scale: {
             get: () => {
-                return self._scale;
+                return this._scale;
             },
             set: (sc) => {
                 this._scale = sc;
+                this.recalcAmplitudes();
                 this.invalidate();
             }
         },
@@ -36,9 +38,10 @@ function Oscilloscope(canvas) {
                 return this._sampleRate;
             },
             set: (sr) => {
-                if (sr < 0 || sr > 100000) return;
-
-                this._sampleRate = sr;
+                if (sr < 0) this._sampleRate = 0;
+                else if (sr > 100000) this._sampleRate = 100000;
+                else this._sampleRate = sr;
+                this.recalcAmplitudes();
             }
         }
     });
@@ -60,9 +63,12 @@ function Oscilloscope(canvas) {
 
         this.loadMask('img/osc_overlay.png');
 
-        this.reload();
-        this.onResize();
+        this.scale = 0.00004;
+        this.sampleRate = 300;
+        this.renderType = this.RENDER_THEORY;
 
+        this.onResize();
+        this.clearAmplitudeBuffer();
         this.draw();
     }.bind(this);
     init();
@@ -70,15 +76,19 @@ function Oscilloscope(canvas) {
     window.addEventListener('resize', function () {
         this.onResize();
     }.bind(this), true);
+
+    document.body.addEventListener('playnote', (e) => {
+        this.addNote(e.detail);
+    });
+
+    document.body.addEventListener('stopnote', (e) => {
+        this.removeNote(e.detail);
+    });
+
+    document.body.addEventListener('stop', () => {
+        this.stop();
+    });
 }
-
-Oscilloscope.prototype.reload = function () {
-    this.scale = 0.00004;
-    this.sampleRate = 300;
-    this.renderType = this.RENDER_THEORY;
-
-    this.stop();
-};
 
 Oscilloscope.prototype.onResize = function () {
     /*
@@ -93,9 +103,9 @@ Oscilloscope.prototype.onResize = function () {
 
     let oscStyle = window.getComputedStyle(this.canvas, null);
     let oscParentStyle = window.getComputedStyle(this.canvas.parentNode, null);
-    let oscDivW = this.canvas.parentNode.clientWidth -
-        parseFloat(oscParentStyle.paddingLeft) - parseFloat(oscParentStyle.paddingRight) -
-        parseFloat(oscStyle.paddingLeft) - parseFloat(oscStyle.paddingRight);
+    let oscDivW = this.canvas.parentNode.clientWidth
+        - (parseFloat(oscParentStyle.paddingLeft) + parseFloat(oscParentStyle.paddingRight))
+        - (parseFloat(oscStyle.paddingLeft) + parseFloat(oscStyle.paddingRight));
 
     this.canvas.setAttribute('width', oscDivW);
     this.canvas.setAttribute('height', oscDivW);
@@ -104,27 +114,14 @@ Oscilloscope.prototype.onResize = function () {
 
     this.width = this.canvas.width;
     this.height = this.canvas.height;
-    this.maxAmplitudeHeight = this.canvas.height / 2;
-    this.renderLiveFreqToPx = this.maxAmplitudeHeight / 255.;
     this.center = {x: this.canvas.width / 2, y: this.canvas.height / 2};
+    this.renderLivePxPerFreq = this.center.y / 255.;
     if (this.width > 0) {
         this.step = this.width / this.sampleRate;
     }
 
     this.prepareMask();
     this.invalidate();
-
-    document.body.addEventListener('playnote', (e) => {
-        this.addNote(e.detail);
-    });
-
-    document.body.addEventListener('stopnote', (e) => {
-        this.removeNote(e.detail);
-    });
-
-    document.body.addEventListener('stop', (e) => {
-        this.stop();
-    });
 };
 
 Oscilloscope.prototype.invalidate = function () {
@@ -132,34 +129,20 @@ Oscilloscope.prototype.invalidate = function () {
 };
 
 Oscilloscope.prototype.addNote = function (note) {
-    // check for duplicate
-    for (var name in this.notes) {
-        if (this.notes[name].name == note.name && this.notes[name].octave == note.octave) {
-            // don't add to the 'notes' list if exists, just draw
-            this.invalidate();
-            return;
-        }
-    }
-
-    this.notes.push(note);
+    if (this.renderType == this.RENDER_THEORY) this.calcAmplitudes();
     this.invalidate();
 };
 
 Oscilloscope.prototype.removeNote = function (note) {
-    for (var i = 0; i < this.notes.length; i++) {
-        var curNote = this.notes[i];
-        if (curNote.name === note.name && curNote.octave === note.octave) {
-            this.notes.splice(i, 1);
-            break;
-        }
+    if (this.renderType == this.RENDER_THEORY) {
+        delete this.amplitudeBuffer[note];
+        delete this.canvasBuffer[note];
     }
     this.invalidate();
 };
 
 Oscilloscope.prototype.stop = function () {
-    this.notes = [];
-    this.canvasAmplitudeBuffer = [];	// constants of each oscillator waves
-
+    if (this.renderType == this.RENDER_THEORY) this.clearAmplitudeBuffer();
     this.invalidate();
 };
 
@@ -180,11 +163,8 @@ Oscilloscope.prototype.draw = function () {
     this.ctx.fillRect(0, 0, this.width, this.height);
     this.ctx.fill();
 
-    if (this.renderType == this.RENDER_THEORY && this.notes.length > 0) {
-        for (var i = 0; i < this.notes.length; i++) {
-            this.drawSourceWaves(this.notes[i]);
-        }
-        this.drawResultingWave();
+    if (this.renderType == this.RENDER_THEORY && main.playing.length > 0) {
+        this.drawTheoreticalWaves();
     } else if (this.renderType == this.RENDER_LIVE_AMPLITUDE || this.renderType == this.RENDER_LIVE_FREQUENCY) {
         this.drawFromBuffer();
     }
@@ -194,17 +174,43 @@ Oscilloscope.prototype.draw = function () {
     });
 };
 
-Oscilloscope.prototype.drawSourceWaves = function (note) {
-    if (!this.canvasAmplitudeBuffer[note])
-        this.calcAmplitudes(note);
-    this.ctx.lineWidth = this.lineWidthSrc;
+Oscilloscope.prototype.drawTheoreticalWaves = function () {
+    for (let note in main.playing) {
+        this.drawSourceWaves(note);
+    }
+    this.drawResultingWave();
+};
 
-    this.ctx.strokeStyle = getWaveColor(note.index);
+Oscilloscope.prototype.drawFromBuffer = function () {
+    var buffer, scaleX;
+    if (this.renderType == this.RENDER_LIVE_AMPLITUDE) {
+        buffer = main.sound.getAudioAmpBuffer();
+        scaleX = -this.center.y;
+    } else {
+        buffer = main.sound.getAudioFreqBuffer();
+        scaleX = this.renderLivePxPerFreq;
+    }
+
+    this.ctx.lineWidth = this.lineWidthLive;
+    this.ctx.strokeStyle = '#4f4';
+    this.ctx.beginPath();
+    this.ctx.moveTo(0, this.center.y);
+    for (var i = 0; i < buffer.length; i++) {
+        this.ctx.lineTo(i * this.step, this.center.y + scaleX * buffer[i]);
+    }
+    this.ctx.stroke();
+
+    this.invalidate();
+};
+
+Oscilloscope.prototype.drawSourceWaves = function (note) {
+    this.ctx.lineWidth = this.lineWidthSrc;
+    this.ctx.strokeStyle = getWaveColor(__note.getNote(note).index);
     this.ctx.beginPath();
     for (var i = 0; i < main.instrument.oscillators.length; i++) {
-        this.ctx.moveTo(0, this.canvasAmplitudeBuffer[note][i][0]);
+        this.ctx.moveTo(0, this.canvasBuffer[note][i][0]);
         for (var j = 0; j < this.sampleRate; j++) {
-            this.ctx.lineTo(j * this.step, this.canvasAmplitudeBuffer[note][i][j]);
+            this.ctx.lineTo(j * this.step, this.canvasBuffer[note][i][j]);
         }
     }
     this.ctx.stroke();
@@ -217,58 +223,77 @@ Oscilloscope.prototype.drawResultingWave = function () {
     this.ctx.shadowBlur = this.ctx.shadowOffsetY * 2;
     this.ctx.shadowColor = '#3a3';
 
-    var names = [];
-    let nInd;
-    for (nInd = 0; nInd < this.notes.length; nInd++) {
-        var note = this.notes[nInd];
-        names[nInd] = note.toString();
-        if (!this.canvasAmplitudeBuffer[names[nInd]])
-            this.calcAmplitudes(note);
-    }
-
+    let pointY;
     this.ctx.beginPath();
-    this.ctx.moveTo(0, this.maxAmplitudeHeight);
     for (var j = 0; j < this.sampleRate; j++) {
         var resAmpl = 0;
-        for (nInd = 0; nInd < this.notes.length; nInd++) {
-            var name = names[nInd];
+        for (var note in main.playing) {
             for (var i = 0; i < main.instrument.oscillators.length; i++) {
-                resAmpl += this.canvasAmplitudeBuffer[name][i][j];
+                resAmpl += this.canvasBuffer[note][i][j];
             }
         }
-        this.ctx.lineTo(j * this.step, resAmpl / main.instrument.oscillators.length / this.notes.length);
+        pointY = resAmpl / main.instrument.oscillators.length / main.playing.length;
+        if (j==0) {
+            this.ctx.moveTo(0, pointY);
+        } else {
+            this.ctx.lineTo(j * this.step, pointY);
+        }
     }
     this.ctx.stroke();
     this.ctx.shadowBlur = 0;
     this.ctx.shadowOffsetY = 0;
 };
 
-Oscilloscope.prototype.drawFromBuffer = function () {
-    var buffer, scaleX;
-    if (this.renderType == this.RENDER_LIVE_AMPLITUDE) {
-        buffer = main.sound.getAudioAmpBuffer();
-        scaleX = -this.maxAmplitudeHeight;
-    } else {
-        buffer = main.sound.getAudioFreqBuffer();
-        scaleX = this.renderLiveFreqToPx;
-    }
+/**
+ * Calculate amplitudes of waves of notes.
+ */
+Oscilloscope.prototype.calcAmplitudes = function () {
+    for (let note in main.playing) {
+        if (this.amplitudeBuffer[note]) continue;
 
-    this.ctx.lineWidth = this.lineWidthLive;
-    this.ctx.strokeStyle = '#4f4';
-    this.ctx.moveTo(0, buffer[0]);
-    for (var i = 0; i < buffer.length; i++) {
-        this.ctx.lineTo(i * this.step, this.maxAmplitudeHeight + scaleX * buffer[i]);
-    }
-    this.ctx.stroke();
+        let i, j;
 
-    this.invalidate();
+        var baseFreq = __note.getNote(note).freq * 2 * Math.PI;
+        this.amplitudeBuffer[note] = [];
+        for (i = 0; i < main.instrument.oscillators.length; i++) {
+            var waveFunc = __constants.WAVE_FUNCTION(main.instrument.oscillators[i].type);
+            this.amplitudeBuffer[note][i] = [];
+            var amplMultiplier = main.instrument.oscillators[i].gain;
+            var freq = baseFreq * main.instrument.oscillators[i].freq * this.scale;
+            var center = this.center.x / this.step;
+            for (j = 0; j <= this.sampleRate; j++) {
+                this.amplitudeBuffer[note][i][j] = amplMultiplier * waveFunc(freq * (j - center));
+            }
+        }
+
+        this.canvasBuffer[note] = [];
+        for (i = 0; i < main.instrument.oscillators.length; i++) {
+            this.canvasBuffer[note][i] = [];
+            for (j = 0; j <= this.sampleRate; j++) {
+                // reverse value of amplitude because
+                // the lowest point of the canvas (j,0)
+                // is the highest amplitude of wave
+                this.canvasBuffer[note][i][j] = -this.center.y * this.amplitudeBuffer[note][i][j] + this.center.y;
+            }
+        }
+    }
+};
+
+Oscilloscope.prototype.clearAmplitudeBuffer = function () {
+    this.amplitudeBuffer = [];
+    this.canvasBuffer = [];
+};
+
+Oscilloscope.prototype.recalcAmplitudes = function () {
+    this.clearAmplitudeBuffer();
+    this.calcAmplitudes();
 };
 
 Oscilloscope.prototype.loadMask = function (url) {
     this.mask = new Image();
     this.mask.setAttribute('crossOrigin', 'anonymous');
     this.mask.onload = function () {
-        this.prepareMask(self.mask);
+        this.prepareMask(this.mask);
     }.bind(this);
     this.mask.src = url;
 };
@@ -297,28 +322,6 @@ Oscilloscope.prototype.prepareMask = function () {
     this.mctx.shadowColor = "#060";
     this.mctx.drawImage(this.mask, 0, 0, this.width, this.height);
     this.mctx.shadowBlur = 0;
-};
-
-/**
- * Calculate the points of waves of the note on canvas.
- */
-Oscilloscope.prototype.calcAmplitudes = function (note) {
-    this.canvasAmplitudeBuffer[note] = [];
-    var baseFreq = note.freq * 2 * Math.PI;
-
-    for (var i = 0; i < main.instrument.oscillators.length; i++) {
-        var waveFunc = __constants.WAVE_FUNCTION(main.instrument.oscillators[i].type);
-        this.canvasAmplitudeBuffer[note][i] = [];
-        // reverse value of amplitude because the lower point of canvas (j,0)
-        // is the highest possible amplitude of wave
-        var amplMultiplier = -this.maxAmplitudeHeight * main.instrument.oscillators[i].gain;
-        var freq = baseFreq * main.instrument.oscillators[i].freq * this.scale;
-        var center = this.center.x / this.step;
-        for (var j = 0; j <= this.sampleRate; j++) {
-            this.canvasAmplitudeBuffer[note][i][j] =
-                amplMultiplier * waveFunc(freq * (j - center)) + this.maxAmplitudeHeight;
-        }
-    }
 };
 
 /**

@@ -2,10 +2,9 @@
 exports.getNote = getNote;
 
 let noteCache = [];
-__constants.NOTES_COUNT = (__constants.NOTE_END[1] - __constants.NOTE_START[1]) * __config.scale.length
-    - __config.scale.indexOf(__constants.NOTE_START[0]) + __config.scale.indexOf(__constants.NOTE_END[0]) + 1;
-noteCache[0] = __constants.NOTE_START = new Note(__constants.NOTE_START[0] + __constants.NOTE_START[1]);
-noteCache[__constants.NOTES_COUNT] = __constants.NOTE_END = new Note(__constants.NOTE_END[0] + __constants.NOTE_END[1]);
+__constants.NOTES_COUNT = getIndex(__constants.NOTE_END.name, __constants.NOTE_END.octave) + 1;
+noteCache[0] = __constants.NOTE_START = new Note(__constants.NOTE_START.name + __constants.NOTE_START.octave);
+noteCache[__constants.NOTES_COUNT] = __constants.NOTE_END = new Note(__constants.NOTE_END.name + __constants.NOTE_END.octave);
 
 // initialize cache
 for (let i = 1; i < __constants.NOTES_COUNT - 1; i++) {

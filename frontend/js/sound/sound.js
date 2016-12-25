@@ -99,7 +99,7 @@ Sound.prototype.stopNote = function (note, forceStop) {
     forceStop = forceStop || false;
 
     // if the only note is stopped, release the enveloper
-    if (main.playingCount == 1 && !forceStop) {
+    if (main.playing.length == 0 && !forceStop) {
         this.enveloper.release();
         // the note will be stopped in enveloper's onFinished callback
         // we need to remember currently fading note to stop it

@@ -13,7 +13,7 @@ function NoteBox(parameters) {
     }
 
     this.noteRange.setAttribute("min", "0");
-    this.noteRange.setAttribute("max", (__constants.NOTES_COUNT).toString());
+    this.noteRange.setAttribute("max", (__constants.NOTES_COUNT-1).toString());
 
     this._note = undefined;
 }

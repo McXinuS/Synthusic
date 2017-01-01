@@ -14,26 +14,6 @@ console.log("WebSocket server is running @ " + port);
 
 app.use(express.static('public'));
 
-var useSsl = (process.argv[2] != undefined && process.argv[2].toLowerCase()=='true');
-
-// redirect to HTTPS
-if (useSsl) {
-	app.get('*', function (req, res, next) {
-		if (req.headers['x-forwarded-proto'] != 'https') {
-			console.log('Redirecting to HTTPS');
-			res.redirect('https://' + req.headers.host + req.url);
-		}
-		else {
-			console.log('Responding to "' + req.url + '" request');
-			next();
-		}
-	});
-}
-
-app.get('/favicon', function (req, res) {
-	res.sendFile(path.join(__dirname, '/img/favicon.png'));
-});
-
-app.get('/', function (req, res) {
-	res.sendFile(path.join(__dirname, '/index.html'));
+app.get(['/favicon', '/favicon.ico'], function (req, res) {
+	res.sendFile(path.join(__dirname, '../frontend/img/favicon.png'));
 });

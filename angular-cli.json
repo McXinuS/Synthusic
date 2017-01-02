@@ -1,22 +1,24 @@
 {
   "project": {
-    "version": "1.0.0",
+    "version": "1.0.0-beta.24",
     "name": "simple-synthesizer"
   },
   "apps": [
     {
+      "root": "src",
+      "outDir": "dist",
       "assets": [
-        "assets"
+        "assets",
+        "favicon.ico"
       ],
-      "root": "frontend",
-      "outDir": "public",
       "index": "index.html",
       "main": "main.ts",
+      "test": "test.ts",
       "tsconfig": "tsconfig.json",
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "style.css"
+        "styles.css"
       ],
       "scripts": [],
       "environments": {
@@ -28,6 +30,16 @@
   ],
   "addons": [],
   "packages": [],
+  "e2e": {
+    "protractor": {
+      "config": "./protractor.conf.js"
+    }
+  },
+  "test": {
+    "karma": {
+      "config": "./karma.conf.js"
+    }
+  },
   "defaults": {
     "styleExt": "css",
     "prefixInterfaces": false,

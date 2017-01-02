@@ -12,8 +12,4 @@ console.log("HTTP server is running @ " + port);
 var webSocketServer = require('./web-socket.js').Server(server);
 console.log("WebSocket server is running @ " + port);
 
-app.use(express.static('public'));
-
-app.get(['/favicon', '/favicon.ico'], function (req, res) {
-	res.sendFile(path.join(__dirname, '../frontend/img/favicon.png'));
-});
+app.use(express.static('dist'));

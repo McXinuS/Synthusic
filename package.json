@@ -24,7 +24,8 @@
   },
   "main": "./backend/index.js",
   "scripts": {
-    "start": "webpack && node backend/index.js"
+    "start": "node backend/index.js",
+    "postinstall": "webpack"
   },
   "babel": {
     "presets": [

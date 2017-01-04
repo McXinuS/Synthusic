@@ -1,0 +1,17 @@
+<div id="topnav">
+  <ul class="navbar">
+    <li>
+      <a (click)="showNav('chat')">Chat (todo)</a>
+    </li>
+    <li>
+      <a (click)="showNav('rooms')">Rooms (todo)</a>
+    </li>
+    <li>
+      <a (click)="showNav('settings')">Settings</a>
+    </li>
+    <li>
+      <a (click)="showNav('instrument')">Instrument (todo)</a>
+    </li>
+  </ul>
+</div>
+<app-settings [isVisible]="visible['settings']"></app-settings>

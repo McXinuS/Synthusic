@@ -13,3 +13,4 @@ var webSocketServer = require('./web-socket.js').Server(server);
 console.log("WebSocket server is running @ " + port);
 
 app.use(express.static('dist'));
+app.use(express.static('dist/assets'));

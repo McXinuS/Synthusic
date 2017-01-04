@@ -1,0 +1,29 @@
+#nav_settings {
+  background : rgba(60, 60, 60, .9);
+  color      : #ddd;
+  padding    : 24px 48px;
+  margin     : 45px 0 -45px 0;
+}
+
+#nav_settings .btn {
+  background   : rgba(100, 100, 100, .5);
+  border-color : #3a3a3a;
+  color        : inherit;
+}
+
+#nav_settings .dropdown-menu {
+  background : #646464;
+  width      : 100%;
+}
+
+#nav_settings .dropdown-menu > li > a:focus, #nav_settings .dropdown-menu > li > a:hover {
+  background : #888;
+}
+
+#nav_settings .dropdown-menu > li > a.selected {
+  background : #888;
+}
+
+#panner-field {
+
+}

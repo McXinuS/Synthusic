@@ -1,1 +1,156 @@
-/* You can add global styles to this file, and also import other style files */
+.content {
+  margin : 80px 0 35px 0;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.loader {
+  width: 130px;
+  height: 130px;
+  background-image: url("assets/img/spinner_cat.gif");
+  background-size: 130px 130px;
+}
+
+.dropdown-menu > li > a {
+  color : inherit !important;
+}
+
+.dropdown-menu > li > a.selected {
+  background : #f5f5f5;
+}
+
+.container-block {
+  border-radius : 5px;
+  margin-bottom : 5px;
+}
+
+.container-title {
+  font-size     : 24px;
+  border-bottom : 1px solid;
+  margin-bottom : 10px;
+  cursor        : pointer;
+}
+
+.label-value {
+  float : right;
+}
+
+.inline-block {
+  display : inline-block;
+}
+
+.hidden {
+  display : none;
+}
+
+.well {
+  background   : rgba(255, 255, 255, .02);
+  border-color : #5a5a5a;
+  transition   : all .2s ease-in-out;
+}
+
+.well:hover {
+  background : rgba(255, 255, 255, .03);
+  box-shadow : inset 0 0 6px 1px rgba(0, 0, 0, .15);
+}
+
+.list-group {
+  margin : 0;
+}
+
+.list-group-item {
+  background-color : inherit !important;
+  border           : inherit !important;
+}
+
+.title-arrow {
+  float  : right;
+  cursor : pointer;
+}
+
+.title-arrow-up {
+  border              : 14px solid transparent;
+  border-top          : 0;
+  border-bottom-color : #6ea972;
+}
+
+.title-arrow-down {
+  border           : 14px solid transparent;
+  border-bottom    : 0;
+  border-top-color : #6ea972;
+}
+
+meter {
+  width  : 100%;
+  height : 1.35em;
+}
+
+meter::-webkit-meter-bar {
+  font-size     : 0;
+  border        : 1px solid black;
+  border-radius : 1px;
+  background    : rgba(240, 240, 240, .1);
+}
+
+meter::-webkit-meter-optimum-value {
+  background    : #86CC00; /* Green */
+  border-radius : 1px;
+}
+
+meter::-webkit-meter-suboptimum-value {
+  background    : #FFDB1A; /* Yellow */
+  border-radius : 1px;
+}
+
+meter::-webkit-meter-even-less-good-value {
+  background    : #CC4600; /* Red */
+  border-radius : 1px;
+}
+
+input[type=range] {
+  -webkit-appearance : none;
+  margin             : 14px 0 14px 0;
+  height             : 22px;
+  background         : transparent;
+}
+
+input[type=range]:focus {
+  outline : none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background : #367ebd;
+}
+
+input[type=range][disabled]::-webkit-slider-runnable-track {
+  background : #aaa;
+}
+
+input[type=range][disabled]::-webkit-slider-thumb {
+  background : #ddd;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width      : 100%;
+  height     : 8px;
+  cursor     : pointer;
+  background : #3071a9;
+  border     : 1px solid #010101;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  box-shadow         : 1px 1px 1px #000000, 0 0 1px #0d0d0d;
+  border             : 1px solid #000000;
+  height             : 30px;
+  width              : 16px;
+  border-radius      : 3px;
+  background         : #ffffff;
+  cursor             : pointer;
+  -webkit-appearance : none;
+  margin-top         : -13px;
+}

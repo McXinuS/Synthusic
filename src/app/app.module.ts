@@ -6,19 +6,38 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { SettingsComponent } from './settings/settings.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { KeyboardComponent } from './keyboard/keyboard.component';
+import { KeyComponent } from './keyboard/key/key.component';
+import { LoaderService } from "./shared/loader-service/loader.service";
+import { NoteService } from "./shared/note/note.service";
+import { InstrumentService } from "./shared/instrument/instrument.service";
+import { SequencerService } from "./shared/sequencer/sequencer.service";
+import { BroadcasterService } from "./shared/broadcaster/broadcaster.service";
+import { SoundService } from "./shared/sound/sound.service";
+import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
 
 @NgModule({
   declarations: [
     AppComponent,
     SettingsComponent,
-    NavbarComponent
+    NavbarComponent,
+    KeyboardComponent,
+    KeyComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [
+    LoaderService,
+    InstrumentService,
+    NoteService,
+    SequencerService,
+    SequencerNoteService,
+    BroadcasterService,
+    SoundService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,48 @@
+#instr-container {
+  background : url(../../assets/img/woodtexture8.jpg);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+#keyboard {
+  margin-bottom : 15px;
+  border        : 5px solid #582E16;
+  max-width     : 100%;
+  transition    : all .5s ease;
+  overflow-x    : auto;
+  overflow-y    : hidden;
+  white-space   : nowrap;
+  border-radius : 3px;
+}
+
+#keyboard-up {
+  background : url(../../assets/img/piano-up.jpg);
+  cursor     : move;
+  height     : 94px;
+}
+
+#keyboard-keys {
+  height     : 300px;
+  font-size  : 0;
+  transition : height .5s;
+}
+
+.keyboard-mini #keyboard-keys {
+  height : 120px;
+}
+
+#keyboard::-webkit-scrollbar {
+  width  : 10px;
+  height : 24px;
+}
+
+#keyboard::-webkit-scrollbar-track {
+  background : url(../../assets/img/piano-down.jpg);
+}
+
+#keyboard::-webkit-scrollbar-thumb {
+  background-color : rgba(88, 46, 22, .7);
+}

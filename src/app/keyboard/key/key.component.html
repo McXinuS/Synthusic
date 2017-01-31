@@ -1,0 +1,6 @@
+<div class="key" [class.key-black]="note.isAccidental" [class.key-white]="!note.isAccidental"
+     [class.playing]="highlighted" [class.selected]="selected && highlighted"
+     (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (contextmenu)="onContextMenu($event)"
+     (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave($event)">
+  <span>{{note.fullname}}</span>
+</div>

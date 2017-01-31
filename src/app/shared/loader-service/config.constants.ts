@@ -1,0 +1,40 @@
+import {Scale} from "../note/scale.model";
+
+let scaleNatural: Scale = {
+  id: 0,
+  name: 'Natural',
+  scale: ['C', 'D', 'E', 'F', 'G', 'A', 'B'],
+  accidentalPlaceholder: ' ',
+  accidentalSign: ' ',
+  accidentalStep: 0
+};
+let scaleSharp: Scale = {
+  id: 1,
+  name: 'Sharp',
+  scale: ['C', 'Cs', 'D', 'Ds', 'E', 'F', 'Fs', 'G', 'Gs', 'A', 'As', 'B'],
+  accidentalPlaceholder: 's',
+  accidentalSign: '♯',
+  accidentalStep: +1
+};
+let scaleFlat: Scale = {
+  id: 2,
+  name: 'Flat',
+  scale: ['C', 'Df', 'D', 'Ef', 'E', 'F', 'Gf', 'G', 'Af', 'A', 'Bf', 'B'],
+  accidentalPlaceholder: 'f',
+  accidentalSign: '♭',
+  accidentalStep: -1
+};
+
+export const CONSTANTS = {
+  noteConstants: {
+    'SCALE_NATURAL': scaleNatural,
+    'SCALE_SHARP': scaleSharp,
+    'SCALE_FLAT': scaleFlat,
+
+    'SCALE': this.SCALE_SHARP,
+    'FIRST_NOTE': {'name': 'C', 'octave': 2},
+    'LAST_NOTE': {'name': 'B', 'octave': 5},
+
+    'MASTER_GAIN_MAX': 0.5
+  }
+};

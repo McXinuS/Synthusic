@@ -1,7 +1,12 @@
 <app-navbar></app-navbar>
 
 <div class="content">
-  <div class="centered">
-    <h1 id="load-now">Loading...</h1>
+  <div id="loader" [class.hidden]="loadDone">
+    <div class="centered">
+      <h1>{{loaderMessage}}</h1>
+      <div class="centered-hor spinner"></div>
+    </div>
   </div>
 </div>
+
+<app-keyboard></app-keyboard>

@@ -1,15 +1,31 @@
 .content {
-  margin : 80px 0 35px 0;
+  margin : 45px 0 0 0;
 }
 
 .centered {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-100%);
 }
 
-.loader {
+.centered-hor {
+  position  : fixed;
+  left      : 50%;
+  transform : translateX(-50%);
+}
+
+#loader {
+  position   : absolute;
+  top        : 0;
+  right      : 0;
+  bottom     : 0;
+  left       : 0;
+  z-index    : 999;
+  background : rgba(0, 0, 0, .3);
+}
+
+.spinner {
   width: 130px;
   height: 130px;
   background-image: url("assets/img/spinner_cat.gif");

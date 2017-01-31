@@ -1,4 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
+import {SequencerService} from "../shared/sequencer/sequencer.service";
+import {SoundService} from "../shared/sound/sound.service";
 
 @Component({
   selector: 'app-settings',
@@ -8,7 +10,8 @@ import {Component, OnInit, Input} from '@angular/core';
 export class SettingsComponent implements OnInit {
   @Input() isVisible:boolean;
 
-  constructor() { }
+  constructor(private sequencerService: SequencerService,
+              private soundService: SoundService) { }
 
   ngOnInit() {
   }

@@ -18,6 +18,7 @@ export class KeyboardComponent implements OnInit {
   highlights: boolean[];
   notes: Note[];
   containerScrollWidth: number;
+  miniMode: boolean = false;
 
   private activeInstrument: Instrument;
 
@@ -32,13 +33,6 @@ export class KeyboardComponent implements OnInit {
     this.notes = this.noteService.notes;
     this.highlights = this.sequencerService.playingNotes;
     this.activeInstrument = this.instrumentService.instruments[0];
-
-    /*
-     this.broadcaster.on<Note>(BroadcastTopic.playNote)
-     .subscribe(note => this.playNote({note: note, broadcast: false}));
-     this.broadcaster.on<Note>(BroadcastTopic.stopNote)
-     .subscribe(note => this.stopNote({note: note, broadcast: false}));
-     */
   }
 
   onResize(keyboardWidth) {
@@ -70,5 +64,9 @@ export class KeyboardComponent implements OnInit {
     if (broadcast) {
       this.broadcaster.broadcast(BroadcastTopic.stopNote, ns);
     }
+  }
+
+  onMiniChange() {
+    this.miniMode = !this.miniMode;
   }
 }

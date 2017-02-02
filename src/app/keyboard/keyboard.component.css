@@ -1,10 +1,10 @@
 #instr-container {
   background : url(../../assets/img/woodtexture8.jpg);
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9;
+  position   : fixed;
+  bottom     : 0;
+  left       : 0;
+  right      : 0;
+  z-index    : 9;
 }
 
 #keyboard {
@@ -22,15 +22,20 @@
   background : url(../../assets/img/piano-up.jpg);
   cursor     : move;
   height     : 94px;
+  transition : height 0.4s;
+}
+
+.mini #keyboard-up {
+  height : 0;
 }
 
 #keyboard-keys {
-  height     : 300px;
+  height     : 200px;
   font-size  : 0;
   transition : height .5s;
 }
 
-.keyboard-mini #keyboard-keys {
+.mini #keyboard-keys {
   height : 120px;
 }
 

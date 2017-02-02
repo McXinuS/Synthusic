@@ -1,16 +1,19 @@
 <div id="instr-container" class="container-fluid">
-  <div class="container-title" data-toggle="collapse" data-target="#keyboard-up-collapse">
+  <div class="container-title"
+       (mouseup)="onMiniChange()">
     <h3>Keyboard
       <span id="instr-arrow" class="title-arrow glyphicon glyphicon-collapse-up"></span>
     </h3>
   </div>
 
-  <div id="keyboard">
-    <div id="keyboard-up-collapse" class="collapse in">
+  <div id="keyboard" [class.mini]="miniMode">
+    <div id="keyboard-up-collapse">
       <div id="keyboard-up" [style.width]="containerScrollWidth"></div>
     </div>
     <div id="keyboard-keys" (resize)="onResize(scrollWidth)">
-      <app-keyboard-key *ngFor="let note of notes" [note]="note" [highlighted]="highlights[note.index]"
+      <app-keyboard-key *ngFor="let note of notes"
+                        [note]="note"
+                        [highlighted]="highlights[note.index]"
                         (keyStateUpdated)="onKeyStateUpdated($event)"></app-keyboard-key>
     </div>
   </div>

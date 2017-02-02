@@ -38,3 +38,25 @@
   background-color : #000000;
   color            : #ffffff;
 }
+
+.navmenu {
+  transition : opacity .3s;
+  z-index    : 10;
+}
+
+.nav-collapse {
+  opacity : 0;
+}
+
+#logo-holder {
+  padding: 0;
+}
+
+.logo {
+  background-image    : url('assets/img/favicon_lowres.png');
+  background-repeat   : no-repeat;
+  background-position : center;
+  width               : 44px;
+  height              : 44px;
+  padding             : 6px;
+}

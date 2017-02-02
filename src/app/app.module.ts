@@ -15,6 +15,7 @@ import { SequencerService } from "./shared/sequencer/sequencer.service";
 import { BroadcasterService } from "./shared/broadcaster/broadcaster.service";
 import { SoundService } from "./shared/sound/sound.service";
 import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
+import { InstrumentSettingsComponent } from './instrument-settings/instrument-settings.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
     SettingsComponent,
     NavbarComponent,
     KeyboardComponent,
-    KeyComponent
+    KeyComponent,
+    InstrumentSettingsComponent
   ],
   imports: [
     BrowserModule,

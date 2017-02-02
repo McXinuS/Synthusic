@@ -8,8 +8,6 @@ import {SoundService} from "../shared/sound/sound.service";
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
-  @Input() isVisible:boolean;
-
   constructor(private sequencerService: SequencerService,
               private soundService: SoundService) { }
 

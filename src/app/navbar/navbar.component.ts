@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {SettingsComponent} from "../settings/settings.component";
 
 @Component({
   selector: 'app-navbar',
@@ -7,7 +6,7 @@ import {SettingsComponent} from "../settings/settings.component";
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  visible: boolean[] = [];
+  visible: Map<string, boolean> = new Map();
 
   constructor() {
   }
@@ -16,6 +15,8 @@ export class NavbarComponent implements OnInit {
   }
 
   showNav(tab) {
-    this.visible[tab] = !this.visible[tab];
+    let curState = this.visible.get(tab);
+    this.visible.clear();
+    this.visible.set(tab, !curState);
   }
 }

@@ -128,20 +128,20 @@
   color : #000000;
 }
 
-.keyboard-mini .key-black {
+.mini .key-black {
   height     : 60%;
   box-shadow : 0 0 5px rgba(0, 0, 0, .5);
 }
 
-.keyboard-mini .key-black:before {
+.mini .key-black:before {
   box-shadow : none;
 }
 
-.keyboard-mini .key-white > span {
+.mini .key-white > span {
   bottom : 0
 }
 
-.keyboard-mini .key-black > span {
+.mini .key-black > span {
   bottom    : 0;
   transform : translate(-50%, -35%);
 }

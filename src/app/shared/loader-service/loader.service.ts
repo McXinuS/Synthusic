@@ -5,13 +5,15 @@ import {INSTRUMENTS} from './instrument.mock';
 import {InstrumentService} from "../instrument/instrument.service";
 import {BroadcasterService} from "../broadcaster/broadcaster.service";
 import {SoundService} from "../sound/sound.service";
+import {PopupService} from "../popup/popup.service";
 
 @Injectable()
 export class LoaderService{
   constructor(private noteService: NoteService,
               private instrumentService: InstrumentService,
               private broadcaster: BroadcasterService,
-              private soundService: SoundService) {
+              private soundService: SoundService,
+              private popupService: PopupService) {
   }
 
   init(progressChange, onDone) {
@@ -26,6 +28,7 @@ export class LoaderService{
     progressChange('Initializing sound module');
     this.initSoundModule(settings);
     onDone();
+    this.popupService.show("Loaded!");
   }
 
   private establishWebSocketConnection() {

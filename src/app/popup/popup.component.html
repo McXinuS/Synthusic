@@ -1,0 +1,11 @@
+<div class="overlay"
+     [class.overlay-active]="popupService.isShown"
+     (click)="close($event)">
+  <div class="centered popup" *ngIf="popupService.isShown">
+    <app-instrument-settings *ngIf="popupService.isInstrument"></app-instrument-settings>
+    <div *ngIf="!popupService.isInstrument">
+      <p>{{popupService.message}}</p>
+      <button (click)="close()">Close</button>
+    </div>
+  </div>
+</div>

@@ -67,7 +67,7 @@
 .well {
   background   : rgba(255, 255, 255, .02);
   border-color : #5a5a5a;
-  transition   : all .2s ease-in-out;
+  transition   : background .2s ease-in-out, box-shadow .2s;
 }
 
 .well:hover {

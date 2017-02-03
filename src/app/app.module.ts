@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { SettingsComponent } from './settings/settings.component';
+import { SettingsComponent } from './navbar/settings/settings.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { KeyboardComponent } from './keyboard/keyboard.component';
 import { KeyComponent } from './keyboard/key/key.component';
@@ -15,7 +15,9 @@ import { SequencerService } from "./shared/sequencer/sequencer.service";
 import { BroadcasterService } from "./shared/broadcaster/broadcaster.service";
 import { SoundService } from "./shared/sound/sound.service";
 import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
-import { InstrumentSettingsComponent } from './instrument-settings/instrument-settings.component';
+import { InstrumentSettingsComponent } from './popup/instrument-settings/instrument-settings.component';
+import {PopupService} from "./shared/popup/popup.service";
+import { PopupComponent } from './popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { InstrumentSettingsComponent } from './instrument-settings/instrument-se
     NavbarComponent,
     KeyboardComponent,
     KeyComponent,
-    InstrumentSettingsComponent
+    InstrumentSettingsComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,8 @@ import { InstrumentSettingsComponent } from './instrument-settings/instrument-se
     SequencerService,
     SequencerNoteService,
     BroadcasterService,
-    SoundService
+    SoundService,
+    PopupService
   ],
   bootstrap: [AppComponent]
 })

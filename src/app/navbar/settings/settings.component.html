@@ -56,50 +56,6 @@
       </ul>
     </div>
 
-    <div class="col-sm-5 col-md-5 col-lg-5">
-      <div class="well">
-        <label>Envelope</label>
-        <div class="row">
-          <div class="col-md-3 col-lg-3">
-            <div id="envelope-attack-label">
-              <span class="label-desc">Attack</span>
-              <span class="label-value">Value</span>
-            </div>
-            <input type="range" id="envelope-attack-range" min="0" max="2500" step="10" value="1"
-                   oninput="main.updateEnvelopeConfig(this.value, 'attack')"
-                   onchange="// TODO main.updateEnvelopeConfig(this.value, 'attack', true)">
-          </div>
-          <div class="col-md-3 col-lg-3">
-            <div id="envelope-decay-label">
-              <span class="label-desc">Decay</span>
-              <span class="label-value">Value</span>
-            </div>
-            <input type="range" id="envelope-decay-range" min="0" max="2500" step="10" value="1"
-                   oninput="main.updateEnvelopeConfig(this.value, 'decay')"
-                   onchange="main.updateEnvelopeConfig(this.value, 'decay', true)">
-          </div>
-          <div class="col-md-3 col-lg-3">
-            <div id="envelope-sustain-label">
-              <span class="label-desc">Sustain</span>
-              <span class="label-value">Value</span>
-            </div>
-            <input type="range" id="envelope-sustain-range" min="0" max="1" step="0.01" value="1"
-                   oninput="main.updateEnvelopeConfig(this.value, 'sustain')"
-                   onchange="main.updateEnvelopeConfig(this.value, 'sustain', true)">
-          </div>
-          <div class="col-md-3 col-lg-3">
-            <div id="envelope-release-label">
-              <span class="label-desc">Release</span>
-              <span class="label-value">Value</span>
-            </div>
-            <input type="range" id="envelope-release-range" min="0" max="2500" step="10" value="1"
-                   oninput="main.updateEnvelopeConfig(this.value, 'release')"
-                   onchange="main.updateEnvelopeConfig(this.value, 'release', true)">
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <div class="row">

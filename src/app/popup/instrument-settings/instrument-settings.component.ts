@@ -14,4 +14,7 @@ export class InstrumentSettingsComponent implements OnInit {
   ngOnInit() {
   }
 
+  updateEnveloper() {
+
+  }
 }

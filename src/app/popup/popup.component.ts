@@ -13,8 +13,15 @@ export class PopupComponent implements OnInit {
   ngOnInit() {
   }
 
-  close(event?) {
+  close(event?: Event) {
+    console.log(event);
     this.popupService.close();
-    if (event) event.stopPropagation();
+  }
+
+  doNothing(event: Event) {
+    console.log(event);
+    event.stopPropagation();
+    event.cancelBubble = true;
+    return false;
   }
 }

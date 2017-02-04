@@ -8,6 +8,7 @@ import {BroadcastTopic} from "../shared/broadcaster/broadcasttopic.enum";
 import {Instrument} from "../shared/instrument/instrument.model";
 import {InstrumentService} from "../shared/instrument/instrument.service";
 import {SequencerNoteService} from "../shared/sequencer/sequencernote.service";
+import {PopupService} from "../shared/popup/popup.service";
 
 @Component({
   selector: 'app-keyboard',
@@ -17,21 +18,25 @@ import {SequencerNoteService} from "../shared/sequencer/sequencernote.service";
 export class KeyboardComponent implements OnInit {
   highlights: boolean[];
   notes: Note[];
+
+  instruments: Instrument[];
+  activeInstrument: Instrument;
+
   containerScrollWidth: number;
   miniMode: boolean = false;
-
-  private activeInstrument: Instrument;
 
   constructor(private noteService: NoteService,
               private sequencerService: SequencerService,
               private sequencerNoteService: SequencerNoteService,
               private broadcaster: BroadcasterService,
-              private instrumentService: InstrumentService,) {
+              private instrumentService: InstrumentService,
+              private popupService: PopupService) {
   }
 
   ngOnInit() {
     this.notes = this.noteService.notes;
     this.highlights = this.sequencerService.playingNotes;
+    this.instruments = this.instrumentService.instruments;
     this.activeInstrument = this.instrumentService.instruments[0];
   }
 
@@ -46,8 +51,6 @@ export class KeyboardComponent implements OnInit {
         return;
       case KeyChangeMode.stop:
         this.stopNote({note: e.note, broadcast: true});
-        return;
-      case KeyChangeMode.observe:
         return;
     }
   }
@@ -66,7 +69,11 @@ export class KeyboardComponent implements OnInit {
     }
   }
 
-  onMiniChange() {
-    this.miniMode = !this.miniMode;
+  onMiniChange(e) {
+    if (e.which == 1) this.miniMode = !this.miniMode;
+  }
+
+  openSettings() {
+    this.popupService.show(this.activeInstrument);
   }
 }

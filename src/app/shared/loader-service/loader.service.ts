@@ -28,7 +28,6 @@ export class LoaderService{
     progressChange('Initializing sound module');
     this.initSoundModule(settings);
     onDone();
-    this.popupService.show("Loaded!");
   }
 
   private establishWebSocketConnection() {

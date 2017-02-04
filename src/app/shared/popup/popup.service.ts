@@ -1,23 +1,30 @@
 import {Injectable} from "@angular/core";
 import {Instrument} from "../instrument/instrument.model";
 
+export interface PopupMessage {
+
+}
+
 @Injectable()
 export class PopupService {
   instrument: Instrument;
+  header: string;
   message: string;
+
   isShown: boolean = false;
   isInstrument: boolean = false;
 
   show(instrument: Instrument);
-  show(message: String);
-  show(content: any) {
+  show(header:string, message: String);
+  show(content: any, content2?: string) {
     if (this.isShown) return;
 
-    if (content instanceof Instrument) {
+    if (typeof content == 'object') {
       this.instrument = content;
       this.isInstrument = true;
     } else if (typeof content == 'string') {
-      this.message = content;
+      this.header = content;
+      this.message = content2;
     }
     this.isShown = true;
   }

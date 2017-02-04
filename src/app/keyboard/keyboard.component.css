@@ -1,10 +1,53 @@
-#instr-container {
+.wrapper {
   background : url(../../assets/img/woodtexture8.jpg);
   position   : fixed;
   bottom     : 0;
   left       : 0;
   right      : 0;
   z-index    : 9;
+}
+
+.container-title h3 {
+  margin  : 0;
+  padding : 20px 0 10px 0;
+}
+
+.settings {
+  display : inline-block;
+}
+
+label {
+  display        : block;
+  font-size      : 0.8em;
+  text-transform : uppercase;
+  color          : #d6c0b3;
+}
+
+select {
+  width              : 200px;
+  padding            : 0 35px 0 6px;
+  border             : 1px solid #ccc;
+  border-radius      : 4px;
+  height             : 30px;
+  cursor             : pointer;
+  -webkit-appearance : none;
+  -moz-appearance    : none;
+  appearance         : none;
+}
+
+.select-action {
+  width            : 30px;
+  height           : 30px;
+  margin-left             : -30px;
+  border           : 1px solid #ccc;
+  border-radius    : 0 4px 4px 0;
+  background-color : #fff;
+  transition       : background-color .3s;
+  top              : 0;
+}
+
+.select-action:hover {
+  background-color : #e1e1e1;
 }
 
 #keyboard {
@@ -20,7 +63,6 @@
 
 #keyboard-up {
   background : url(../../assets/img/piano-up.jpg);
-  cursor     : move;
   height     : 94px;
   transition : height 0.4s;
 }

@@ -14,8 +14,11 @@ export class KeyComponent {
   @Output() keyStateUpdated = new EventEmitter();
 
   onMouseDown(e) {
-    if (e.which == 3) this.selected = true;
-    if (e.which == 1 || e.which == 3) {
+    if (e.which == 3) {
+      this.selected = true;
+      this.playNote();
+    }
+    if (e.which == 1) {
       this.highlighted ? this.stopNote() : this.playNote();
     }
     if (e.which == 1 || e.which == 2) {
@@ -52,9 +55,5 @@ export class KeyComponent {
   stopNote() {
     this.selected = false;
     this.keyStateUpdated.emit({mode: KeyChangeMode.stop, note: this.note});
-  }
-
-  observeNote() {
-    this.keyStateUpdated.emit({mode: KeyChangeMode.observe, note: this.note});
   }
 }

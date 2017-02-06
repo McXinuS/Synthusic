@@ -3,7 +3,7 @@
      (click)="close($event)">
   <div class="centered popup"
        *ngIf="popupService.isShown"
-       (click)="doNothing($event)">
+       (click)="$event.stopPropagation()">
     <app-instrument-settings
       *ngIf="popupService.isInstrument"
       [instrument]="popupService.instrument"></app-instrument-settings>

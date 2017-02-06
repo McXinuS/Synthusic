@@ -16,7 +16,9 @@
             <select [(ngModel)]="activeInstrument">
               <option *ngFor="let instrument of instruments" [ngValue]="instrument">{{instrument.name}}</option>
             </select>
-            <button class="glyphicon glyphicon-cog select-action" (click)="openSettings()"></button>
+            <div class="select-action" (click)="openSettings()">
+              <span class="glyphicon glyphicon-cog"></span>
+            </div>
           </div>
         </div>
       </div>

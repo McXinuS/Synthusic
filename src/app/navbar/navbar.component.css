@@ -41,16 +41,13 @@
 
 .navmenu {
   position   : relative;
-  transition : visibility 0s, opacity .3s, max-height 0s linear .3s;
+  transition : visibility .3s, opacity .3s;
   z-index    : 10;
   opacity    : 1;
   visibility : visible;
 }
 
 .nav-collapse {
-  transition  : visibility 0s linear .3s, opacity .3s, max-height 0s linear .3s;
-  max-height  : 0;
-  overflow    : hidden;
   opacity     : 0;
   visibility  : hidden;
 }

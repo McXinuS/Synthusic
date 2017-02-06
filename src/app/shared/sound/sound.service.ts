@@ -6,6 +6,7 @@ import {SequencerNote} from "../sequencer/sequencernote.model";
 import {BroadcastTopic} from "../broadcaster/broadcasttopic.enum";
 import {Enveloper} from "./enveloper";
 import {Instrument} from "../instrument/instrument.model";
+import {SequencerNoteService} from "../sequencer/sequencernote.service";
 
 class GainedOscillatorNode extends OscillatorNode{
   gainNode: GainNode;
@@ -68,7 +69,8 @@ export class SoundService {
   readonly RAMP_STOP_TIME = 50;
 
   constructor(private broadcaster: BroadcasterService,
-              private sequencerService: SequencerService) {
+              private sequencerService: SequencerService,
+              private sequencerNoteService: SequencerNoteService) {
   }
 
   init() {
@@ -162,6 +164,7 @@ export class SoundService {
     this.noteToStop = undefined;
 
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
+      if (instrumentId && this.sequencerNoteService.hasPreffix(instrumentId, id)) return;
       for (let osc of oscArr) {
         osc.stop(0);
         osc.disconnect();

@@ -7,8 +7,6 @@ import {NoteService} from "../note/note.service";
 
 @Injectable()
 export class SequencerNoteService {
-
-
   readonly ID_INSTUMENT_MULTIPLIER = 200;
 
   constructor(private noteService: NoteService, private instrumentService: InstrumentService) {
@@ -25,19 +23,30 @@ export class SequencerNoteService {
   Create(id: number): SequencerNote;
   Create(noteOrId: any, instrument?: Instrument): SequencerNote {
     if (typeof noteOrId == 'number') {
-      let [noteId, insId] = this._parseID(noteOrId);
+      let [noteId, insId] = this.parseID(noteOrId);
       let n = this.noteService.getNote(noteId);
       let instrument = this.instrumentService.getInstrument(insId);
       return new SequencerNote(noteOrId, n, instrument);
     }
-    return new SequencerNote(this._getID(noteOrId, instrument), noteOrId, instrument);
+    return new SequencerNote(this.getID(noteOrId, instrument), noteOrId, instrument);
   }
 
-  private _getID(note: Note, instrument: Instrument) {
-    return instrument.id * this.ID_INSTUMENT_MULTIPLIER + note.index;
+  private getID(note: Note, instrument: Instrument) {
+    return this.getPreffix(instrument.id) + note.index;
   }
 
-  private _parseID(id: number) {
+  private parseID(id: number) {
     return [id % this.ID_INSTUMENT_MULTIPLIER, Math.trunc(id / this.ID_INSTUMENT_MULTIPLIER)];
+  }
+
+  getPreffix(instrumentId: number): number {
+    return instrumentId * this.ID_INSTUMENT_MULTIPLIER;
+  }
+
+  /**
+   * Checks whether the sequencerNote contains following instrument.
+   */
+  hasPreffix(instrumentId: number, sequencerNoteId: number): boolean {
+    return instrumentId == sequencerNoteId % this.ID_INSTUMENT_MULTIPLIER;
   }
 }

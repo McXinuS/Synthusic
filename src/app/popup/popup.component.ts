@@ -17,11 +17,4 @@ export class PopupComponent implements OnInit {
     console.log(event);
     this.popupService.close();
   }
-
-  doNothing(event: Event) {
-    console.log(event);
-    event.stopPropagation();
-    event.cancelBubble = true;
-    return false;
-  }
 }

@@ -8,7 +8,7 @@
       </div>
       <input type="range" min="0" max="2500" step="10"
              [value]="instrument.envelope.attack"
-             (change)="updateEnvelopeConfig(value, 'attack', true)">
+             (change)="updateEnvelopeConfig('attack', $event.target.value)">
     </div>
     <div class="col-md-3 col-lg-3">
       <div>
@@ -17,7 +17,7 @@
       </div>
       <input type="range" min="0" max="2500" step="10"
              [value]="instrument.envelope.decay"
-             (change)="updateEnvelopeConfig(value, 'decay', true)">
+             (change)="updateEnvelopeConfig('decay', $event.target.value)">
     </div>
     <div class="col-md-3 col-lg-3">
       <div>
@@ -26,7 +26,7 @@
       </div>
       <input type="range" min="0" max="1" step="0.01"
              [value]="instrument.envelope.sustain"
-             (change)="updateEnvelopeConfig(value, 'sustain', true)">
+             (change)="updateEnvelopeConfig('sustain', $event.target.value)">
     </div>
     <div class="col-md-3 col-lg-3">
       <div>
@@ -35,7 +35,7 @@
       </div>
       <input type="range" min="0" max="2500" step="10"
              [value]="instrument.envelope.release"
-             (change)="updateEnvelopeConfig(value, 'release', true)">
+             (change)="updateEnvelopeConfig('release', $event.target.value)">
     </div>
   </div>
 </div>

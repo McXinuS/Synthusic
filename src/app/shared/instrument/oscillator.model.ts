@@ -1,5 +1,7 @@
 export class Oscillator {
-  type: string;
   freq: number;
   gain: number;
+  type: string;
 }
+
+export const Types = ['sine', 'square', 'sawtooth', 'triangle'];

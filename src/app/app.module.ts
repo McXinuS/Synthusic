@@ -18,6 +18,9 @@ import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
 import { InstrumentSettingsComponent } from './popup/instrument-settings/instrument-settings.component';
 import {PopupService} from "./shared/popup/popup.service";
 import { PopupComponent } from './popup/popup.component';
+import { OscillatorSettingsComponent } from './popup/instrument-settings/oscillator-settings/oscillator-settings.component';
+import {TitleCase} from "./shared/utils/pipes/titlecase.pipe";
+import { SequencerComponent } from './sequencer/sequencer.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { PopupComponent } from './popup/popup.component';
     KeyboardComponent,
     KeyComponent,
     InstrumentSettingsComponent,
-    PopupComponent
+    PopupComponent,
+    OscillatorSettingsComponent,
+    TitleCase,
+    SequencerComponent
   ],
   imports: [
     BrowserModule,

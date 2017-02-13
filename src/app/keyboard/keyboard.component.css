@@ -17,10 +17,16 @@
 }
 
 label {
-  display        : block;
   font-size      : 0.8em;
   text-transform : uppercase;
   color          : #d6c0b3;
+}
+
+select {
+  width              : 200px;
+  -webkit-appearance : none;
+  -moz-appearance    : none;
+  appearance         : none;
 }
 
 #keyboard {

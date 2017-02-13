@@ -66,7 +66,7 @@ export class SoundService {
    * Prevents click effect when changing one note to another.
    * When stopped, every note will be fading during that period of time (ms).
    */
-  readonly RAMP_STOP_TIME = 50;
+  readonly RAMP_STOP_TIME = 10;
 
   constructor(private broadcaster: BroadcasterService,
               private sequencerService: SequencerService,

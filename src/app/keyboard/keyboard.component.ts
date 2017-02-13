@@ -40,10 +40,6 @@ export class KeyboardComponent implements OnInit {
     this.activeInstrument = this.instrumentService.instruments[0];
   }
 
-  onResize(keyboardWidth) {
-    this.containerScrollWidth = keyboardWidth;
-  }
-
   onKeyStateUpdated(e) {
     switch (e.mode) {
       case KeyChangeMode.play:

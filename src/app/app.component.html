@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
-
 <div class="content">
+  <app-sequencer></app-sequencer>
   <div id="loader" [class.hidden]="loadDone">
     <div class="centered">
       <h1>{{loaderMessage}}</h1>
@@ -8,6 +8,5 @@
     </div>
   </div>
 </div>
-
 <app-keyboard></app-keyboard>
 <app-popup></app-popup>

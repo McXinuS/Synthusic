@@ -14,7 +14,6 @@ export class PopupComponent implements OnInit {
   }
 
   close(event?: Event) {
-    console.log(event);
     this.popupService.close();
   }
 }

@@ -1,0 +1,29 @@
+.well {
+  margin : 0;
+}
+
+#instrumentCanvas {
+  display : block;
+}
+
+.envelope {
+  border  : solid #999 1px;
+  padding : 5px 8px;
+}
+
+#name {
+  font-size        : 2em;
+  padding-left     : 16px;
+  margin-bottom    : 15px;
+  height           : 50px;
+  background-color : transparent;
+  transition       : background-color .3s;
+}
+
+#name:hover {
+  background-color : rgba(255,255,255,0.3);
+}
+
+#name:focus {
+  background-color : #fff;
+}

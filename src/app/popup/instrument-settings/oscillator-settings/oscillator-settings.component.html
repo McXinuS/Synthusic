@@ -1,0 +1,50 @@
+<canvas #instrumentCanvas id="instrumentCanvas"
+        [class.grabbing]="isMouseDown"
+        height='250px'
+        (mousedown)="mouseDown($event)"
+        (mousemove)="mouseMove($event)"
+        (mouseup)="mouseUp()"
+        (mouseleave)="mouseLeave()"
+        (contextmenu)="$event.preventDefault();"></canvas>
+
+<div>
+
+  <div class="row">
+    <div class="col-md-4 col-lg-4">
+      <div>
+        <span class="label-desc">Frequency scale</span>
+        <span class="label-value">{{selectedOscillator && selectedOscillator.freq | number : '1.2-2'}}</span>
+      </div>
+      <input type="range"
+             min="0.25"
+             max="8"
+             step="0.01"
+             [value]="selectedOscillator && selectedOscillator.freq"
+             [disabled]="!selectedOscillator"
+             (input)="updateProperty('freq', $event.target.value)"
+             (change)="updateProperty('freq', $event.target.value, true)">
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <div>
+        <span class="label-desc">Gain scale</span>
+        <span class="label-value">{{selectedOscillator && selectedOscillator.gain | number : '1.2-2'}}</span>
+      </div>
+      <input id="gain" type="range"
+             min="0"
+             max="1"
+             step="0.01"
+             [value]="selectedOscillator && selectedOscillator.gain"
+             [disabled]="!selectedOscillator"
+             (input)="updateProperty('gain', $event.target.value)"
+             (change)="updateProperty('gain', $event.target.value, true)">
+    </div>
+    <div class="col-md-4 col-lg-4">
+      <label for="type">Type</label>
+      <select id="type" [(ngModel)]="selectedOscillator && selectedOscillator.type"
+              [disabled]="!selectedOscillator"
+              (change)="updateProperty('type', $event.target.value, true)">
+        <option *ngFor="let type of Types" value="{{type}}">{{type | titleCase}}</option>
+      </select>
+    </div>
+  </div>
+</div>

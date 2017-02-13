@@ -9,7 +9,7 @@
   <div id="keyboard" [class.mini]="miniMode">
 
     <div id="keyboard-up-collapse">
-      <div id="keyboard-up" [style.width]="containerScrollWidth">
+      <div id="keyboard-up" [style.width.px]="keyboardKeys.scrollWidth">
         <div class="well settings">
           <label>Instrument</label>
           <div class="button-group">
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div id="keyboard-keys" (resize)="onResize(scrollWidth)">
+    <div #keyboardKeys id="keyboard-keys">
       <app-keyboard-key *ngFor="let note of notes"
                         [note]="note"
                         [highlighted]="highlights[note.index]"

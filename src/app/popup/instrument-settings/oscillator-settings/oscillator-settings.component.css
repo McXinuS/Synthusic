@@ -1,0 +1,9 @@
+canvas {
+  display : block;
+  cursor  : grab;
+  margin-bottom: 10px;
+}
+
+canvas.grabbing {
+  cursor : grabbing;
+}

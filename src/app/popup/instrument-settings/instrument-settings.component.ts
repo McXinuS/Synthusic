@@ -1,5 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {Instrument} from "../../shared/instrument/instrument.model";
+import {InstrumentService} from "../../shared/instrument/instrument.service";
 
 @Component({
   selector: 'app-instrument-settings',
@@ -9,12 +10,12 @@ import {Instrument} from "../../shared/instrument/instrument.model";
 export class InstrumentSettingsComponent implements OnInit {
   @Input() instrument: Instrument;
 
-  constructor() { }
+  constructor(private instrumentService: InstrumentService) { }
 
   ngOnInit() {
   }
 
   updateEnvelopeConfig(type: string, value: number) {
-    this.instrument.envelope[type] = value;
+    this.instrumentService.updateEnvelope(this.instrument.id, type, value);
   }
 }

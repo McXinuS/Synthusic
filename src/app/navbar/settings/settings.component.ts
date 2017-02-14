@@ -8,10 +8,22 @@ import {SoundService} from "../../shared/sound/sound.service";
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+
+  masterGainBeforeMute: number = 0;
+
   constructor(private sequencerService: SequencerService,
-              private soundService: SoundService) { }
+              private soundService: SoundService) {
+  }
 
   ngOnInit() {
   }
 
+  toggleMute() {
+    if (this.soundService.masterGain > 0) {
+      this.masterGainBeforeMute = this.soundService.masterGain;
+      this.soundService.masterGain = 0;
+    } else {
+      this.soundService.masterGain = this.masterGainBeforeMute;
+    }
+  };
 }

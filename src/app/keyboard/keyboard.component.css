@@ -51,13 +51,15 @@ select {
 }
 
 #keyboard-keys {
-  height     : 200px;
+  height     : 12vh;
+  min-height : 100px;
   font-size  : 0;
-  transition : height .5s;
+  transition : min-height .5s, height .5s;
 }
 
 .mini #keyboard-keys {
-  height : 120px;
+  height     : 8vh;
+  min-height : 75px;
 }
 
 #keyboard::-webkit-scrollbar {

@@ -40,7 +40,9 @@
 }
 
 .navmenu {
-  position   : relative;
+  position   : absolute;
+  left       : 0;
+  right      : 0;
   transition : visibility .3s, opacity .3s;
   z-index    : 10;
   opacity    : 1;
@@ -48,12 +50,12 @@
 }
 
 .nav-collapse {
-  opacity     : 0;
-  visibility  : hidden;
+  opacity    : 0;
+  visibility : hidden;
 }
 
 #logo-holder {
-  padding: 0;
+  padding : 0;
 }
 
 .logo {

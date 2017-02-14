@@ -1,9 +1,7 @@
 #nav_settings {
-  position   : relative;
   background : rgba(60, 60, 60, .9);
   color      : #ddd;
   padding    : 24px 48px;
-  margin     : 45px 0 -45px 0;
 }
 
 #nav_settings .btn {

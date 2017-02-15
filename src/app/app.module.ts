@@ -21,6 +21,8 @@ import { PopupComponent } from './popup/popup.component';
 import { OscillatorSettingsComponent } from './popup/instrument-settings/oscillator-settings/oscillator-settings.component';
 import {TitleCase} from "./shared/utils/pipes/titlecase.pipe";
 import { SequencerComponent } from './sequencer/sequencer.component';
+import { ChatComponent } from './navbar/chat/chat.component';
+import {ChatService} from "./shared/chat/chat.service";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,8 @@ import { SequencerComponent } from './sequencer/sequencer.component';
     PopupComponent,
     OscillatorSettingsComponent,
     TitleCase,
-    SequencerComponent
+    SequencerComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import { SequencerComponent } from './sequencer/sequencer.component';
     SequencerNoteService,
     BroadcasterService,
     SoundService,
-    PopupService
+    PopupService,
+    ChatService
   ],
   bootstrap: [AppComponent]
 })

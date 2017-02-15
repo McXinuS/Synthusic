@@ -1,0 +1,11 @@
+
+<div class="container-fluid">
+  <div *ngIf="messages.length == 0" class="center">
+    No messages yet.
+  </div>
+  <ul>
+    <li *ngFor="let msg of messages">
+      {{msg.sender}}: {{msg.message}}
+    </li>
+  </ul>
+</div>

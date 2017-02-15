@@ -35,8 +35,8 @@
 }
 
 .navbar li a:hover {
-  background-color : #000000;
-  color            : #ffffff;
+  background-color : #000;
+  color            : #fff;
 }
 
 .navmenu {
@@ -56,6 +56,7 @@
 
 #logo-holder {
   padding : 0;
+  margin-left: 15px;
 }
 
 .logo {

@@ -14,10 +14,10 @@
     <li>
       <a (click)="showNav('settings')">Settings</a>
     </li>
-    <li>
-      <a (click)="showNav('instrument')">Instrument (todo)</a>
-    </li>
   </ul>
+</div>
+<div class="navmenu" [class.nav-collapse]="!visible.get('chat')">
+  <app-chat></app-chat>
 </div>
 <div class="navmenu" [class.nav-collapse]="!visible.get('settings')">
   <app-settings></app-settings>

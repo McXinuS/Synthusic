@@ -1,5 +1,6 @@
 export enum BroadcastTopic {
   playNote,
   stopNote,
-  stop
+  stop,
+  chatMessage
 }

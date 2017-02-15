@@ -10,19 +10,6 @@
   color        : inherit;
 }
 
-#nav_settings .dropdown-menu {
-  background : #646464;
-  width      : 100%;
-}
-
-#nav_settings .dropdown-menu > li > a:focus, #nav_settings .dropdown-menu > li > a:hover {
-  background : #888;
-}
-
-#nav_settings .dropdown-menu > li > a.selected {
-  background : #888;
-}
-
 #panner-field {
 
 }

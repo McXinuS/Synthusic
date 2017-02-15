@@ -1,8 +1,9 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
 import {Note} from "../../shared/note/note.model";
 import {KeyChangeMode} from "./keychangemode.enum";
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-keyboard-key',
   templateUrl: './key.component.html',
   styleUrls: ['./key.component.css']

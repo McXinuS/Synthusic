@@ -61,7 +61,7 @@
 }
 
 .key > span {
-  transition  : color .75s, bottom .5s;
+  transition  : color .75s, bottom .5s, transform .5s;
   font-family : 'VT323', monospace;
   position    : absolute;
   bottom      : 10px;
@@ -142,6 +142,6 @@
 }
 
 .mini .key-black > span {
-  bottom    : 0;
-  transform : translate(-50%, -35%);
+  bottom    : 50%;
+  transform : translate(-50%, 50%);
 }

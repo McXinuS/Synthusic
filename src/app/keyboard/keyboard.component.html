@@ -1,9 +1,11 @@
 <div class="wrapper container-fluid">
   <div class="container-title"
        (mouseup)="onMiniChange($event)">
-    <h3>Keyboard
-      <span class="title-arrow glyphicon glyphicon-collapse-up"></span>
-    </h3>
+    <h4>Keyboard
+      <span class="title-arrow glyphicon"
+            [class.glyphicon-collapse-up]="miniMode"
+            [class.glyphicon-collapse-down]="!miniMode"></span>
+    </h4>
   </div>
 
   <div id="keyboard" [class.mini]="miniMode">

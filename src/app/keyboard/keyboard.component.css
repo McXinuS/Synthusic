@@ -7,9 +7,14 @@
   z-index    : 9;
 }
 
-.container-title h3 {
+.container-title {
   margin  : 0;
   padding : 20px 0 10px 0;
+}
+
+.title-arrow {
+  float  : right;
+  cursor : pointer;
 }
 
 .settings {
@@ -51,15 +56,13 @@ select {
 }
 
 #keyboard-keys {
-  height     : 12vh;
-  min-height : 100px;
+  height     : 200px;
   font-size  : 0;
   transition : min-height .5s, height .5s;
 }
 
 .mini #keyboard-keys {
-  height     : 8vh;
-  min-height : 75px;
+  height     : 120px;
 }
 
 #keyboard::-webkit-scrollbar {

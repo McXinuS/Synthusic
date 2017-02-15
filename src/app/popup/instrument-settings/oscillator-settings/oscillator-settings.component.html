@@ -1,3 +1,5 @@
+<h4>Oscillators</h4>
+
 <canvas #instrumentCanvas id="instrumentCanvas"
         [class.grabbing]="isMouseDown"
         height='250px'
@@ -39,7 +41,7 @@
              (change)="updateProperty('gain', $event.target.value, true)">
     </div>
     <div class="col-md-4 col-lg-4">
-      <label for="type">Type</label>
+      <p>Type</p>
       <select id="type" [(ngModel)]="selectedOscillator && selectedOscillator.type"
               [disabled]="!selectedOscillator"
               (change)="updateProperty('type', $event.target.value, true)">

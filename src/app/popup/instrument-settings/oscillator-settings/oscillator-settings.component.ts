@@ -30,8 +30,8 @@ export class OscillatorSettingsComponent implements OnInit {
 
   isMouseDown: boolean = false;
   gainChangeInvert: boolean;
-  closestIndex: number;
-  selectedIndex: number;
+  closestIndex: number = -1;
+  selectedIndex: number = -1;
   selectedOscillator: Oscillator;
   oscillatorWaveCache: Map<number, number[]> = new Map();
 
@@ -163,9 +163,9 @@ export class OscillatorSettingsComponent implements OnInit {
   }
 
   mouseDown(e: MouseEvent) {
-    this.isMouseDown = true;
     this.gainChangeInvert = (e.pageY - this.canvas.nativeElement.offsetTop) > this.height / 2 ? false : true;
     if (e.which == 1) {
+      this.isMouseDown = true;
       this.selectedIndex = this.closestIndex;
       this.selectedOscillator = this.instrument.oscillators[this.selectedIndex];
       this.draw();
@@ -174,6 +174,7 @@ export class OscillatorSettingsComponent implements OnInit {
         this.instrumentService.deleteOscillator(this.instrument.id, this.instrument.oscillators[this.closestIndex]);
         this.closestIndex = -1;
       } else {
+        this.isMouseDown = true;
         let osc = new Oscillator();
         osc.freq = 1;
         osc.gain = 1;

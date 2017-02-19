@@ -4,12 +4,19 @@
   <div class="popup"
        *ngIf="popupService.isShown"
        (click)="$event.stopPropagation()">
+
     <app-instrument-settings
       *ngIf="popupService.isInstrument"
       [instrument]="popupService.instrument"></app-instrument-settings>
-    <div *ngIf="!popupService.isInstrument">
+
+    <div *ngIf="!popupService.isInstrument"
+         class="popup-text">
+      <h2>{{popupService.header}}</h2>
       <p>{{popupService.message}}</p>
-      <button (click)="close()">Close</button>
+    </div>
+
+    <div class="btn-group">
+      <div class="btn btn-primary" (click)="close()">Close</div>
     </div>
   </div>
 </div>

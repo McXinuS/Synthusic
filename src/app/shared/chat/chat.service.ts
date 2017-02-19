@@ -9,16 +9,19 @@ export class ChatService implements OnInit {
   public messages: Observable<Array<Chat>>;
 
   constructor(private broadcaster: BroadcasterService) {
-    this.messages = Observable.interval(2500).map(i => [{sender: i, message: 'Test message'}]);
-  }
-
-  ngOnInit() {
-    /*
     this.messages = new Observable(observer => {
       this.broadcaster.on(BroadcastTopic.chatMessage).subscribe(
         (message: Chat) => observer.next(message)
       )
     });
-    */
+  }
+
+  ngOnInit() {
+
+    let n = 0;
+    setInterval(this.broadcaster.broadcast(
+        BroadcastTopic.chatMessage,
+        {sender: 0, message: 'Test message ' + n++}),
+      2500);
   }
 }

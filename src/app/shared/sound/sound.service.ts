@@ -73,10 +73,11 @@ export class SoundService {
               private sequencerNoteService: SequencerNoteService) {
   }
 
-  init() {
+  init(masterGain: number) {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
+    this.masterGain = masterGain;
 
     this.broadcaster.on<SequencerNote>(BroadcastTopic.playNote)
       .subscribe(note => this.playNote(note));

@@ -8,7 +8,7 @@ import { SettingsComponent } from './navbar/settings/settings.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { KeyboardComponent } from './keyboard/keyboard.component';
 import { KeyComponent } from './keyboard/key/key.component';
-import { LoaderService } from "./shared/loader-service/loader.service";
+import {LoaderService} from "./shared/loader/loader.service";
 import { NoteService } from "./shared/note/note.service";
 import { InstrumentService } from "./shared/instrument/instrument.service";
 import { SequencerService } from "./shared/sequencer/sequencer.service";
@@ -23,6 +23,7 @@ import {TitleCase} from "./shared/utils/pipes/titlecase.pipe";
 import { SequencerComponent } from './sequencer/sequencer.component';
 import { ChatComponent } from './navbar/chat/chat.component';
 import {ChatService} from "./shared/chat/chat.service";
+import {WebSocketService} from "./shared/websocket/websocket.service";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import {ChatService} from "./shared/chat/chat.service";
     BroadcasterService,
     SoundService,
     PopupService,
-    ChatService
+    ChatService,
+    WebSocketService
   ],
   bootstrap: [AppComponent]
 })

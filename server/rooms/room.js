@@ -1,7 +1,22 @@
-/*
- TODO
- addUser - assign user to a free room
- assignUser(id) - assign to the particular room
- removeUser - remove user from a room he was assigned
- userAction(parameters) - send message or change configuration of the room
- */
+'use strict';
+
+exports.Room = Room;
+
+function Room() {
+  let state = new (require('./synth-config/config').Config);
+
+
+}
+
+Room.prototype = {
+  addUser: function() {
+
+  },
+  removeUser: function() {
+
+  },
+
+  changeState: function() {
+
+  }
+};

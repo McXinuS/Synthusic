@@ -35,8 +35,9 @@ function Server(server) {
     return webSocketServer;
 }
 
+// send message to everyone except sender
 function broadcast(message, sender) {
-    if (typeof(message) !== 'string') message = JSON.stringify(message);
+    if (typeof(message) === 'object') message = JSON.stringify(message);
 
     wsClients.forEach(function (client) {
         if (client !== sender.ws) {
@@ -45,8 +46,9 @@ function broadcast(message, sender) {
     });
 }
 
+// send message to particular user
 function send(message, reciever) {
-    if (typeof(message) !== 'string') message = JSON.stringify(message);
+    if (typeof(message) === 'object') message = JSON.stringify(message);
 
     reciever.ws.send(message);
 }
@@ -54,11 +56,45 @@ function send(message, reciever) {
 
 let messageHandlers = [processGeneralMessage, processServiceMessage];
 
+function processGeneralMessage(data, sender) {
+  let note;
+  switch (data.type) {
+    case WEB_SOCKET_MESSAGE_TYPE.play_note:
+      note = data.note;
+      synthConfig.addNote(note);
+      broadcast(data, sender);
+      return 'type: play_note, note: ' + note;
+    case WEB_SOCKET_MESSAGE_TYPE.stop_note:
+      note = data.note;
+      synthConfig.removeNote(note);
+      broadcast(data, sender);
+      return 'type: stop_note, note: ' + note;
+    case WEB_SOCKET_MESSAGE_TYPE.stop:
+      synthConfig.removeAllNotes();
+      broadcast(data, sender);
+      return 'type: stop';
+    case WEB_SOCKET_MESSAGE_TYPE.get_state:
+      send(synthConfig.getStateObject(), sender);
+      return 'type: get_state';
+  }
+
+  return false;
+}
+
+function processServiceMessage(data, sender) {
+  switch (data.type) {
+    case WEB_SOCKET_MESSAGE_TYPE.ping:
+      send({type: WEB_SOCKET_MESSAGE_TYPE.pong}, sender);
+      return 'type: ping';
+  }
+
+  return false;
+}
+
 function processWebSocketMessage(message, sender) {
     new Promise(function (resolve, reject) {
         let data = JSON.parse(message);
         let logMsg = 'New message from id ' + sender.id + '. Message ';
-
         let success = false;
         for (let ind in messageHandlers) {
             let res = messageHandlers[ind](data, sender);
@@ -68,7 +104,6 @@ function processWebSocketMessage(message, sender) {
                 break;
             }
         }
-
         if (!success) {
             reject(logMsg + ': ' + JSON.stringify(data));
         }
@@ -80,48 +115,14 @@ function processWebSocketMessage(message, sender) {
     );
 }
 
-function processGeneralMessage(data, sender) {
-    switch (data.type) {
-        case WEB_SOCKET_MESSAGE_TYPE.play_note:
-            var note = data.note;
-            synthConfig.addNote(note);
-            broadcast(data, sender);
-            return 'type: play_note, note: ' + note;
-        case WEB_SOCKET_MESSAGE_TYPE.stop_note:
-            var note = data.note;
-            synthConfig.removeNote(note);
-            broadcast(data, sender);
-            return 'type: stop_note, note: ' + note;
-        case WEB_SOCKET_MESSAGE_TYPE.stop:
-            synthConfig.removeAllNotes();
-            broadcast(data, sender);
-            return 'type: stop';
-        case WEB_SOCKET_MESSAGE_TYPE.get_state:
-            send(synthConfig.getStateObject(), sender);
-            return 'type: get_state';
-    }
-
-    return false;
-}
-
-function processServiceMessage(data, sender) {
-    switch (data.type) {
-        case WEB_SOCKET_MESSAGE_TYPE.ping:
-            send({type: WEB_SOCKET_MESSAGE_TYPE.pong}, sender);
-            return 'type: ping';
-    }
-
-    return false;
-}
-
 function onMessageSuccess(result) {
-    console.log(result);
+  console.log(result);
 }
 
 function onMessageRejected(error) {
-    console.log(error);
+  console.log(error);
 }
 
 function onException(ex) {
-    console.log(ex);
+  console.log(ex);
 }

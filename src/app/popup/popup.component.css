@@ -1,38 +1,21 @@
-.overlay {
-  position   : fixed;
-  top        : 0;
-  bottom     : 0;
-  left       : 0;
-  right      : 0;
-  background : rgba(0, 0, 0, 0.7);
-  transition : visibility .5s, opacity .5s;
-  visibility : hidden;
-  opacity    : 0;
-  z-index    : 999;
-}
-
-.overlay-active {
-  visibility : visible;
-  opacity    : 1;
-}
-
 .popup {
   padding          : 30px 40px;
   background-color : aliceblue;
   border           : solid 1px black;
   border-radius    : 5px;
   min-width        : 30%;
+  margin           : auto;
 }
 
 .popup-text > h2 {
-  margin-top: 5px;
+  margin-top : 5px;
 }
 
 .popup-text > p {
-  font-size: 16px;
+  font-size : 16px;
 }
 
 .btn-group {
-  padding-top: 10px;
-  float: right;
+  padding-top : 20px;
+  float       : right;
 }

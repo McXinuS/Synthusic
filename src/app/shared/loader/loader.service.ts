@@ -8,7 +8,7 @@ import {WebSocketService} from "../websocket/websocket.service";
 import {PopupService} from "../popup/popup.service";
 
 @Injectable()
-export class LoaderService{
+export class LoaderService {
   settings;
   readonly WebSocketTimeout = 10000;
 
@@ -20,33 +20,54 @@ export class LoaderService{
   }
 
   init(progressChange, onDone) {
-    // TODO rewrite with promise
+    // TODO: make everything observable
     progressChange('Establishing server connection');
-    if (!this.establishWebSocketConnection()) {
-      this.popupService.show(
-        'Unable to connect',
-        'The remote server is not responding, going offline mode. Try to reload the page to go online.');
-      this.settings = this.loadLocalSettings();
-    } else {
-      progressChange('Parsing response');
-      this.settings = this.loadSettings();
-    }
-    progressChange('Loading notes');
-    this.initNotes();
-    progressChange('Loading instruments');
-    this.initInstruments();
-    progressChange('Initializing sound module');
-    this.initSoundModule();
-    onDone();
+    this.establishWebSocketConnection()
+      .then(function () {
+        this.popupService.show(
+          'Unable to connect',
+          'The remote server is not responding, going offline mode. Try to reload the page to go online.');
+        this.settings = this.loadLocalSettings();
+      }, function () {
+        progressChange('Parsing response');
+        this.settings = this.loadSettings();
+      })
+      .catch(function () {
+        progressChange('Parsing response');
+        this.settings = this.loadSettings();
+      })
+      .then(function () {
+        progressChange('Loading notes');
+        this.initNotes();
+      })
+      .then(function () {
+        progressChange('Loading instruments');
+        this.initInstruments();
+      })
+      .then(function () {
+        progressChange('Initializing sound module');
+        this.initSoundModule();
+      })
+      .then(function () {
+        onDone();
+      })
+      .catch(function () {
+        this.popupService.show(
+          'Unable to initialize app',
+          'Something went wrong during the loading if the application. Try to reload the page.');
+        onDone();
+      });
   }
 
-  private establishWebSocketConnection(): boolean {
-    this.wsService.init(location.origin.replace(/^http/, 'ws'));
-    let now = Date.now();
-    while (!this.wsService.isSocketReady) {
-      if (Date.now() - now > this.WebSocketTimeout) return false;
-    }
-    return true;
+  private establishWebSocketConnection(): Promise<any> {
+    return new Promise(function (resolve, reject) {
+      this.wsService.init(location.origin.replace(/^http/, 'ws'));
+      let now = Date.now();
+      while (!this.wsService.isSocketReady) {
+        if (Date.now() - now > this.WebSocketTimeout) reject();
+      }
+      resolve();
+    });
   }
 
   private loadSettings() {

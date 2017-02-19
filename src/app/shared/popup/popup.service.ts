@@ -1,10 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Instrument} from "../instrument/instrument.model";
 
-export interface PopupMessage {
-
-}
-
 @Injectable()
 export class PopupService {
   instrument: Instrument;

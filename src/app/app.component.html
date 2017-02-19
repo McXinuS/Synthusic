@@ -1,7 +1,7 @@
 <app-navbar></app-navbar>
 <div class="content">
   <app-sequencer></app-sequencer>
-  <div id="loader" [class.hidden]="loadDone">
+  <div *ngIf="!loadDone" class="overlay overlay-active" >
     <div class="centered">
       <h1>{{loaderMessage}}</h1>
       <div class="centered-hor spinner"></div>

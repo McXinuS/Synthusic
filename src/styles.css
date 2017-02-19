@@ -8,14 +8,23 @@
   justify-content : center;
 }
 
-#loader {
-  position   : absolute;
+.overlay {
+  z-index    : 999;
+  position   : fixed;
   top        : 0;
-  right      : 0;
   bottom     : 0;
   left       : 0;
-  z-index    : 999;
-  background : rgba(0, 0, 0, .3);
+  right      : 0;
+  background : rgba(0, 0, 0, 0.7);
+  overflow-y : auto;
+  transition : visibility .5s, opacity .5s;
+  visibility : hidden;
+  opacity    : 0;
+}
+
+.overlay-active {
+  visibility : visible;
+  opacity    : 1;
 }
 
 .spinner {
@@ -40,8 +49,12 @@
 
 .container-title {
   font-size     : 2.5em;
-  margin-bottom : 10px;
   cursor        : pointer;
+}
+
+.container-title > h3, .container-title > h4 {
+  margin: 0;
+  padding: 8px 8px 8px 5px;
 }
 
 .label-value {

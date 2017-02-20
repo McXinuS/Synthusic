@@ -1,7 +1,7 @@
-import {Component, OnInit, ViewChild, ElementRef, Input, EventEmitter, Output} from '@angular/core';
-import {Instrument} from "../../../shared/instrument/instrument.model";
-import {Oscillator, Types} from "../../../shared/instrument/oscillator.model";
-import {InstrumentService} from "../../../shared/instrument/instrument.service";
+import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
+import {Instrument} from '../../../shared/instrument/instrument.model';
+import {Oscillator, Types} from '../../../shared/instrument/oscillator.model';
+import {InstrumentService} from '../../../shared/instrument/instrument.service';
 
 @Component({
   selector: 'app-oscillator-settings',
@@ -9,7 +9,7 @@ import {InstrumentService} from "../../../shared/instrument/instrument.service";
   styleUrls: ['./oscillator-settings.component.css']
 })
 
-export class OscillatorSettingsComponent implements OnInit {
+export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   @Input() instrument: Instrument;
 
   @ViewChild('instrumentCanvas') canvas: ElementRef;
@@ -41,7 +41,7 @@ export class OscillatorSettingsComponent implements OnInit {
         return Math.sin;
       case 'square':
         return function (t) {
-          return t == 0 ? 0 : (Math.sin(t) > 0) ? 1 : -1
+          return t === 0 ? 0 : (Math.sin(t) > 0) ? 1 : -1;
         };
       case 'sawtooth':
         return function (t) {
@@ -65,7 +65,7 @@ export class OscillatorSettingsComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.ctx = this.canvas.nativeElement.getContext("2d");
+    this.ctx = this.canvas.nativeElement.getContext('2d');
     this.fitCanvasToContainer();
     this.draw();
   }
@@ -82,7 +82,7 @@ export class OscillatorSettingsComponent implements OnInit {
     this.checkCache();
 
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.ctx.fillStyle = "rgba(0,0,0,.02)";
+    this.ctx.fillStyle = 'rgba(0,0,0,.02)';
     this.ctx.fillRect(0, 0, this.width, this.height);
 
     this.drawGrid(this.width, this.height);
@@ -97,8 +97,8 @@ export class OscillatorSettingsComponent implements OnInit {
       let osc = this.instrument.oscillators[i];
       waveCache = this.oscillatorWaveCache.get(this.getOscillatorHash(osc));
       height = -h / 2 / this.gainScaleMax;
-      if (this.selectedIndex == i) this.ctx.lineWidth = 3;
-      else if (this.closestIndex == i) this.ctx.lineWidth = 2;
+      if (this.selectedIndex === i) this.ctx.lineWidth = 3;
+      else if (this.closestIndex === i) this.ctx.lineWidth = 2;
       else this.ctx.lineWidth = 1;
 
       this.ctx.beginPath();
@@ -125,7 +125,7 @@ export class OscillatorSettingsComponent implements OnInit {
 
     this.ctx.beginPath();
     this.ctx.lineWidth = 0.5;
-    this.ctx.font = "14px Arial";
+    this.ctx.font = '14px Arial';
     this.ctx.fillStyle = '#888';
     const markLength = 10, numberMargin = 5;
     for (let i = 0.5, x; i <= 8; i *= 2) {

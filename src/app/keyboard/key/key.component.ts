@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import {Note} from "../../shared/note/note.model";
-import {KeyChangeMode} from "./keychangemode.enum";
+import {Note} from '../../shared/note/note.model';
+import {KeyChangeMode} from './keychangemode.enum';
 
 @Component({
   encapsulation: ViewEncapsulation.None,

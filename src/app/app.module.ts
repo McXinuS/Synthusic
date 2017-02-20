@@ -8,22 +8,22 @@ import { SettingsComponent } from './navbar/settings/settings.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { KeyboardComponent } from './keyboard/keyboard.component';
 import { KeyComponent } from './keyboard/key/key.component';
-import {LoaderService} from "./shared/loader/loader.service";
-import { NoteService } from "./shared/note/note.service";
-import { InstrumentService } from "./shared/instrument/instrument.service";
-import { SequencerService } from "./shared/sequencer/sequencer.service";
-import { BroadcasterService } from "./shared/broadcaster/broadcaster.service";
-import { SoundService } from "./shared/sound/sound.service";
-import {SequencerNoteService} from "./shared/sequencer/sequencernote.service";
+import {LoaderService} from './shared/loader/loader.service';
+import { NoteService } from './shared/note/note.service';
+import { InstrumentService } from './shared/instrument/instrument.service';
+import { SequencerService } from './shared/sequencer/sequencer.service';
+import { BroadcasterService } from './shared/broadcaster/broadcaster.service';
+import { SoundService } from './shared/sound/sound.service';
+import {SequencerNoteService} from './shared/sequencer/sequencernote.service';
 import { InstrumentSettingsComponent } from './popup/instrument-settings/instrument-settings.component';
-import {PopupService} from "./shared/popup/popup.service";
+import {PopupService} from './shared/popup/popup.service';
 import { PopupComponent } from './popup/popup.component';
 import { OscillatorSettingsComponent } from './popup/instrument-settings/oscillator-settings/oscillator-settings.component';
-import {TitleCase} from "./shared/utils/pipes/titlecase.pipe";
+import {TitleCase} from './shared/utils/pipes/titlecase.pipe';
 import { SequencerComponent } from './sequencer/sequencer.component';
 import { ChatComponent } from './navbar/chat/chat.component';
-import {ChatService} from "./shared/chat/chat.service";
-import {WebSocketService} from "./shared/websocket/websocket.service";
+import {ChatService} from './shared/chat/chat.service';
+import {WebSocketService} from './shared/websocket/websocket.service';
 
 @NgModule({
   declarations: [

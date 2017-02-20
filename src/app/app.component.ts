@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoaderService} from "./shared/loader/loader.service";
+import {LoaderService} from './shared/loader/loader.service';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   }
 
   onProgressChange(message: string) {
-    this.loaderMessage=message
+    this.loaderMessage=message;
   }
 
   onComponentsLoad() {

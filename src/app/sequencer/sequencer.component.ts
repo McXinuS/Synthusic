@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {InstrumentService} from "../shared/instrument/instrument.service";
+import {InstrumentService} from '../shared/instrument/instrument.service';
 
 @Component({
   selector: 'app-sequencer',

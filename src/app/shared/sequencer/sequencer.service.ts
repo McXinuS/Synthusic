@@ -1,12 +1,12 @@
-import {Injectable, OnInit} from "@angular/core";
-import {Note} from "../note/note.model";
-import {Instrument} from "../instrument/instrument.model";
-import {SequencerNote} from "./sequencernote.model";
-import {Observable} from "rxjs";
-import {InstrumentService} from "../instrument/instrument.service";
-import {BroadcasterService} from "../broadcaster/broadcaster.service";
-import {BroadcastTopic} from "../broadcaster/broadcasttopic.enum";
-import {SequencerNoteService} from "./sequencernote.service";
+import {Injectable, OnInit} from '@angular/core';
+import {Note} from '../note/note.model';
+import {Instrument} from '../instrument/instrument.model';
+import {SequencerNote} from './sequencernote.model';
+import {Observable} from 'rxjs';
+import {InstrumentService} from '../instrument/instrument.service';
+import {BroadcasterService} from '../broadcaster/broadcaster.service';
+import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
+import {SequencerNoteService} from './sequencernote.service';
 
 @Injectable()
 export class SequencerService implements OnInit {

@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {Instrument} from "../../shared/instrument/instrument.model";
-import {InstrumentService} from "../../shared/instrument/instrument.service";
+import {Instrument} from '../../shared/instrument/instrument.model';
+import {InstrumentService} from '../../shared/instrument/instrument.service';
 
 @Component({
   selector: 'app-instrument-settings',

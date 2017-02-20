@@ -71,12 +71,12 @@ export class SoundService {
   constructor(private broadcaster: BroadcasterService,
               private sequencerService: SequencerService,
               private sequencerNoteService: SequencerNoteService) {
-  }
-
-  init(masterGain: number) {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
+  }
+
+  init(masterGain: number) {
     this.masterGain = masterGain;
 
     this.broadcaster.on<SequencerNote>(BroadcastTopic.playNote)

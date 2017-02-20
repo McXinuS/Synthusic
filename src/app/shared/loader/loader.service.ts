@@ -23,35 +23,37 @@ export class LoaderService {
     // TODO: make everything observable
     progressChange('Establishing server connection');
     this.establishWebSocketConnection()
-      .then(function () {
+      .then(() => {
+        progressChange('Parsing response');
+        this.settings = this.loadSettings();
+      }, () => {
         this.popupService.show(
           'Unable to connect',
           'The remote server is not responding, going offline mode. Try to reload the page to go online.');
         this.settings = this.loadLocalSettings();
-      }, function () {
-        progressChange('Parsing response');
-        this.settings = this.loadSettings();
       })
-      .catch(function () {
-        progressChange('Parsing response');
-        this.settings = this.loadSettings();
+      .catch((err) => {
+        this.popupService.show(
+          'Unable to connect',
+          'The remote server is not responding, going offline mode. Try to reload the page to go online.');
+        this.settings = this.loadLocalSettings();
       })
-      .then(function () {
+      .then(() => {
         progressChange('Loading notes');
         this.initNotes();
       })
-      .then(function () {
+      .then(() => {
         progressChange('Loading instruments');
         this.initInstruments();
       })
-      .then(function () {
+      .then(() => {
         progressChange('Initializing sound module');
         this.initSoundModule();
       })
-      .then(function () {
+      .then(() => {
         onDone();
       })
-      .catch(function () {
+      .catch((err) => {
         this.popupService.show(
           'Unable to initialize app',
           'Something went wrong during the loading if the application. Try to reload the page.');
@@ -60,13 +62,34 @@ export class LoaderService {
   }
 
   private establishWebSocketConnection(): Promise<any> {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       this.wsService.init(location.origin.replace(/^http/, 'ws'));
+      /*
       let now = Date.now();
       while (!this.wsService.isSocketReady) {
-        if (Date.now() - now > this.WebSocketTimeout) reject();
+       if (Date.now() - now > this.WebSocketTimeout) {
+       reject();
+       }
       }
-      resolve();
+       resolve();
+       */
+      let tId, intId;
+      tId = setTimeout(
+        () => {
+          clearTimeout(tId);
+          clearInterval(intId);
+          reject();
+        },
+        this.WebSocketTimeout);
+      intId = setInterval(
+        () => {
+          if (this.wsService.isSocketReady) {
+            resolve();
+            clearTimeout(tId);
+            clearInterval(intId);
+          }
+        },
+        50);
     });
   }
 

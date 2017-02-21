@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import {LoaderService} from './shared/loader/loader.service';
 
 @Component({
@@ -15,12 +15,13 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loaderService.init(msg => this.onProgressChange(msg),
+    this.loaderService.init(
+      msg => this.onProgressChange(msg),
       () => this.onComponentsLoad());
   }
 
   onProgressChange(message: string) {
-    this.loaderMessage=message;
+    this.loaderMessage = message;
   }
 
   onComponentsLoad() {

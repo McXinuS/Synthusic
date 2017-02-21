@@ -9,7 +9,6 @@ import {PopupService} from "../popup/popup.service";
 
 @Injectable()
 export class LoaderService {
-  settings;
   readonly WebSocketTimeout = 10000;
 
   constructor(private wsService: WebSocketService,
@@ -25,33 +24,23 @@ export class LoaderService {
     this.establishWebSocketConnection()
       .then(() => {
         progressChange('Parsing response');
-        this.settings = this.loadSettings();
+        return this.loadSettings();
       }, () => {
         this.popupService.show(
           'Unable to connect',
           'The remote server is not responding, going offline mode. Try to reload the page to go online.');
-        this.settings = this.loadLocalSettings();
+        return this.loadLocalSettings();
       })
-      .catch((err) => {
-        this.popupService.show(
-          'Unable to connect',
-          'The remote server is not responding, going offline mode. Try to reload the page to go online.');
-        this.settings = this.loadLocalSettings();
-      })
-      .then(() => {
+      .then((settings) => {
         progressChange('Loading notes');
-        this.initNotes();
-      })
-      .then(() => {
+        this.initNotes(settings);
         progressChange('Loading instruments');
-        this.initInstruments();
-      })
-      .then(() => {
+        this.initInstruments(settings);
         progressChange('Initializing sound module');
-        this.initSoundModule();
-      })
-      .then(() => {
-        onDone();
+        this.initSoundModule(settings);
+        setTimeout(onDone, 2000);
+
+        //onDone();
       })
       .catch((err) => {
         this.popupService.show(
@@ -64,15 +53,6 @@ export class LoaderService {
   private establishWebSocketConnection(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.wsService.init(location.origin.replace(/^http/, 'ws'));
-      /*
-      let now = Date.now();
-      while (!this.wsService.isSocketReady) {
-       if (Date.now() - now > this.WebSocketTimeout) {
-       reject();
-       }
-      }
-       resolve();
-       */
       let tId, intId;
       tId = setTimeout(
         () => {
@@ -95,9 +75,7 @@ export class LoaderService {
 
   private loadSettings() {
     // TODO init from websocket here
-    let set = Object.assign({}, CONSTANTS.noteConstants, {instruments: INSTRUMENTS});
-    set['scale'] = set.SCALE_SHARP;
-    return set;
+    return this.loadLocalSettings();
   }
 
   private loadLocalSettings() {
@@ -106,15 +84,15 @@ export class LoaderService {
     return set;
   }
 
-  private initNotes() {
-    this.noteService.init(this.settings);
+  private initNotes(settings) {
+    this.noteService.init(settings);
   }
 
-  private initInstruments() {
-    this.instrumentService.init(this.settings.instruments);
+  private initInstruments(settings) {
+    this.instrumentService.init(settings.instruments);
   }
 
-  private initSoundModule() {
-    this.soundService.init(this.settings.MASTER_GAIN_MAX / 2);
+  private initSoundModule(settings) {
+    this.soundService.init(settings.MASTER_GAIN_MAX / 2);
   }
 }

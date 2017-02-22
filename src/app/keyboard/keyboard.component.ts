@@ -34,9 +34,8 @@ export class KeyboardComponent implements OnInit {
 
   ngOnInit() {
     this.notes = this.noteService.notes;
-    this.highlights = this.sequencerService.playingNotes;
-
-    this.instrumentService.instruments.subscribe(function (instruments: Instrument[]) {
+    this.highlights = this.sequencerService.playingNotes; // TODO observable
+    this.instrumentService.instruments.subscribe(instruments => {
       this.instruments = instruments;
       if (!this.activeInstrument) {
         this.activeInstrument = this.instruments[0];

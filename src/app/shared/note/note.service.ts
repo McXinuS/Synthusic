@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Note} from "./note.model";
-import {Scale} from "./scale.model";
+import {Note} from './note.model';
+import {Scale} from './scale.model';
 
 @Injectable()
 export class NoteService {
-  private _notes: Note[];
+  private _notes: Note[] = [];
   get notes(): Note[] {
     return this._notes;
   }
@@ -50,8 +50,6 @@ export class NoteService {
       scaleLength = scale.length,
       accidentalPlaceholder = this._scale.accidentalPlaceholder,
       accidentalSign = this._scale.accidentalSign;
-
-    this._notes = [];
 
     this._noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
     for (let i = 0; i < this._noteCount; i++) {
@@ -100,8 +98,9 @@ export class NoteService {
     }
 
     // step is skipped: function 'includes' is not recognized by IDE
-    //if (!['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].includes(res[0][0].toLocaleLowerCase()))
-    //  throw new Error(`Wrong note name: ${res[0][0]}.`);
+    if (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].findIndex(val => val == res[0][0].toLocaleLowerCase()) == -1) {
+      throw new Error(`Wrong note name: ${res[0][0]}.`);
+    }
     if (res[0].length == 2 && (res[0][1] != this._scale.accidentalPlaceholder))
       throw new Error(`Wrong accidental: ${res[0][1]}.`);
     if (isNaN(res[1]))

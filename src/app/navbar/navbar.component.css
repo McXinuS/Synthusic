@@ -54,14 +54,6 @@
   visibility : hidden;
 }
 
-#logo-holder {
-  padding : 0;
-  margin-left: 15px;
-}
-
-.logo {
-  background : url('assets/img/favicon_lowres.png') no-repeat center;
-  width      : 44px;
-  height     : 44px;
-  padding    : 6px;
+.logo-holder {
+  padding : 6px 20px 6px 25px !important;
 }

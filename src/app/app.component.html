@@ -1,10 +1,12 @@
+<div class="center overlay"
+     [class.overlay-active]="!loadDone">
+  <h1>{{loaderMessage}}</h1>
+  <div class="spinner"></div>
+</div>
+
 <app-navbar></app-navbar>
 <div class="content">
   <app-sequencer></app-sequencer>
-  <div *ngIf="!loadDone" class="center overlay overlay-active">
-      <h1>{{loaderMessage}}</h1>
-    <div class="spinner"></div>
-  </div>
 </div>
 <app-keyboard></app-keyboard>
 <app-popup></app-popup>

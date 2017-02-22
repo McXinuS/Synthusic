@@ -1,4 +1,4 @@
-import {Component, OnInit } from '@angular/core';
+import {Component, OnInit, trigger, transition, style, animate, state} from '@angular/core';
 import {LoaderService} from './shared/loader/loader.service';
 
 @Component({

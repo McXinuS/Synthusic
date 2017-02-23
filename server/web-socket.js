@@ -2,127 +2,110 @@
 
 exports.Server = Server;
 
-const WEB_SOCKET_MESSAGE_TYPE = require('./../shared/web-socket-message-types');
-let synthConfig = new (require('./synth-config/config').Config);
+const WEB_SOCKET_MESSAGE_TYPE = require('./web-socket-message-types');
 
-let wsClients = [];
-let wsLastId = 0;
+let roomService = new (require('./rooms/room-service').RoomService)();
 
 function Server(server) {
-    let webSocketServer = require('ws').Server({
-        server: server
+  let webSocketServer = require('ws').Server({
+    server: server
+  });
+
+  let wsClients = [],
+    wsLastId = 0;
+
+  function onConnection(ws) {
+    let id = wsLastId++;
+    wsClients[id] = ws;
+    roomService.addUser(ws);
+
+    console.log("New connection : id " + id);
+
+    ws.on('message', function (message) {
+      processWebSocketMessage(message, {ws: ws, id: id});
     });
 
-    webSocketServer.on('connection', function (ws) {
-
-        var id = wsLastId;
-        wsLastId++;
-
-        wsClients[id] = ws;
-        console.log("New connection : id " + id);
-
-        ws.on('message', function (message) {
-            processWebSocketMessage(message, {ws: ws, id: id});
-        });
-
-        ws.on('close', function () {
-            console.log('Connection closed : id ' + id);
-            delete wsClients[id];
-        });
-
+    ws.on('close', function () {
+      console.log('Connection closed : id ' + id);
+      roomService.deleteUser();
+      delete wsClients[id];
     });
-
-    return webSocketServer;
-}
-
-// send message to everyone except sender
-function broadcast(message, sender) {
-    if (typeof(message) === 'object') message = JSON.stringify(message);
-
-    wsClients.forEach(function (client) {
-        if (client !== sender.ws) {
-            client.send(message);
-        }
-    });
-}
-
-// send message to particular user
-function send(message, reciever) {
-    if (typeof(message) === 'object') message = JSON.stringify(message);
-
-    reciever.ws.send(message);
-}
-
-
-let messageHandlers = [processGeneralMessage, processServiceMessage];
-
-function processGeneralMessage(data, sender) {
-  let note;
-  switch (data.type) {
-    case WEB_SOCKET_MESSAGE_TYPE.play_note:
-      note = data.note;
-      synthConfig.addNote(note);
-      broadcast(data, sender);
-      return 'type: play_note, note: ' + note;
-    case WEB_SOCKET_MESSAGE_TYPE.stop_note:
-      note = data.note;
-      synthConfig.removeNote(note);
-      broadcast(data, sender);
-      return 'type: stop_note, note: ' + note;
-    case WEB_SOCKET_MESSAGE_TYPE.stop:
-      synthConfig.removeAllNotes();
-      broadcast(data, sender);
-      return 'type: stop';
-    case WEB_SOCKET_MESSAGE_TYPE.get_state:
-      send(synthConfig.getStateObject(), sender);
-      return 'type: get_state';
   }
 
-  return false;
-}
 
-function processServiceMessage(data, sender) {
-  switch (data.type) {
-    case WEB_SOCKET_MESSAGE_TYPE.ping:
-      send({type: WEB_SOCKET_MESSAGE_TYPE.pong}, sender);
-      return 'type: ping';
+  function processStateMessage(data, sender) {
+    let note;
+    switch (data.type) {
+      case WEB_SOCKET_MESSAGE_TYPE.play_note:
+        note = data.note;
+        synthConfig.addNote(note);
+        return 'type: play_note, note: ' + note;
+      case WEB_SOCKET_MESSAGE_TYPE.stop_note:
+        note = data.note;
+        synthConfig.removeNote(note);
+        return 'type: stop_note, note: ' + note;
+      case WEB_SOCKET_MESSAGE_TYPE.stop:
+        synthConfig.removeAllNotes();
+        return 'type: stop';
+      case WEB_SOCKET_MESSAGE_TYPE.get_state:
+        send(synthConfig.getStateObject(), sender);
+        return 'type: get_state';
+    }
+    return null;
   }
 
-  return false;
-}
+  function processServiceMessage(data, sender) {
+    switch (data.type) {
+      case WEB_SOCKET_MESSAGE_TYPE.ping:
+        send({type: WEB_SOCKET_MESSAGE_TYPE.pong}, sender);
+        return 'type: ping';
+    }
+    return null;
+  }
 
-function processWebSocketMessage(message, sender) {
+  function processChatMessage(data, sender) {
+    return null;
+  }
+
+  let messageHandlers = [processStateMessage, processServiceMessage, processChatMessage];
+
+  function processWebSocketMessage(message, sender) {
     new Promise(function (resolve, reject) {
-        let data = JSON.parse(message);
-        let logMsg = 'New message from id ' + sender.id + '. Message ';
-        let success = false;
-        for (let ind in messageHandlers) {
-            let res = messageHandlers[ind](data, sender);
-            if (res) {
-                success = true;
-                resolve(logMsg + res);
-                break;
-            }
+      let data = JSON.parse(message);
+      let logMsg = 'New message from id ' + sender.id + '. Message ';
+      let success = false;
+      for (let handler of messageHandlers) {
+        let res = handler(data, sender);
+        if (res) {
+          success = true;
+          resolve(logMsg + res);
+          break;
         }
-        if (!success) {
-            reject(logMsg + ': ' + JSON.stringify(data));
-        }
+      }
+      if (!success) {
+        reject(logMsg + ': ' + JSON.stringify(data));
+      }
     }).then(
-        onMessageSuccess,
-        onMessageRejected
-    ).catch(
-        onException
+      onMessageSuccess,
+      onMessageRejected
     );
-}
+  }
 
-function onMessageSuccess(result) {
-  console.log(result);
-}
+  function onMessageSuccess(result) {
+    console.log(result);
+  }
 
-function onMessageRejected(error) {
-  console.log(error);
-}
+  function onMessageRejected(error) {
+    console.log(error);
+  }
 
-function onException(ex) {
-  console.log(ex);
+  // send message to the particular user
+  function send(message, reciever) {
+    if (typeof(message) === 'object') message = JSON.stringify(message);
+    reciever.ws.send(message);
+  }
+
+  webSocketServer.on('connection', onConnection);
+
+  return webSocketServer;
 }

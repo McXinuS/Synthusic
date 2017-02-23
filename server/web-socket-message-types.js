@@ -1,4 +1,6 @@
-module.exports = {
+'use strict';
+
+exports = {
     play_note: 0,
     stop_note: 1,
     stop: 5,

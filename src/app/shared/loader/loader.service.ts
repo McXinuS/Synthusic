@@ -1,15 +1,18 @@
 import {Injectable} from '@angular/core';
-import {NoteService} from "../note/note.service";
-import {CONSTANTS} from "./config.constants";
-import {INSTRUMENTS} from './instrument.mock';
-import {InstrumentService} from "../instrument/instrument.service";
-import {SoundService} from "../sound/sound.service";
-import {WebSocketService} from "../websocket/websocket.service";
-import {PopupService} from "../popup/popup.service";
+import {NoteService} from '../note/note.service';
+import {InstrumentService} from '../instrument/instrument.service';
+import {SoundService} from '../sound/sound.service';
+import {WebSocketService} from '../websocket/websocket.service';
+import {PopupService} from '../popup/popup.service';
+import {Settings} from './settings.model';
+import {SETTINGS_OFFLINE} from './settings.mock';
 
 @Injectable()
 export class LoaderService {
   readonly WebSocketTimeout = 10000;
+
+  // TODO indicate offline mode in UI
+  offlineMode: boolean;
 
   constructor(private wsService: WebSocketService,
               private noteService: NoteService,
@@ -23,26 +26,26 @@ export class LoaderService {
     progressChange('Establishing server connection');
     this.establishWebSocketConnection()
       .then(() => {
+        this.offlineMode = false;
         progressChange('Parsing response');
         return this.loadSettings();
       }, () => {
+        this.offlineMode = true;
         this.popupService.show(
           'Unable to connect',
           'The remote server is not responding, going offline mode. Try to reload the page to go online.');
         return this.loadLocalSettings();
       })
-      .then((settings) => {
+      .then((settings: Settings) => {
         progressChange('Loading notes');
         this.initNotes(settings);
         progressChange('Loading instruments');
         this.initInstruments(settings);
         progressChange('Initializing sound module');
         this.initSoundModule(settings);
-        setTimeout(onDone, 2000);
-
-        //onDone();
+        setTimeout(onDone, 2000); // DEBUG
       })
-      .catch((err) => {
+      .catch(() => {
         this.popupService.show(
           'Unable to initialize app',
           'Something went wrong during the loading if the application. Try to reload the page.');
@@ -73,26 +76,26 @@ export class LoaderService {
     });
   }
 
-  private loadSettings() {
-    // TODO init from websocket here
+  private loadSettings(): Settings {
+    // TODO init from websocket
+    let instruments;
+    // return Object.assign({}, ..., CONSTANTS);
     return this.loadLocalSettings();
   }
 
-  private loadLocalSettings() {
-    let set = Object.assign({}, CONSTANTS.noteConstants, {instruments: INSTRUMENTS});
-    set['scale'] = set.SCALE_SHARP;
-    return set;
+  private loadLocalSettings(): Settings {
+    return SETTINGS_OFFLINE;
   }
 
-  private initNotes(settings) {
+  private initNotes(settings: Settings) {
     this.noteService.init(settings);
   }
 
-  private initInstruments(settings) {
+  private initInstruments(settings: Settings) {
     this.instrumentService.init(settings.instruments);
   }
 
-  private initSoundModule(settings) {
-    this.soundService.init(settings.MASTER_GAIN_MAX / 2);
+  private initSoundModule(settings: Settings) {
+    this.soundService.init(settings.masterGainMax / 2);
   }
 }

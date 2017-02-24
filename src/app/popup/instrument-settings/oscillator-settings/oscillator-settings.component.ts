@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
-import {Instrument} from '../../../shared/instrument/instrument.model';
-import {Oscillator, Types} from '../../../shared/instrument/oscillator.model';
+import {Instrument, Oscillator, Types} from '../../../shared/instrument/instrument.model';
 import {InstrumentService} from '../../../shared/instrument/instrument.service';
 
 @Component({

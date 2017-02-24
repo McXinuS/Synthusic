@@ -1,4 +1,4 @@
-import {Instrument} from "../instrument/instrument.model";
+import {Instrument} from "./instrument.model";
 
 export const INSTRUMENTS: Instrument[] = [
   {

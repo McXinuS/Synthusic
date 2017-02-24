@@ -1,9 +1,8 @@
 exports = {
-  notes: [],
   bpm: 60,
   instruments: [
     {
-      id: 10,
+      id: 4,
       name: 'Organ',
       oscillators: [
         {type: 'sine', freq: '1', gain: '1'},
@@ -22,7 +21,7 @@ exports = {
         }
     },
     {
-      id: 11,
+      id: 5,
       name: 'Sine bass + triangle',
       oscillators: [
         {type: 'sine', freq: '0.5', gain: '1'},

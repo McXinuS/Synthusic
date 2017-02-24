@@ -26,15 +26,13 @@ let scaleFlat: Scale = {
 };
 
 export const CONSTANTS = {
-  noteConstants: {
-    'SCALE_NATURAL': scaleNatural,
-    'SCALE_SHARP': scaleSharp,
-    'SCALE_FLAT': scaleFlat,
+  scaleNatural: scaleNatural,
+  scaleSharp: scaleSharp,
+  scaleFlat: scaleFlat,
+  scale: this.scaleSharp,
 
-    'SCALE': this.SCALE_SHARP,
-    'FIRST_NOTE': {'name': 'C', 'octave': 2},
-    'LAST_NOTE': {'name': 'B', 'octave': 5},
+  firstNote: {'name': 'C', 'octave': 2},
+  lastNote: {'name': 'B', 'octave': 5},
 
-    'MASTER_GAIN_MAX': 0.5
-  }
+  masterGainMax: 0.5
 };

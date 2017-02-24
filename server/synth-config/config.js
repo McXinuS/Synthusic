@@ -5,16 +5,9 @@ exports.Config = Config;
 function Config() {
   let defaults = require('./../../shared/defaults');
 
-  Object.defineProperties(this, {
-    notes: {
-      value: {},
-      writable: false
-    },
-    instruments: {
-      value: defaults.instruments,
-      writable: false
-    }
-  });
+  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId);
+  this.notes = [];
+  this.instruments = defaults.instruments;
 }
 
 Config.prototype = {
@@ -24,7 +17,6 @@ Config.prototype = {
       instruments: this.instruments
     }
   },
-
   addNote: function (note) {
     this.notes[note] = true;
   },
@@ -33,10 +25,12 @@ Config.prototype = {
   },
 
   addInstrument: function (instrument) {
-    this.instruments.push(instrument); // TODO assign ID to the instrument
+    instrument.id = this.lastInstrumentId++;
+    this.instruments.push(instrument);
   },
-  updateInstrument: function () {
-
+  updateInstrument: function (instrument) {
+    let i = this.instruments.findIndex(ins => ins.id == instrument.id);
+    if (i != -1) this.instruments[i] = instrument;
   },
   deleteInstrument: function (id) {
     delete this.instruments.find(ins => ins.id == id);

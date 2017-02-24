@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Note} from './note.model';
 import {Scale} from './scale.model';
+import {Settings} from "../loader/settings.model";
 
 @Injectable()
 export class NoteService {
@@ -14,11 +15,6 @@ export class NoteService {
     return this._noteCount;
   }
 
-  private _scale: Scale;
-  get scale(): Scale {
-    return this._scale;
-  }
-
   private _firstNote: Note;
   get firstNote(): Note {
     return this._firstNote;
@@ -27,6 +23,11 @@ export class NoteService {
   private _lastNote: Note;
   get lastNote(): Note {
     return this._lastNote;
+  }
+
+  private _scale: Scale;
+  get scale(): Scale {
+    return this._scale;
   }
 
   // interval of each note from 'A' note
@@ -40,12 +41,12 @@ export class NoteService {
     'B': 2,
   };
 
-  init(settings: Object) {
-    let startName = settings['FIRST_NOTE'].name,
-      startOctave = settings['FIRST_NOTE'].octave,
-      endName = settings['LAST_NOTE'].name,
-      endOctave = settings['LAST_NOTE'].octave;
-    this._scale = settings['scale'];
+  init(settings: Settings) {
+    let startName = settings.firstNote.name,
+      startOctave = settings.firstNote.octave,
+      endName = settings.lastNote.name,
+      endOctave = settings.lastNote.octave;
+    this._scale = settings.scale;
     let scale = this._scale.scale,
       scaleLength = scale.length,
       accidentalPlaceholder = this._scale.accidentalPlaceholder,

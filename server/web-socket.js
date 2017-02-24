@@ -2,7 +2,7 @@
 
 exports.Server = Server;
 
-const WEB_SOCKET_MESSAGE_TYPE = require('./web-socket-message-types');
+const WEB_SOCKET_MESSAGE_TYPE = require('./../shared/web-socket-message-types');
 
 let roomService = new (require('./rooms/room-service').RoomService)();
 

@@ -3,7 +3,7 @@
 exports.Config = Config;
 
 function Config() {
-  let defaults = require('./defaults');
+  let defaults = require('./../../shared/defaults');
 
   Object.defineProperties(this, {
     notes: {

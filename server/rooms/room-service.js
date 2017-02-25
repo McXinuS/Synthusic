@@ -9,15 +9,16 @@ let RoomService = function () {
   let rooms = [];
 
   let lastRoomId = 0;
-  let createRoom = function () {
+
+  function createRoom() {
     return new rm(lastRoomId++);
-  };
+  }
 
-  let destroyRoom = function (id) {
+  function destroyRoom(id) {
     delete rooms.find(room => room.id === id);
-  };
+  }
 
-  let addUser = function (id) {
+  function addUser(id) {
     let freeRoom;
     for (let room in rooms) {
       if (room.usersNumber < MAX_USERS_IN_ROOM) {
@@ -36,30 +37,46 @@ let RoomService = function () {
       }
     }
     freeRoom.addUser(id);
-  };
+    return freeRoom.id;
+  }
 
-  let deleteUser = function (id) {
-    let room = getUserRoom(id);
+  function removeUser(id) {
+    let room = getRoomByUser(id);
     if (!room) return;
 
-    room.deleteUser(id);
+    room.removeUser(id);
     if (!room.hasUsers) {
       destroyRoom(room.id);
     }
-  };
+  }
 
-  let getSameRoomUsers = function (userId) {
+  function getRoomByUser(userId) {
     for (let room of rooms) {
       if (room.hasUser(userId)) {
         return room;
       }
     }
     return null;
-  };
+  }
+
+  function getRoomStateByUser(userId) {
+    let room = getRoomByUser(userId);
+    return room && room.config;
+  }
+
+  function getRoomUsersByUser(userId) {
+    let room = getRoomByUser(userId);
+    return room && room.users;
+  }
+
+  /* API */
 
   this.addUser = addUser;
-  this.deleteUser = deleteUser;
-  this.getSameRoomUsers = getSameRoomUsers;
+  this.removeUser = removeUser;
+
+  this.getRoomByUser = getRoomByUser;
+  this.getRoomStateByUser = getRoomStateByUser;
+  this.getRoomUsersByUser = getRoomUsersByUser;
 };
 
 module.exports.RoomService = RoomService;

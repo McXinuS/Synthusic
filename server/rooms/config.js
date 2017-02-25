@@ -8,15 +8,18 @@ function Config() {
   this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId);
   this.notes = [];
   this.instruments = defaults.instruments;
+  this.bpm = defaults.bpm;
 }
 
 Config.prototype = {
-  getStateObject: function () {
+  getState: function () {
     return {
       notes: this.notes,
-      instruments: this.instruments
+      instruments: this.instruments,
+      bpm: this.bpm
     }
   },
+
   addNote: function (note) {
     this.notes[note] = true;
   },

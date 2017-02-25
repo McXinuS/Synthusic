@@ -1,12 +1,11 @@
 import {Injectable} from "@angular/core";
 import {WebSocketMessage, WebSocketMessageType} from "./websocketmessage.model";
+import {BroadcasterService} from "../broadcaster/broadcaster.service";
 
 @Injectable()
 export class WebSocketService {
-  onmessage: (data)=>void = null;
-  onopen: ()=>void = null;
-
   socket: WebSocket;
+  handler: WebSocketMessageHandler;
 
   get isSocketReady(): boolean {
     return this.socket.readyState === 1;
@@ -16,6 +15,10 @@ export class WebSocketService {
   readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
   readonly PING_TIME = 30000; // interval of ping of server to keep web socket connection
 
+  constructor(private broadcaster: BroadcasterService) {
+    this.handler = new WebSocketMessageHandler(broadcaster);
+  }
+
   init(host: string) {
     this.connect(host);
   }
@@ -23,22 +26,17 @@ export class WebSocketService {
   connect(host: string) {
     let ws = new WebSocket(host);
 
-    var pingIntervalId;
+    let pingIntervalId;
     ws.onopen = () => {
       console.info(`Connected to server`);
+      this.requestProgrammState();
       pingIntervalId = setInterval(() => {
         this.sendPing();
       }, this.PING_TIME);
-      if (this.onopen != null) {
-        this.onopen();
-      }
     };
 
     ws.onmessage = (event) => {
-      var data = JSON.parse(event.data);
-      if (this.onmessage != null) {
-        this.onmessage(data);
-      }
+      this.handler.onMessage(event.data);
     };
 
     ws.onclose = () => {
@@ -46,7 +44,7 @@ export class WebSocketService {
       clearTimeout(pingIntervalId);
       setTimeout(() => {
         this.connect(host);
-      }, this.RECONNECT_TIME)
+      }, this.RECONNECT_TIME);
     };
 
     this.socket = ws;
@@ -75,4 +73,44 @@ export class WebSocketService {
     this.send(new WebSocketMessage(WebSocketMessageType.ping));
   };
 
+  requestProgrammState() {
+    this.send(new WebSocketMessage(WebSocketMessageType.));
+  }
+}
+
+class WebSocketMessageHandler {
+  constructor(private broadcaster: BroadcasterService) {
+  }
+
+  onMessage({type, data}: {type: number, data: any}) {
+
+  }
+
+  onNoteAdd() {
+
+  }
+
+  onNoteDelete() {
+
+  }
+
+  onInstrumentAdd() {
+
+  }
+
+  onInstrumentUpdate() {
+
+  }
+
+  onInstrumentDelete() {
+
+  }
+
+  onRoomUsersUpdate() {
+
+  }
+
+  onRoomNameUpdate() {
+
+  }
 }

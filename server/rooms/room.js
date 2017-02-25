@@ -1,10 +1,10 @@
 'use strict';
 
-let conf = require('../synth-config/config');
+let conf = require('./config');
 
 let Room = function (id) {
   this.id = id;
-  this.progConfig = new conf.Config();
+  this.config = new conf.Config();
   this.users = [];
 
   let self = this;
@@ -29,22 +29,36 @@ let Room = function (id) {
 };
 
 Room.prototype = {
+  getState: function() {
+    return this.config.getState();
+  },
+
   addUser: function (id) {
     this.users.push(id);
   },
   removeUser: function(id) {
     let i = this.users.findIndex(user => user === id);
-    this.users.splice()
+    if (i != -1) {
+      this.users.splice(i, 1);
+    }
   },
 
-  getState: function() {
-
+  addNote: function (note) {
+    this.config.addNote(note);
+  },
+  removeNote: function (note) {
+    this.config.removeNote(note);
   },
 
-  changeState: function() {
-
-
+  addInstrument: function (instrument) {
+    this.config.addInstrument(instrument);
   },
+  updateInstrument: function (instrument) {
+    this.config.updateInstrument(instrument);
+  },
+  deleteInstrument: function (id) {
+    this.config.deleteInstrument(id);
+  }
 };
 
 module.exports.Room = Room;

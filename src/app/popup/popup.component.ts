@@ -13,7 +13,7 @@ export class PopupComponent implements OnInit {
   ngOnInit() {
   }
 
-  close(event?: Event) {
+  close() {
     this.popupService.close();
   }
 }

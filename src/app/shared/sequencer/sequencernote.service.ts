@@ -7,7 +7,7 @@ import {NoteService} from "../note/note.service";
 
 @Injectable()
 export class SequencerNoteService {
-  readonly ID_INSTUMENT_MULTIPLIER = 200;
+  readonly ID_INSTRUMENT_MULTIPLIER = 200;
 
   constructor(private noteService: NoteService, private instrumentService: InstrumentService) {
   }
@@ -32,21 +32,21 @@ export class SequencerNoteService {
   }
 
   private getID(note: Note, instrument: Instrument) {
-    return this.getPreffix(instrument.id) + note.index;
+    return this.getPrefix(instrument.id) + note.index;
   }
 
   private parseID(id: number) {
-    return [id % this.ID_INSTUMENT_MULTIPLIER, Math.trunc(id / this.ID_INSTUMENT_MULTIPLIER)];
+    return [id % this.ID_INSTRUMENT_MULTIPLIER, Math.trunc(id / this.ID_INSTRUMENT_MULTIPLIER)];
   }
 
-  getPreffix(instrumentId: number): number {
-    return instrumentId * this.ID_INSTUMENT_MULTIPLIER;
+  getPrefix(instrumentId: number): number {
+    return instrumentId * this.ID_INSTRUMENT_MULTIPLIER;
   }
 
   /**
    * Checks whether the sequencerNote contains following instrument.
    */
   hasPreffix(instrumentId: number, sequencerNoteId: number): boolean {
-    return instrumentId == sequencerNoteId % this.ID_INSTUMENT_MULTIPLIER;
+    return instrumentId == sequencerNoteId % this.ID_INSTRUMENT_MULTIPLIER;
   }
 }

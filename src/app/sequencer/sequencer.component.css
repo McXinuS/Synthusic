@@ -1,4 +1,12 @@
 .instrument {
-  height : 400px;
+  height : 250px;
   width  : 20%;
+}
+
+.instrument:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.instrument:nth-child(odd) {
+  background-color: #ffffff;
 }

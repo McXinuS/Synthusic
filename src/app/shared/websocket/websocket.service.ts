@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
-import {WebSocketMessage, WebSocketMessageType} from "./websocketmessage.model";
+import {WebSocketMessage} from "./websocketmessage.model";
 import {BroadcasterService} from "../broadcaster/broadcaster.service";
+import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
 
 @Injectable()
 export class WebSocketService {
@@ -29,7 +30,7 @@ export class WebSocketService {
     let pingIntervalId;
     ws.onopen = () => {
       console.info(`Connected to server`);
-      this.requestProgrammState();
+      this.requestProgramState();
       pingIntervalId = setInterval(() => {
         this.sendPing();
       }, this.PING_TIME);
@@ -73,8 +74,8 @@ export class WebSocketService {
     this.send(new WebSocketMessage(WebSocketMessageType.ping));
   };
 
-  requestProgrammState() {
-    this.send(new WebSocketMessage(WebSocketMessageType.));
+  requestProgramState() {
+    this.send(new WebSocketMessage(WebSocketMessageType.get_state));
   }
 }
 

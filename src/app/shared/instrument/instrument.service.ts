@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import {Instrument} from "./instrument.model";
+import {Instrument, Oscillator} from "./instrument.model";
 import {BroadcasterService} from "../broadcaster/broadcaster.service";
-import {Oscillator} from "./oscillator.model";
 import {BehaviorSubject} from "rxjs";
 
 @Injectable()

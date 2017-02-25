@@ -1,4 +1,5 @@
-import {Envelope} from "../instrument/envelope.model";
+import {Envelope} from '../instrument/instrument.model';
+
 export enum EnveloperState {
   STATE_STARTED,
   STATE_DECAYING,
@@ -16,7 +17,7 @@ export class Enveloper {
   funcTimeoutId: number = -1;
   onFinished: () => void;
 
-  constructor(audioCtx: AudioContext, envelope: Envelope, onFinished?: ()=>any) {
+  constructor(audioCtx: AudioContext, envelope: Envelope, onFinished?: () => any) {
     this.audioCtx = audioCtx;
     this.gainNode = audioCtx.createGain();
     this.gainNode.gain.value = 0;

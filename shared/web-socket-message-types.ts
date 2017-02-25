@@ -11,5 +11,3 @@ export enum WebSocketMessageType {
   ping = 100, // keep connection alive (from client)
   pong = 101  // keep connection alive (from server)
 }
-
-exports = WebSocketMessageType;

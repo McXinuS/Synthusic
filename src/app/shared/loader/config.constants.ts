@@ -29,7 +29,7 @@ export const CONSTANTS = {
   scaleNatural: scaleNatural,
   scaleSharp: scaleSharp,
   scaleFlat: scaleFlat,
-  scale: this.scaleSharp,
+  scale: scaleSharp,
 
   firstNote: {'name': 'C', 'octave': 2},
   lastNote: {'name': 'B', 'octave': 5},

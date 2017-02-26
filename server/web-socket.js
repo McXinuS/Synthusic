@@ -2,11 +2,12 @@
 
 exports.Server = Server;
 
-let rs = require('./rooms/room-service').RoomService;
-const WebSocketMessageType = require('./../shared/web-socket-message-types.ts').WebSocketMessageType;
+let rs = require('./rooms/room-service').RoomService,
+  ws = require('ws');
+const WebSocketMessageType = require('./../shared/web-socket-message-types').WebSocketMessageType;
 
 function Server(server) {
-  let webSocketServer = require('ws').Server({
+  let webSocketServer = ws.Server({
     server: server
   });
 
@@ -14,11 +15,14 @@ function Server(server) {
     wsLastId = 0,
     roomService = new rs();
 
+  // DEBUG
+  //roomService.addUser(-1);
+
   function onConnection(ws) {
     let id = wsLastId++;
     wsClients.set(id, ws);
-    let roomId = roomService.addUser(ws);
-    notifyRoomUsersUpdate(roomId);
+    let roomId = roomService.addUser(id);
+    notifyRoomUsersUpdate(id);
 
     console.log("New connection : id " + id);
 
@@ -27,9 +31,9 @@ function Server(server) {
     });
 
     ws.on('close', function () {
-      roomService.removeUser();
+      notifyRoomUsersUpdate(id);
+      roomService.removeUser(id);
       wsClients.delete(id);
-      notifyRoomUsersUpdate(roomId);
       console.log('Connection closed : id ' + id);
     });
   }
@@ -58,10 +62,11 @@ function Server(server) {
    * @param receivers Array of user ids or websockets.
    */
   function broadcast(message, receivers) {
+    if (typeof receivers == 'undefined') return;
     if (typeof(message) === 'object') {
       message = JSON.stringify(message);
     }
-    if (receivers && receivers[0] && !(receivers[0] instanceof WebSocket)) {
+    if (receivers[0] && !(receivers[0] instanceof ws)) {
       receivers = getWebSockets(receivers);
     }
     for (let receiver of receivers) {
@@ -75,8 +80,9 @@ function Server(server) {
    * @param userId Array of user ids or websockets.
    */
   function broadcastToUserRoom(message, userId) {
-    let rec = roomService.getRoomByUser(userId);
-    rec.splice(rec.findIndex(userId), 1);
+    let rec = roomService.getRoomUsersByUser(userId);
+    if (!rec) return;
+    rec.splice(rec.indexOf(userId), 1);
     broadcast(message, rec);
   }
 
@@ -92,17 +98,17 @@ function Server(server) {
     if (!message.includes('type')) {
       throw new Error('Message must have a type');
     }
-    if (!(receiver instanceof WebSocket)) {
+    if (!(receiver instanceof ws)) {
       receiver = getWebSockets(receiver);
     }
     receiver.send(message);
   }
 
-  function notifyRoomUsersUpdate(roomId) {
-    broadcast({
+  function notifyRoomUsersUpdate(userId) {
+    broadcastToUserRoom({
       type: WebSocketMessageType.room_users_update,
-      data: roomService.getRoomUsersByUser(roomId)
-    })
+      data: roomService.getRoomUsersByUser(userId)
+    }, userId);
   }
 
   function processStateMessage(message, sender) {
@@ -110,7 +116,10 @@ function Server(server) {
     switch (message.type) {
 
       case WebSocketMessageType.get_state:
-        send(roomService.getRoomStateByUser(sender), sender);
+        send({
+          type: WebSocketMessageType.get_state,
+          data: roomService.getRoomStateByUser(sender)
+        }, sender);
         return true;
 
       case WebSocketMessageType.note_add:
@@ -163,8 +172,9 @@ function Server(server) {
 
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {
-      let message = JSON.parse(messageStr),
-        logMsg = 'New message from id ' + sender + ': ' + messageStr;
+      let message = JSON.parse(messageStr);
+      if (message && message.type) message.type = WebSocketMessageType[message.type];
+      let logMsg = 'New message from id ' + sender + ': ' + JSON.stringify(message);
       for (let handler of messageHandlers) {
         let handled = handler(message, sender);
         if (handled) {

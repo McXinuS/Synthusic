@@ -10,11 +10,6 @@ let Room = function (id) {
   let self = this;
 
   Object.defineProperties(this, {
-    hasUser: {
-      get: function(id) {
-        return self.users.findIndex(user => user === id) != -1;
-      }
-    },
     hasUsers: {
       get: function() {
         return self.users.length !== 0;
@@ -35,6 +30,9 @@ Room.prototype = {
 
   addUser: function (id) {
     this.users.push(id);
+  },
+  hasUser: function(id) {
+    return this.users.findIndex(user => user === id) != -1;
   },
   removeUser: function(id) {
     let i = this.users.findIndex(user => user === id);

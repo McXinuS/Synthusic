@@ -11,7 +11,7 @@ let RoomService = function () {
   let lastRoomId = 0;
 
   function createRoom() {
-    return new rm(lastRoomId++);
+    return new rm.Room(lastRoomId++);
   }
 
   function destroyRoom(id) {
@@ -20,7 +20,7 @@ let RoomService = function () {
 
   function addUser(id) {
     let freeRoom;
-    for (let room in rooms) {
+    for (let room of rooms) {
       if (room.usersNumber < MAX_USERS_IN_ROOM) {
         freeRoom = room;
         break;
@@ -46,7 +46,7 @@ let RoomService = function () {
 
     room.removeUser(id);
     if (!room.hasUsers) {
-      destroyRoom(room.id);
+      //destroyRoom(room.id);
     }
   }
 
@@ -56,17 +56,17 @@ let RoomService = function () {
         return room;
       }
     }
-    return null;
+    throw new Error('There is no room assigned with user id ' + userId);
   }
 
   function getRoomStateByUser(userId) {
     let room = getRoomByUser(userId);
-    return room && room.config;
+    return Object.assign({}, room.config);
   }
 
   function getRoomUsersByUser(userId) {
     let room = getRoomByUser(userId);
-    return room && room.users;
+    return room.users.slice();
   }
 
   /* API */

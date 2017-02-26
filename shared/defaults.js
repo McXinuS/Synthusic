@@ -1,4 +1,4 @@
-exports = {
+module.exports = {
   bpm: 60,
   instruments: [
     {

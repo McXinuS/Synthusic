@@ -1,7 +1,8 @@
-<div class="center overlay"
-     [class.overlay-active]="!loadDone">
-  <h1>{{loaderMessage}}</h1>
-  <div class="spinner"></div>
+<div class="center overlay start-overlay" [class.overlay-active]="!loadDone">
+  <div>
+    <h1>{{loaderMessage}}</h1>
+    <div class="center-hor spinner"></div>
+  </div>
 </div>
 
 <app-navbar></app-navbar>

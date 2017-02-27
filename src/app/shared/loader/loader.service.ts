@@ -11,7 +11,6 @@ import {SETTINGS_OFFLINE} from './settings.mock';
 export class LoaderService {
   readonly WebSocketTimeout = 10000;
 
-  // TODO indicate offline mode in UI
   offlineMode: boolean;
 
   constructor(private wsService: WebSocketService,
@@ -22,7 +21,6 @@ export class LoaderService {
   }
 
   init(progressChange, onDone) {
-    // TODO: make everything observable
     progressChange('Establishing server connection');
     this.establishWebSocketConnection()
       .then(() => {
@@ -43,7 +41,8 @@ export class LoaderService {
         this.initInstruments(settings);
         progressChange('Initializing sound module');
         this.initSoundModule(settings);
-        setTimeout(onDone, 2000); // DEBUG
+        // DEBUG
+        setTimeout(onDone, 1800000);
       })
       .catch(() => {
         this.popupService.show(

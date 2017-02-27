@@ -10,6 +10,10 @@
   justify-content : center;
 }
 
+.center-hor {
+  margin : 0 auto;
+}
+
 .overlay {
   z-index    : 999;
   position   : fixed;
@@ -27,6 +31,12 @@
 .overlay-active {
   visibility : visible;
   opacity    : 1;
+}
+
+div.start-overlay {
+  background      : linear-gradient(123deg, #78482c, #531520);
+  background-size : 400% 400%;
+  animation       : startOverlayAnimation 10s ease infinite;
 }
 
 .spinner {
@@ -172,4 +182,16 @@ select[disabled] {
 
 .select-action span:hover {
   transform : rotate(360deg);
+}
+
+@keyframes startOverlayAnimation {
+  0% {
+    background-position : 0 20%
+  }
+  50% {
+    background-position : 100% 80%
+  }
+  100% {
+    background-position : 0 20%
+  }
 }

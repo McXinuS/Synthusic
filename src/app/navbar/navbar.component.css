@@ -10,6 +10,7 @@
 }
 
 #topnav .navbar {
+  display         : inline;
   list-style-type : none;
   margin          : 0;
   padding         : 0;
@@ -20,7 +21,6 @@
 }
 
 .navbar li {
-  float       : left;
   font-family : "Segoe UI", Arial, sans-serif;
 }
 
@@ -56,4 +56,28 @@
 
 .logo-holder {
   padding : 6px 20px 6px 25px !important;
+}
+
+.left li {
+  float : left;
+}
+
+.right li {
+  float : right;
+}
+
+.offline-mode {
+  animation : alertBackground 2s linear 3;
+}
+
+@keyframes alertBackground {
+  0% {
+    background-color : transparent;
+  }
+  50% {
+    background-color : rgba(133, 58, 61, 0.57);
+  }
+  100% {
+    background-color : transparent;
+  }
 }

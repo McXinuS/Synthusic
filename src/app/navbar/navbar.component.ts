@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {LoaderService} from '../shared/loader/loader.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +9,7 @@ import {Component, OnInit} from '@angular/core';
 export class NavbarComponent implements OnInit {
   visible: Map<string, boolean> = new Map();
 
-  constructor() {
+  constructor(private loaderService: LoaderService) {
   }
 
   ngOnInit() {
@@ -18,5 +19,9 @@ export class NavbarComponent implements OnInit {
     let curState = this.visible.get(tab);
     this.visible.clear();
     this.visible.set(tab, !curState);
+  }
+
+  confirmPageExit() {
+    
   }
 }

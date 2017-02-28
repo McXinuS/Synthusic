@@ -13,9 +13,9 @@ export class SequencerService implements OnInit {
 
   constructor(private broadcaster: BroadcasterService,
               private sequencerNoteService: SequencerNoteService) {
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.playNote)
+    this.broadcaster.on<SequencerNote>(BroadcastTopic.addNote)
       .subscribe(note => this.playNote(note));
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.stopNote)
+    this.broadcaster.on<SequencerNote>(BroadcastTopic.removeNote)
       .subscribe(note => this.stopNote(note));
   }
 
@@ -45,14 +45,18 @@ export class SequencerService implements OnInit {
   playNote(note: SequencerNote) {
     if (this.isPlaying(note)) return;
     this.playing.push(note.id);
-    this.addPlayingNote(note.note);
+    this.broadcaster.broadcast(BroadcastTopic.playNote, note.note);
+    //this.addPlayingNote(note.note);
   }
 
   stopNote(note: SequencerNote) {
+    /*
     if (!this.isPlaying(note)) return;
     let nsInd = this.playing.indexOf(note.id);
     this.playing.splice(nsInd,1);
-    this.removePlayingNote(note.note);
+    */
+    this.broadcaster.broadcast(BroadcastTopic.stopNote, note.note);
+    //this.removePlayingNote(note.note);
   }
 
   isPlaying(note: SequencerNote) {
@@ -63,6 +67,7 @@ export class SequencerService implements OnInit {
   /**
    * Array of playing at the moment notes (no regards to instrument's notes).
    */
+  // TODO observable + move to 'sound'
   playingNotes: boolean[] = [];
 
   /**

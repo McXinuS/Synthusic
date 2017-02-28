@@ -9,22 +9,23 @@
 }
 
 .container-title {
-  font-size     : 2.5em;
-  cursor        : pointer;
+  font-size : 2.5em;
+  cursor    : pointer;
 }
 
 .container-title > h3, .container-title > h4 {
-  margin: 0;
-  padding: 10px 10px 10px 15px;
+  margin  : 0;
+  padding : 10px 10px 10px 15px;
 }
 
 .title-arrow {
-  float      : right;
-  cursor     : pointer;
+  float  : right;
+  cursor : pointer;
 }
 
 .settings {
-  display : inline-block;
+  display  : inline-block;
+  position : absolute;
 }
 
 label {

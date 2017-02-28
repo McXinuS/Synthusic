@@ -34,9 +34,26 @@
 }
 
 div.start-overlay {
-  background      : linear-gradient(123deg, #78482c, #531520);
+  background      : linear-gradient(123deg, hsla(228, 30%, 20%, 0.8), hsla(160, 60%, 20%, 0.8));
   background-size : 400% 400%;
   animation       : startOverlayAnimation 10s ease infinite;
+}
+
+.start-overlay > div {
+  background-color : rgba(240, 248, 255, 0.31);
+  padding          : 30px;
+  box-shadow       : 0 0 18px 1px aliceblue;
+  border-radius    : 3px;
+}
+
+.start-overlay > div h1 {
+  margin      : 0 0 25px 0;
+  color       : white;
+  line-height : 1;
+}
+
+.text-outline {
+  text-shadow : #333 0 0 1px, #333 0 0 1px, #333 0 0 1px, #333 0 0 1px;
 }
 
 .spinner {

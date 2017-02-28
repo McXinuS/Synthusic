@@ -34,7 +34,7 @@ export class KeyboardComponent implements OnInit {
 
   ngOnInit() {
     this.notes = this.noteService.notes;
-    this.highlights = this.sequencerService.playingNotes; // TODO observable
+    this.highlights = this.sequencerService.playingNotes; // TODO
     this.instrumentService.instruments.subscribe(instruments => {
       this.instruments = instruments;
       if (!this.activeInstrument) {
@@ -58,7 +58,7 @@ export class KeyboardComponent implements OnInit {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.playNote, ns);
+      this.broadcaster.broadcast(BroadcastTopic.addNote, ns);
     }
   }
 
@@ -66,7 +66,7 @@ export class KeyboardComponent implements OnInit {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.stopNote, ns);
+      this.broadcaster.broadcast(BroadcastTopic.removeNote, ns);
     }
   }
 

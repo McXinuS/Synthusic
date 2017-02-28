@@ -1,5 +1,5 @@
 <div id="topnav">
-  <ul class="left navbar">
+  <ul class="navbar">
     <li>
       <a class="logo-holder">
         <img src="assets/img/favicon_lowres.png" width="32px" height="32px"/>
@@ -15,12 +15,10 @@
       <a (click)="showNav('settings')">Settings</a>
     </li>
   </ul>
-
-  <ul *ngIf="loaderService.offlineMode" class="right navbar">
-      <li class="offline-mode">
-        <a (click)="confirmPageExit()">Offline mode</a>
-      </li>
-  </ul>
+  
+  <li *ngIf="loaderService.offlineMode" class="right offline-mode">
+    <a (click)="confirmPageExit()">Offline mode</a>
+  </li>
 </div>
 
 <div class="navmenu" [class.nav-collapse]="!visible.get('chat')">

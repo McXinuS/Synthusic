@@ -6,6 +6,7 @@ import {WebSocketService} from '../websocket/websocket.service';
 import {PopupService} from '../popup/popup.service';
 import {Settings} from './settings.model';
 import {SETTINGS_OFFLINE} from './settings.mock';
+import {CONSTANTS} from "./config.constants";
 
 @Injectable()
 export class LoaderService {
@@ -27,7 +28,8 @@ export class LoaderService {
         this.offlineMode = false;
         progressChange('Parsing response');
         return this.loadSettings();
-      }, () => {
+      })
+      .catch (() => {
         this.offlineMode = true;
         this.popupService.show(
           'Unable to connect',
@@ -42,9 +44,9 @@ export class LoaderService {
         progressChange('Initializing sound module');
         this.initSoundModule(settings);
         // DEBUG
-        setTimeout(onDone, 1800000);
-      })
-      .catch(() => {
+        //setTimeout(onDone, 1800000);
+        onDone();
+      }, () => {
         this.popupService.show(
           'Unable to initialize app',
           'Something went wrong during the loading if the application. Try to reload the page.');
@@ -75,11 +77,19 @@ export class LoaderService {
     });
   }
 
-  private loadSettings(): Settings {
-    // TODO init from websocket
-    let instruments;
-    // return Object.assign({}, ..., CONSTANTS);
-    return this.loadLocalSettings();
+  private async loadSettings() {
+      try {
+        let state = await this.wsService.requestProgramState();
+        if (!state)
+          return null;
+        return Object.assign({}, state, CONSTANTS);
+      }
+      catch (e) {
+        return null;
+      }
+
+    //DEBUG
+    //return this.loadLocalSettings();
   }
 
   private loadLocalSettings(): Settings {

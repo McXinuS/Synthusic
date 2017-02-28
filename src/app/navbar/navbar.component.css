@@ -10,7 +10,6 @@
 }
 
 #topnav .navbar {
-  display         : inline;
   list-style-type : none;
   margin          : 0;
   padding         : 0;
@@ -22,6 +21,7 @@
 
 .navbar li {
   font-family : "Segoe UI", Arial, sans-serif;
+  float       : left;
 }
 
 .navbar li a {
@@ -39,6 +39,18 @@
   color            : #fff;
 }
 
+.logo-holder {
+  padding : 6px 20px 6px 25px !important;
+}
+
+.navbar li.right {
+  float : right;
+}
+
+.offline-mode {
+  animation : alertBackground 2s linear 3;
+}
+
 .navmenu {
   position   : absolute;
   left       : 0;
@@ -52,22 +64,6 @@
 .nav-collapse {
   opacity    : 0;
   visibility : hidden;
-}
-
-.logo-holder {
-  padding : 6px 20px 6px 25px !important;
-}
-
-.left li {
-  float : left;
-}
-
-.right li {
-  float : right;
-}
-
-.offline-mode {
-  animation : alertBackground 2s linear 3;
 }
 
 @keyframes alertBackground {

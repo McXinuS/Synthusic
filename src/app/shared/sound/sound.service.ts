@@ -1,7 +1,5 @@
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {BroadcasterService} from "../broadcaster/broadcaster.service";
-import {Note} from "../note/note.model";
-import {SequencerService} from "../sequencer/sequencer.service";
 import {SequencerNote} from "../sequencer/sequencernote.model";
 import {BroadcastTopic} from "../broadcaster/broadcasttopic.enum";
 import {Enveloper} from "./enveloper";
@@ -45,22 +43,10 @@ export class SoundService {
   /**
    * Array of notes, playing in the sound module.
    */
-  private get playingLocal(): Map<number, GainedOscillatorNode[]> {
+  private get playing(): Map<number, GainedOscillatorNode[]> {
     return this.oscillators;
   }
-  private get playingCountLocal(): number {
-    return this.oscillators.size;
-  }
-
-  /**
-   * Array of notes, playing in sequencer.
-   */
-  private get playingGlobal(): number[] {
-    return this.sequencerService.playing;
-  }
-  private get playingCountGlobal(): number {
-    return this.sequencerService.playingCount;
-  }
+  playingCount: number = 0;
 
   /**
    * Prevents click effect when changing one note to another.
@@ -69,7 +55,6 @@ export class SoundService {
   readonly RAMP_STOP_TIME = 10;
 
   constructor(private broadcaster: BroadcasterService,
-              private sequencerService: SequencerService,
               private sequencerNoteService: SequencerNoteService) {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
@@ -83,7 +68,7 @@ export class SoundService {
       .subscribe(note => this.playNote(note));
     this.broadcaster.on<SequencerNote>(BroadcastTopic.stopNote)
       .subscribe(note => this.stopNote(note));
-    this.broadcaster.on(BroadcastTopic.stop)
+    this.broadcaster.on(BroadcastTopic.stopAllTotes)
       .subscribe(() => this.stop());
   }
 
@@ -124,6 +109,7 @@ export class SoundService {
     }
 
     if (!this.isPlaying(note)) {
+      this.playingCount++;
       this.oscillators.set(note.id, this.createOscillators(note));
       this.setGain(note, 1, true);
     }
@@ -138,8 +124,10 @@ export class SoundService {
   stopNote(note: SequencerNote, forceStop: boolean = false) {
     if (!this.isPlaying(note)) return;
 
+    this.playingCount--;
+
     // if the only note is stopped, release the enveloper
-    if (this.playingCountGlobal == 0 && !forceStop) {
+    if (this.playingCount == 0 && !forceStop) {
       this.envelopers.get(note.instrument.id).release();
       // the note will be stopped in enveloper's onFinished callback
       // we need to remember currently fading note to stop it
@@ -202,7 +190,7 @@ export class SoundService {
   };
 
   isPlaying(note: SequencerNote) {
-    return this.playingLocal.has(note.id);
+    return this.playing.has(note.id);
   }
 
   private createEnvelope(instrument: Instrument): Enveloper {

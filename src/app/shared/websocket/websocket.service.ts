@@ -2,19 +2,21 @@ import {Injectable} from "@angular/core";
 import {WebSocketMessage} from "./websocketmessage.model";
 import {BroadcasterService} from "../broadcaster/broadcaster.service";
 import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
+import {WebSocketMessageHandler, WebSocketCustomMessageHandler} from "./websocketmessagehandler";
 
 @Injectable()
 export class WebSocketService {
   socket: WebSocket;
   handler: WebSocketMessageHandler;
+  pendingMessages: Array<WebSocketMessage> = [];
 
   get isSocketReady(): boolean {
     return this.socket.readyState === 1;
   }
 
-  readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
+  // readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
   readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
-  readonly PING_TIME = 30000; // interval of ping of server to keep web socket connection
+  readonly PING_TIME = 30000; // interval of ping of server to keep web socket connection alive
 
   constructor(private broadcaster: BroadcasterService) {
     this.handler = new WebSocketMessageHandler(broadcaster);
@@ -30,10 +32,14 @@ export class WebSocketService {
     let pingIntervalId;
     ws.onopen = () => {
       console.info(`Connected to server`);
-      this.requestProgramState();
+
       pingIntervalId = setInterval(() => {
         this.sendPing();
       }, this.PING_TIME);
+
+      for (let msg of this.pendingMessages) {
+        this.send(msg);
+      }
     };
 
     ws.onmessage = (event) => {
@@ -41,8 +47,8 @@ export class WebSocketService {
     };
 
     ws.onclose = () => {
+      setInterval(pingIntervalId);
       console.warn(`Socket is closed. Next attempt to reconnect in ${this.RECONNECT_TIME / 1000} seconds`);
-      clearTimeout(pingIntervalId);
       setTimeout(() => {
         this.connect(host);
       }, this.RECONNECT_TIME);
@@ -52,66 +58,44 @@ export class WebSocketService {
   };
 
   send(data: WebSocketMessage) {
-    this.waitForSocketConnection((socket) => {
-      socket.send(JSON.stringify(data));
-    });
+    if (this.isSocketReady) {
+      this.socket.send(JSON.stringify(data));
+    } else {
+      this.pendingMessages.push(data);
+    }
+    /*
+     this.waitForSocketConnection((socket) => {
+     socket.send(JSON.stringify(data));
+     });
+     */
   };
 
   /**
    * Wait for socket to be ready.
    */
-  waitForSocketConnection(callback) {
-    if (this.isSocketReady) {
-      if (callback != null) callback(this.socket);
-    } else {
-      setTimeout(function () {
-        this.waitForSocketConnection(callback);
-      }.bind(this), this.SEND_WAIT_TIME);
-    }
-  };
+  /*
+   waitForSocketConnection(callback) {
+   if (this.isSocketReady) {
+   if (callback != null) callback(this.socket);
+   } else {
+   setTimeout(function () {
+   this.waitForSocketConnection(callback);
+   }.bind(this), this.SEND_WAIT_TIME);
+   }
+   };
+   */
 
   sendPing() {
     this.send(new WebSocketMessage(WebSocketMessageType.ping));
   };
 
-  requestProgramState() {
-    this.send(new WebSocketMessage(WebSocketMessageType.get_state));
-  }
-}
-
-class WebSocketMessageHandler {
-  constructor(private broadcaster: BroadcasterService) {
-  }
-
-  onMessage({type, data}: {type: number, data: any}) {
-
-  }
-
-  onNoteAdd() {
-
-  }
-
-  onNoteDelete() {
-
-  }
-
-  onInstrumentAdd() {
-
-  }
-
-  onInstrumentUpdate() {
-
-  }
-
-  onInstrumentDelete() {
-
-  }
-
-  onRoomUsersUpdate() {
-
-  }
-
-  onRoomNameUpdate() {
-
+  requestProgramState(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.handler.registerOnce(new WebSocketCustomMessageHandler(WebSocketMessageType.get_state, (data) => {
+        resolve(data);
+      }));
+      this.send(new WebSocketMessage(WebSocketMessageType.get_state));
+      setTimeout(() => reject(), 10000);
+    });
   }
 }

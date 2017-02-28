@@ -307,12 +307,12 @@ function onSocketMessage(data) {
         case __constants.WEB_SOCKET_MESSAGE_TYPE.play_note:
             let name = data.note;
             let note = __note.getNote(name);
-            this.playNote({note: note, notify: false});
+            this.addNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop_note:
             name = data.note;
             note = __note.getNote(name);
-            this.stopNote({note: note, notify: false});
+            this.removeNote({note: note, notify: false});
             break;
         case __constants.WEB_SOCKET_MESSAGE_TYPE.stop:
             this.stop({notify: false});

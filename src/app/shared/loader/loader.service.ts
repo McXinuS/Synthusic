@@ -33,7 +33,10 @@ export class LoaderService {
         this.offlineMode = true;
         this.popupService.show(
           'Unable to connect',
-          'The remote server is not responding, going offline mode. Try to reload the page to go online.');
+          'The remote server is not responding, going offline mode.\n' +
+          'In offline mode you are unable to share your creativity with other people.' +
+          ' Also, all your data will be lost when the page is closed.' +
+          ' Reloading the page is the way to online functional. Just. Doit.');
         return this.loadLocalSettings();
       })
       .then((settings: Settings) => {
@@ -85,7 +88,7 @@ export class LoaderService {
         return Object.assign({}, state, CONSTANTS);
       }
       catch (e) {
-        return null;
+        throw new Error('Error while getting server state');
       }
 
     //DEBUG

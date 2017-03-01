@@ -14,11 +14,11 @@
     <li>
       <a (click)="showNav('settings')">Settings</a>
     </li>
-  </ul>
   
-  <li *ngIf="loaderService.offlineMode" class="right offline-mode">
-    <a (click)="confirmPageExit()">Offline mode</a>
-  </li>
+    <li *ngIf="loaderService.offlineMode" class="right offline-mode">
+      <a (click)="confirmPageExit()">Offline mode</a>
+    </li>
+  </ul>
 </div>
 
 <div class="navmenu" [class.nav-collapse]="!visible.get('chat')">

@@ -48,10 +48,13 @@ export class WebSocketService {
 
     ws.onclose = () => {
       setInterval(pingIntervalId);
+      /*
       console.warn(`Socket is closed. Next attempt to reconnect in ${this.RECONNECT_TIME / 1000} seconds`);
       setTimeout(() => {
         this.connect(host);
       }, this.RECONNECT_TIME);
+      */
+      console.warn(`Socket is closed. Reload the page to go online`);
     };
 
     this.socket = ws;
@@ -61,7 +64,7 @@ export class WebSocketService {
     if (this.isSocketReady) {
       this.socket.send(JSON.stringify(data));
     } else {
-      this.pendingMessages.push(data);
+      //this.pendingMessages.push(data);
     }
     /*
      this.waitForSocketConnection((socket) => {

@@ -28,9 +28,8 @@
 .key-black:before {
   top        : -50px;
   left       : 50%;
-  content    : " ";
+  content    : "";
   height     : 50px;
-  width      : .01px;
   position   : absolute;
   transform  : skewX(-10deg);
   box-shadow : 0 0 50px 10px #000;
@@ -60,23 +59,27 @@
   }
 }
 
-.key > span {
+.key p {
   transition  : color .75s, bottom .5s, transform .5s;
-  font-family : 'VT323', monospace;
+  font-family : 'VT323', 'Courier New', monospace;
   position    : absolute;
   bottom      : 10px;
-  left        : 50%;
-  transform   : translate(-50%, 0);
+  margin      : 0 auto;
 }
 
-.key-white > span {
+.key-white p {
   color     : #4c4c4c;
   font-size : calc(.5vw + 30px);
 }
 
-.key-black > span {
+.key-black p {
   color     : #bebebe;
   font-size : calc(.5vw + 20px);
+}
+
+.upper {
+  vertical-align : super;
+  font-size      : 0.5em;
 }
 
 .key:hover {
@@ -88,7 +91,7 @@
   background-color : #efe;
 }
 
-.key-white:hover > span {
+.key-white:hover p {
   color : #000000;
 }
 
@@ -96,7 +99,7 @@
   background-color : #020;
 }
 
-.key-black:hover > span {
+.key-black:hover p {
   color : #ffffff;
 }
 
@@ -108,7 +111,7 @@
   box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, .2);
 }
 
-.key.playing > span {
+.key.playing p {
   color : #000000;
 }
 
@@ -124,7 +127,7 @@
   background-color : #ccc;
 }
 
-.key.selected > span {
+.key.selected p {
   color : #000000;
 }
 
@@ -137,11 +140,11 @@
   box-shadow : none;
 }
 
-.mini .key-white > span {
+.mini .key-white p {
   bottom : 0
 }
 
-.mini .key-black > span {
+.mini .key-black p {
   bottom    : 50%;
   transform : translate(-50%, 50%);
 }

@@ -2,5 +2,9 @@
      [class.playing]="highlighted" [class.selected]="selected && highlighted"
      (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (contextmenu)="onContextMenu($event)"
      (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave($event)">
-  <span>{{note.fullname}}</span>
+  <p>
+    <span *ngIf="note.isAccidental">{{note.fullname.substring(0,2)}}</span>
+    <span *ngIf="!note.isAccidental">{{note.name}}</span>
+    <span class="upper">{{note.octave}}</span>
+  </p>
 </div>

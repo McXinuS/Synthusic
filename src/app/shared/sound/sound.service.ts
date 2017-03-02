@@ -1,10 +1,11 @@
-import {Injectable} from "@angular/core";
-import {BroadcasterService} from "../broadcaster/broadcaster.service";
-import {SequencerNote} from "../sequencer/sequencernote.model";
-import {BroadcastTopic} from "../broadcaster/broadcasttopic.enum";
-import {Enveloper} from "./enveloper";
-import {Instrument} from "../instrument/instrument.model";
-import {SequencerNoteService} from "../sequencer/sequencernote.service";
+import {Injectable} from '@angular/core';
+import {BroadcasterService} from '../broadcaster/broadcaster.service';
+import {SequencerNote} from '../sequencer/sequencernote.model';
+import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
+import {Enveloper} from './enveloper';
+import {Instrument} from '../instrument/instrument.model';
+import {SequencerNoteService} from '../sequencer/sequencernote.service';
+import {BehaviorSubject} from 'rxjs';
 
 class GainedOscillatorNode extends OscillatorNode{
   gainNode: GainNode;
@@ -43,9 +44,7 @@ export class SoundService {
   /**
    * Array of notes, playing in the sound module.
    */
-  private get playing(): Map<number, GainedOscillatorNode[]> {
-    return this.oscillators;
-  }
+  playingNotes: BehaviorSubject<Array<SequencerNote>> = new BehaviorSubject([]);
   playingCount: number = 0;
 
   /**
@@ -108,10 +107,12 @@ export class SoundService {
       this.noteToStop = undefined;
     }
 
-    if (!this.isPlaying(note)) {
+    if (!this.hasOscillator(note)) {
       this.playingCount++;
       this.oscillators.set(note.id, this.createOscillators(note));
       this.setGain(note, 1, true);
+      this.playingNotes.getValue().push(note);
+      this.playingNotes.next(this.playingNotes.getValue());
     }
 
     this.envelopers.get(note.instrument.id).start();
@@ -122,9 +123,17 @@ export class SoundService {
    * @param forceStop Don't save the note to stop it later with envelope callback, stop it right now instead.
    */
   stopNote(note: SequencerNote, forceStop: boolean = false) {
-    if (!this.isPlaying(note)) return;
+    if (!this.hasOscillator(note)) return;
 
-    this.playingCount--;
+    if (this.isPlaying(note)) {
+      this.playingCount--;
+      let newNotesArray = this.playingNotes.getValue(),
+        ind = newNotesArray.findIndex(n => note.id == n.id);
+      if (ind != -1) {
+        newNotesArray.splice(ind, 1);
+        this.playingNotes.next(newNotesArray);
+      }
+    }
 
     // if the only note is stopped, release the enveloper
     if (this.playingCount == 0 && !forceStop) {
@@ -140,7 +149,7 @@ export class SoundService {
   };
 
   private stopNoteImmediately(note: SequencerNote) {
-    if (!this.isPlaying(note)) return;
+    if (!this.hasOscillator(note)) return;
 
     for (let j = 0; j < note.instrument.oscillators.length; j++) {
       this.oscillators.get(note.id)[j].stop(0);
@@ -160,11 +169,20 @@ export class SoundService {
       }
     });
     this.oscillators.clear();
+
+    if (instrumentId) {
+      let pl = this.playingNotes.getValue().filter(sn => sn.instrument.id != instrumentId);
+      this.playingNotes.next(pl);
+      this.playingCount = pl.length;
+    } else {
+      this.playingNotes.next([]);
+      this.playingCount = 0;
+    }
   };
 
 
   getGain(note: SequencerNote) {
-    if (!this.isPlaying(note)) return 0;
+    if (!this.hasOscillator(note)) return 0;
     return this.oscillators.get(note.id)[0].gainNode.gain.value / note.instrument.oscillators[0].gain;
   };
 
@@ -173,7 +191,7 @@ export class SoundService {
    Otherwise, set it in RAMP_STOP_TIME to prevent click effect
    */
   setGain(note: SequencerNote, targetGain: number, ramp: boolean = false) {
-    if (!this.isPlaying(note)) return;
+    if (!this.hasOscillator(note)) return;
 
     let oscArr = this.oscillators.get(note.id);
     let gain;
@@ -189,12 +207,20 @@ export class SoundService {
     }
   };
 
+  hasOscillator(note: SequencerNote) {
+    return this.oscillators.has(note.id);
+  }
+
   isPlaying(note: SequencerNote) {
-    return this.playing.has(note.id);
+    return this.playingNotes.getValue().findIndex(n => note.id == n.id) != -1;
   }
 
   private createEnvelope(instrument: Instrument): Enveloper {
-    let enveloper = new Enveloper(this.audioContext, instrument.envelope, () => this.stop(instrument.id));
+    let enveloper = new Enveloper(this.audioContext,
+      instrument.envelope,
+      function () {
+        this.stop(instrument.id);
+      }.bind(this));
     enveloper.connect(this.masterGainNode);
     return enveloper;
   }

@@ -86,13 +86,9 @@ export class LoaderService {
         if (!state)
           return null;
         return Object.assign({}, state, CONSTANTS);
-      }
-      catch (e) {
+      } catch (e) {
         throw new Error('Error while getting server state');
       }
-
-    //DEBUG
-    //return this.loadLocalSettings();
   }
 
   private loadLocalSettings(): Settings {

@@ -2,13 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {Note} from '../shared/note/note.model';
 import {NoteService} from '../shared/note/note.service';
 import {KeyChangeMode} from './key/keychangemode.enum';
-import {SequencerService} from '../shared/sequencer/sequencer.service';
+import {SoundService} from '../shared/sound/sound.service';
 import {BroadcasterService} from '../shared/broadcaster/broadcaster.service';
 import {BroadcastTopic} from '../shared/broadcaster/broadcasttopic.enum';
 import {Instrument} from '../shared/instrument/instrument.model';
 import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerNoteService} from '../shared/sequencer/sequencernote.service';
 import {PopupService} from '../shared/popup/popup.service';
+import {SequencerNote} from '../shared/sequencer/sequencernote.model';
 
 @Component({
   selector: 'app-keyboard',
@@ -25,7 +26,7 @@ export class KeyboardComponent implements OnInit {
   miniMode: boolean = false;
 
   constructor(private noteService: NoteService,
-              private sequencerService: SequencerService,
+              private soundService: SoundService,
               private sequencerNoteService: SequencerNoteService,
               private broadcaster: BroadcasterService,
               private instrumentService: InstrumentService,
@@ -34,7 +35,26 @@ export class KeyboardComponent implements OnInit {
 
   ngOnInit() {
     this.notes = this.noteService.notes;
-    this.highlights = this.sequencerService.playingNotes; // TODO
+
+    this.soundService.playingNotes.subscribe((playing: SequencerNote[]) => {
+      this.highlights = [];
+      for (let i=0; i<playing.length; i++) {
+        if (playing[i].instrument.id == this.activeInstrument.id) {
+          this.highlights[playing[i].note.index] = true;
+        }
+      }
+      
+      /*
+      let pl = playing
+        .filter(sn => sn.instrument.id == this.activeInstrument.id)
+        .map(sn => sn.note.index);
+      this.highlights = [];
+      for (let ind of pl) {
+        this.highlights[ind] = true;
+      }
+      */
+    });
+
     this.instrumentService.instruments.subscribe(instruments => {
       this.instruments = instruments;
       if (!this.activeInstrument) {
@@ -58,7 +78,7 @@ export class KeyboardComponent implements OnInit {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.addNote, ns);
+      this.broadcaster.broadcast(BroadcastTopic.playNote, ns);
     }
   }
 
@@ -66,7 +86,7 @@ export class KeyboardComponent implements OnInit {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.removeNote, ns);
+      this.broadcaster.broadcast(BroadcastTopic.stopNote, ns);
     }
   }
 

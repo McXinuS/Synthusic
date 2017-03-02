@@ -7,12 +7,15 @@
   color      : #ddd;
   box-shadow : 0 2px 10px 0 rgba(0, 0, 0, .15);
   z-index    : 99;
+  padding    : 0 80px;
 }
 
 #topnav .navbar {
   list-style-type : none;
   margin          : 0;
   padding         : 0;
+  font-family     : "Segoe UI", Arial, sans-serif;
+  font-weight     : 300;
   overflow        : hidden;
   min-height      : 0;
   border          : 0;
@@ -20,8 +23,7 @@
 }
 
 .navbar li {
-  font-family : "Segoe UI", Arial, sans-serif;
-  float       : left;
+  float : left;
 }
 
 .navbar li a {
@@ -39,8 +41,8 @@
   color            : #fff;
 }
 
-.logo-holder {
-  padding : 6px 20px 6px 25px !important;
+#logo-holder {
+  padding : 6px 20px !important;
 }
 
 .navbar li.right {
@@ -48,7 +50,7 @@
 }
 
 .offline-mode {
-  animation : alertBackground 2s linear 3;
+  animation : alertBackground 2s linear 5;
 }
 
 .navmenu {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ChatService} from '../../shared/chat/chat.service';
 import {Chat} from '../../shared/chat/chat.model';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -9,12 +10,12 @@ import {Chat} from '../../shared/chat/chat.model';
 })
 export class ChatComponent implements OnInit {
 
-  messages: Chat[] = [];
+  messages: Observable<Chat[]>;
 
   constructor(private chatService: ChatService) { }
 
   ngOnInit() {
-    this.chatService.messages.subscribe(messages => this.messages = messages);
+    this.messages = this.chatService.messages;
   }
 
 }

@@ -9,7 +9,7 @@ import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
 import {SequencerNoteService} from './sequencernote.service';
 
 @Injectable()
-export class SequencerService implements OnInit {
+export class SequencerService {
 
   constructor(private broadcaster: BroadcasterService,
               private sequencerNoteService: SequencerNoteService) {
@@ -17,9 +17,6 @@ export class SequencerService implements OnInit {
       .subscribe(note => this.addNote(note));
     this.broadcaster.on<SequencerNote>(BroadcastTopic.removeNote)
       .subscribe(note => this.removeNote(note));
-  }
-
-  ngOnInit() {
   }
 
   /**

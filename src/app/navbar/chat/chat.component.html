@@ -1,10 +1,10 @@
-<div class="chat container-fluid">
-  <div>
-    <div *ngIf="messages.length == 0" class="center">
-      No messages yet.
-    </div>
+<div class="wrapper">
+  <div class="chat">
+    <h1 *ngIf="messages.count == 0" class="center">
+      No messages yet. Be the first to chat!
+    </h1>
     <ul>
-      <li *ngFor="let msg of messages">
+      <li *ngFor="let msg of messages | async">
         {{msg.sender}}: {{msg.message}}
       </li>
     </ul>

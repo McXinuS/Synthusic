@@ -21,8 +21,8 @@ import { PopupComponent } from './popup/popup.component';
 import { OscillatorSettingsComponent } from './popup/instrument-settings/oscillator-settings/oscillator-settings.component';
 import {TitleCase} from './shared/utils/pipes/titlecase.pipe';
 import { SequencerComponent } from './sequencer/sequencer.component';
-import { ChatComponent } from './navbar/chat/chat.component';
-import {ChatService} from './shared/chat/chat.service';
+import {RoomComponent} from './navbar/room/room.component';
+import {RoomService} from './shared/room/room.service';
 import {WebSocketService} from './shared/websocket/websocket.service';
 
 @NgModule({
@@ -37,7 +37,7 @@ import {WebSocketService} from './shared/websocket/websocket.service';
     OscillatorSettingsComponent,
     TitleCase,
     SequencerComponent,
-    ChatComponent
+    RoomComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +53,7 @@ import {WebSocketService} from './shared/websocket/websocket.service';
     BroadcasterService,
     SoundService,
     PopupService,
-    ChatService,
+    RoomService,
     WebSocketService
   ],
   bootstrap: [AppComponent]

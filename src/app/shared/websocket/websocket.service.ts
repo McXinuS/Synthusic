@@ -43,7 +43,7 @@ export class WebSocketService {
     };
 
     ws.onmessage = (event) => {
-      this.handler.onMessage(event.data);
+      this.handler.onMessage(JSON.parse(event.data));
     };
 
     ws.onclose = () => {

@@ -26,18 +26,16 @@ export class WebSocketMessageHandler {
     this.internalHandlers.set(WebSocketMessageType.room_name_update, this.onRoomNameUpdate);
     this.internalHandlers.set(WebSocketMessageType.chat_new_message, this.onChatMessage);
     //this.internalHandlers.set(WebSocketMessageType.get_state, this.);
-    //this.internalHandlers.set(WebSocketMessageType.ping, this.);
-    //this.internalHandlers.set(WebSocketMessageType.pong, this.);
   }
 
   onMessage(message: WebSocketMessage) {
-    let handler = this.internalHandlers.get(message.type);
-    if (handler) handler(message.data);
+    let intHandler = this.internalHandlers.get(message.type);
+    if (intHandler) intHandler(message.data);
 
-    for (let i = 0; i < this.oneTimeHandlers.length; i++) {
-      if (this.oneTimeHandlers[i].type == message.type) {
+    for (let i = this.oneTimeHandlers.length - 1; i >= 0; i--) {
+      if (this.oneTimeHandlers[i].type === message.type) {
         this.oneTimeHandlers[i].callback(message.data);
-        delete this.oneTimeHandlers[i];
+        this.oneTimeHandlers.splice(i, 1);
       }
     }
   }

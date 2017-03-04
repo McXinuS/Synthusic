@@ -60,13 +60,11 @@ let RoomService = function () {
   }
 
   function getRoomStateByUser(userId) {
-    let room = getRoomByUser(userId);
-    return Object.assign({}, room.config);
+    return getRoomByUser(userId).getState();
   }
 
   function getRoomUsersByUser(userId) {
-    let room = getRoomByUser(userId);
-    return room.users.slice();
+    return getRoomByUser(userId).users.slice();
   }
 
   /* API */

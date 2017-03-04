@@ -173,8 +173,9 @@ function Server(server) {
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {
       let message = JSON.parse(messageStr);
-      if (message && message.type) message.type = WebSocketMessageType[message.type];
-      let logMsg = 'New message from id ' + sender + ': ' + JSON.stringify(message);
+      // replace type with its description
+      let describedMsg = Object.assign({}, message, {type: WebSocketMessageType[message.type]});
+      let logMsg = `New message from id ${sender}: ${JSON.stringify(describedMsg)}`;
       for (let handler of messageHandlers) {
         let handled = handler(message, sender);
         if (handled) {

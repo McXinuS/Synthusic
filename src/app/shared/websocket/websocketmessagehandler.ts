@@ -1,7 +1,12 @@
 import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
-import {BroadcasterService} from "../broadcaster/broadcaster.service";
 import {WebSocketMessage} from "./websocketmessage.model";
-import {BroadcastTopic} from "../broadcaster/broadcasttopic.enum";
+import {SequencerNote} from "../sequencer/sequencernote.model";
+import {Instrument} from "../instrument/instrument.model";
+import {Injectable} from "@angular/core";
+import {InstrumentService} from "../instrument/instrument.service";
+import {SequencerService} from "../sequencer/sequencer.service";
+import {RoomService} from "../room/room.service";
+import {ChatMessage} from "../room/chat.model";
 
 export class WebSocketCustomMessageHandler {
   type: WebSocketMessageType;
@@ -12,20 +17,21 @@ export class WebSocketCustomMessageHandler {
   }
 }
 
-export class WebSocketMessageHandler {
+@Injectable()
+export class WebSocketHandlerService {
   internalHandlers: Map<WebSocketMessageType, (data: any) => any> = new Map();
   oneTimeHandlers: Array<WebSocketCustomMessageHandler> = [];
 
-  constructor(private broadcaster: BroadcasterService) {
+  constructor(private instrumentService: InstrumentService,
+              private sequencerService: SequencerService,
+              private roomService: RoomService) {
     this.internalHandlers.set(WebSocketMessageType.note_add, this.onNoteAdd);
     this.internalHandlers.set(WebSocketMessageType.note_remove, this.onNoteRemove);
     this.internalHandlers.set(WebSocketMessageType.instrument_add, this.onInstrumentAdd);
     this.internalHandlers.set(WebSocketMessageType.instrument_update, this.onInstrumentUpdate);
     this.internalHandlers.set(WebSocketMessageType.instrument_delete, this.onInstrumentDelete);
-    this.internalHandlers.set(WebSocketMessageType.room_users_update, this.onRoomUsersUpdate);
-    this.internalHandlers.set(WebSocketMessageType.room_name_update, this.onRoomNameUpdate);
+    this.internalHandlers.set(WebSocketMessageType.room_update, this.onRoomUpdate);
     this.internalHandlers.set(WebSocketMessageType.chat_new_message, this.onChatMessage);
-    //this.internalHandlers.set(WebSocketMessageType.get_state, this.);
   }
 
   onMessage(message: WebSocketMessage) {
@@ -43,36 +49,39 @@ export class WebSocketMessageHandler {
   // TODO assert 'data' values !!!
 
   private onNoteAdd(data) {
-    this.broadcaster.broadcast(BroadcastTopic.addNote, data);
+    if (!(data instanceof SequencerNote)) return;
   }
 
   private onNoteRemove(data) {
-    this.broadcaster.broadcast(BroadcastTopic.removeNote, data);
+    if (!(data instanceof SequencerNote)) return;
   }
 
   private onInstrumentAdd(data) {
+    if (data instanceof Instrument) {
 
+    }
   }
 
   private onInstrumentUpdate(data) {
+    if (data instanceof Instrument) {
 
+    }
   }
 
   private onInstrumentDelete(data) {
-
+    if (typeof data == 'number') {
+      this.instrumentService.deleteInstrument(data);
+    }
   }
 
-  // TODO update model in room service instead on broadcast
-  private onRoomUsersUpdate(data) {
-
-  }
-
-  private onRoomNameUpdate(data) {
+  private onRoomUpdate(data) {
 
   }
 
   private onChatMessage(data) {
-    this.broadcaster.broadcast(BroadcastTopic.chatMessage, data);
+    if (data instanceof ChatMessage) {
+      this.roomService.addMessage(data);
+    }
   }
 
   registerOnce(handler: WebSocketCustomMessageHandler) {

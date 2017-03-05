@@ -1,22 +1,14 @@
-import {Injectable, OnInit} from '@angular/core';
-import {Note} from '../note/note.model';
+import {Injectable} from '@angular/core';
 import {Instrument} from '../instrument/instrument.model';
 import {SequencerNote} from './sequencernote.model';
 import {Observable} from 'rxjs';
 import {InstrumentService} from '../instrument/instrument.service';
-import {BroadcasterService} from '../broadcaster/broadcaster.service';
-import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
 import {SequencerNoteService} from './sequencernote.service';
 
 @Injectable()
 export class SequencerService {
 
-  constructor(private broadcaster: BroadcasterService,
-              private sequencerNoteService: SequencerNoteService) {
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.addNote)
-      .subscribe(note => this.addNote(note));
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.removeNote)
-      .subscribe(note => this.removeNote(note));
+  constructor(private sequencerNoteService: SequencerNoteService) {
   }
 
   /**

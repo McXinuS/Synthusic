@@ -45,7 +45,7 @@
       <select id="type" [(ngModel)]="selectedOscillator && selectedOscillator.type"
               [disabled]="!selectedOscillator"
               (change)="updateProperty('type', $event.target.value, true)">
-        <option *ngFor="let type of Types" value="{{type}}">{{type | titleCase}}</option>
+        <option *ngFor="let type of OscillatorType" value="{{type}}">{{type | titleCase}}</option>
       </select>
     </div>
   </div>

@@ -1,49 +1,79 @@
-import { Injectable } from '@angular/core';
-
+import {Injectable} from '@angular/core';
 import {Instrument, Oscillator} from "./instrument.model";
-import {BroadcasterService} from "../broadcaster/broadcaster.service";
-import {BehaviorSubject} from "rxjs";
+import {Subject} from 'rxjs';
 
 @Injectable()
 export class InstrumentService {
-  public instruments: BehaviorSubject<Array<Instrument>> = new BehaviorSubject([]);
+  private _instruments: Instrument[];
+  instruments$: Subject<Array<Instrument>> = new Subject();
 
-  constructor(broadcaster: BroadcasterService) {
+  constructor() {
   }
 
   getInstrument(id): Instrument {
-    return this.instruments.getValue().find(ins => {
+    return this._instruments.find(ins => {
+      return ins.id == id;
+    });
+  }
+
+  getInstrumentIndex(id): number {
+    return this._instruments.findIndex(ins => {
       return ins.id == id;
     });
   }
 
   init(settings: Instrument[]) {
-    this.instruments.next(settings);
+    this.instruments$.next(settings);
   }
 
-  updateEnvelope(instrumentId: number, type: string, value: number) {
-    this.getInstrument(instrumentId).envelope[type] = value;
+  // TODO: update all other services when instrument is updated
+
+  addInstrument(instrument: Instrument) {
+    this._instruments.push(instrument);
+    this.instruments$.next(this._instruments);
   }
 
-  addOscillator(instrumentId: number, oscillator: Oscillator) {
-    this.getInstrument(instrumentId).oscillators.push(oscillator);
+  updateInstrument(instrument: Instrument) {
+    let index = this.getInstrumentIndex(instrument.id);
+    if (index >= 0) {
+      this._instruments[index] = instrument;
+      this.instruments$.next(this._instruments);
+    }
   }
 
-  updateOscillator(instrumentId: number, oscillator: Oscillator, type: string, value: number | number) {
-    let instrument = this.getInstrument(instrumentId),
+  deleteInstrument(id: number) {
+    let index = this.getInstrumentIndex(id);
+    if (index >= 0) {
+      this._instruments.splice(index, 1);
+      this.instruments$.next(this._instruments);
+    }
+  }
+
+  updateEnvelope(id: number, type: string, value: number) {
+    this.getInstrument(id).envelope[type] = value;
+  }
+
+  addOscillator(id: number, oscillator: Oscillator) {
+    this.getInstrument(id).oscillators.push(oscillator);
+  }
+
+  updateOscillator(id: number, oscillator: Oscillator, type: string, value: number | number) {
+    let instrument = this.getInstrument(id),
       index = this.findOscillatorIndex(instrument, oscillator);
-    instrument.oscillators[index][type] = value;
+    if (index >= 0) {
+      instrument.oscillators[index][type] = value;
+    }
   }
 
-  deleteOscillator(instrumentId: number, oscillator: Oscillator) {
-    let ind, instrument = this.getInstrument(instrumentId);
+  deleteOscillator(id: number, oscillator: Oscillator) {
+    let ind, instrument = this.getInstrument(id);
     while ((ind = this.findOscillatorIndex(instrument, oscillator)) != -1) {
       instrument.oscillators.splice(ind, 1);
     }
   }
 
   private findOscillatorIndex(instrument: Instrument, osc: Oscillator) {
-    return instrument.oscillators.findIndex((cur: Oscillator)=> {
+    return instrument.oscillators.findIndex((cur: Oscillator) => {
       return cur.freq === osc.freq && cur.gain === osc.gain && cur.type === osc.type;
     });
   }

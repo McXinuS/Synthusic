@@ -4,8 +4,7 @@ export enum WebSocketMessageType {
   instrument_add = 10,
   instrument_update = 11,
   instrument_delete = 12,
-  room_users_update = 20,
-  room_name_update = 21,
+  room_update = 20,
   chat_new_message = 30,
   get_state = 90,
   ping = 100, // keep connection alive (from client)

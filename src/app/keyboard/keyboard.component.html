@@ -15,7 +15,8 @@
         <div class="well settings">
           <label>Instrument</label>
           <div class="button-group">
-            <select [(ngModel)]="activeInstrument">
+            <select [(ngModel)]="activeInstrument"
+                    (change)="onInstrumentChange()">
               <option *ngFor="let instrument of instruments" [ngValue]="instrument">{{instrument.name}}</option>
             </select>
             <div class="select-action" (click)="openSettings()">

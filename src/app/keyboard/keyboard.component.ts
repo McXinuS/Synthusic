@@ -3,8 +3,6 @@ import {Note} from '../shared/note/note.model';
 import {NoteService} from '../shared/note/note.service';
 import {KeyChangeMode} from './key/keychangemode.enum';
 import {SoundService} from '../shared/sound/sound.service';
-import {BroadcasterService} from '../shared/broadcaster/broadcaster.service';
-import {BroadcastTopic} from '../shared/broadcaster/broadcasttopic.enum';
 import {Instrument} from '../shared/instrument/instrument.model';
 import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerNoteService} from '../shared/sequencer/sequencernote.service';
@@ -28,7 +26,6 @@ export class KeyboardComponent implements OnInit {
   constructor(private noteService: NoteService,
               private soundService: SoundService,
               private sequencerNoteService: SequencerNoteService,
-              private broadcaster: BroadcasterService,
               private instrumentService: InstrumentService,
               private popupService: PopupService) {
   }
@@ -37,25 +34,10 @@ export class KeyboardComponent implements OnInit {
     this.notes = this.noteService.notes;
 
     this.soundService.playingNotes.subscribe((playing: SequencerNote[]) => {
-      this.highlights = [];
-      for (let i=0; i<playing.length; i++) {
-        if (playing[i].instrument.id == this.activeInstrument.id) {
-          this.highlights[playing[i].note.index] = true;
-        }
-      }
-      
-      /*
-      let pl = playing
-        .filter(sn => sn.instrument.id == this.activeInstrument.id)
-        .map(sn => sn.note.index);
-      this.highlights = [];
-      for (let ind of pl) {
-        this.highlights[ind] = true;
-      }
-      */
+      this.updateHighlight(playing);
     });
 
-    this.instrumentService.instruments.subscribe(instruments => {
+    this.instrumentService.instruments$.subscribe(instruments => {
       this.instruments = instruments;
       if (!this.activeInstrument) {
         this.activeInstrument = this.instruments[0];
@@ -63,31 +45,40 @@ export class KeyboardComponent implements OnInit {
     });
   }
 
+  updateHighlight(playing: SequencerNote[]) {
+    this.highlights = [];
+    for (let i = 0; i < playing.length; i++) {
+      if (playing[i].instrument.id == this.activeInstrument.id) {
+        this.highlights[playing[i].note.index] = true;
+      }
+    }
+  }
+
+  onInstrumentChange() {
+    this.updateHighlight(this.soundService.playingNotes.getValue());
+  }
+
   onKeyStateUpdated(e) {
     switch (e.mode) {
       case KeyChangeMode.play:
-        this.playNote({note: e.note, broadcast: true});
+        this.playNote(e.note);
         return;
       case KeyChangeMode.stop:
-        this.stopNote({note: e.note, broadcast: true});
+        this.stopNote(e.note);
         return;
     }
   }
 
-  playNote({note, broadcast = false}: {note: Note, broadcast: boolean}) {
+  playNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.playNote, ns);
-    }
+    this.soundService.playNote(ns);
   }
 
-  stopNote({note, broadcast = false}: {note: Note, broadcast: boolean}) {
+  stopNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    if (broadcast) {
-      this.broadcaster.broadcast(BroadcastTopic.stopNote, ns);
-    }
+    this.soundService.stopNote(ns);
   }
 
   onMiniChange(e) {

@@ -1,10 +1,13 @@
 'use strict';
 
-let conf = require('./config');
-
 let Room = function (id) {
   this.id = id;
-  this.config = new conf.Config();
+
+  let defaults = require('./../../shared/defaults');
+  this.bpm = defaults.bpm;
+  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId);
+  this.instruments = defaults.instruments;
+  this.notes = [];
   this.users = [];
 
   let self = this;
@@ -25,7 +28,12 @@ let Room = function (id) {
 
 Room.prototype = {
   getState: function() {
-    return this.config.getState();
+    return {
+      bpm: this.bpm,
+      instruments: this.instruments,
+      notes: this.notes,
+      users: this.users
+    }
   },
 
   addUser: function (id) {
@@ -42,20 +50,22 @@ Room.prototype = {
   },
 
   addNote: function (note) {
-    this.config.addNote(note);
+    this.notes[note] = true;
   },
   removeNote: function (note) {
-    this.config.removeNote(note);
+    this.notes[note] = false;
   },
 
   addInstrument: function (instrument) {
-    this.config.addInstrument(instrument);
+    instrument.id = this.lastInstrumentId++;
+    this.instruments.push(instrument);
   },
   updateInstrument: function (instrument) {
-    this.config.updateInstrument(instrument);
+    let i = this.instruments.findIndex(ins => ins.id == instrument.id);
+    if (i != -1) this.instruments[i] = instrument;
   },
   deleteInstrument: function (id) {
-    this.config.deleteInstrument(id);
+    delete this.instruments.find(ins => ins.id == id);
   }
 };
 

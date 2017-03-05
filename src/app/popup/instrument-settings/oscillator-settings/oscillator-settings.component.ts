@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
-import {Instrument, Oscillator, Types} from '../../../shared/instrument/instrument.model';
+import {Instrument, Oscillator, OscillatorType} from '../../../shared/instrument/instrument.model';
 import {InstrumentService} from '../../../shared/instrument/instrument.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   readonly freqScaleMax = 10;
   readonly gainScaleMax = 1.1;
   readonly samples = 300;
-  Types = Types;
+  Types = OscillatorType;
 
   isMouseDown: boolean = false;
   gainChangeInvert: boolean;
@@ -252,7 +252,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   }
 
   getOscillatorHash(oscillator: Oscillator) {
-    let type = Types.indexOf(oscillator.type);
+    let type = OscillatorType.indexOf(oscillator.type);
     return type * 10000 + Math.round(oscillator.freq * 1000) + oscillator.gain;
   }
 

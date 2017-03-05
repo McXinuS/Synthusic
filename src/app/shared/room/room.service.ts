@@ -1,34 +1,30 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {Chat} from './chat.model';
-import {BroadcasterService} from '../broadcaster/broadcaster.service';
-import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
+import {Subject, Observable} from 'rxjs';
+import {ChatMessage} from './chat.model';
 
 @Injectable()
 export class RoomService {
-  _messages: Chat[] = [];
-  public messages: Observable<Chat[]>;
+  private _messages: ChatMessage[] = [];
+  private messagesSource: Subject<ChatMessage[]>;
+  messages$: Observable<ChatMessage[]>;
 
-  readonly MaxMessagesInChat = 100;
+  private readonly MaxMessagesInChat = 100;
 
-  constructor(private broadcaster: BroadcasterService) {
-    this.messages = new Observable(observer => {
-      this.broadcaster.on(BroadcastTopic.chatMessage)
-        .subscribe((message: Chat) => {
-          if (this._messages.length >= this.MaxMessagesInChat) {
-            this._messages.shift();
-          }
-          this._messages.push(message);
-          observer.next(this._messages);
-        });
-    });
-
+  constructor() {
+    this.messagesSource = new Subject();
+    this.messages$ = this.messagesSource.asObservable();
     // DEBUG
     let n = 0;
     setInterval(() => {
-      this.broadcaster.broadcast(
-        BroadcastTopic.chatMessage,
-        {sender: 0, message: 'Test message ' + n++});
+      this.addMessage(new ChatMessage(0, 'Test message ' + n++));
     }, 2500);
+  }
+
+  addMessage(message: ChatMessage) {
+    if (this._messages.length >= this.MaxMessagesInChat) {
+      this._messages.shift();
+    }
+    this._messages.push(message);
+    this.messagesSource.next(this._messages);
   }
 }

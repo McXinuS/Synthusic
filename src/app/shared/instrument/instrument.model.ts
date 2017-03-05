@@ -18,4 +18,4 @@ export class Oscillator {
   type: string;
 }
 
-export const Types = ['sine', 'square', 'sawtooth', 'triangle'];
+export const OscillatorType = ['sine', 'square', 'sawtooth', 'triangle'];

@@ -150,7 +150,7 @@ function Server(server) {
 
   function processServiceMessage(message, sender) {
     switch (message.type) {
-      case WebSocketMessageType.room_name_update:
+      case WebSocketMessageType.room_update:
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.ping:

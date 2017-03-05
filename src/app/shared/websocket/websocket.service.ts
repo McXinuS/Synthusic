@@ -1,25 +1,24 @@
 import {Injectable} from "@angular/core";
 import {WebSocketMessage} from "./websocketmessage.model";
-import {BroadcasterService} from "../broadcaster/broadcaster.service";
 import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
-import {WebSocketMessageHandler, WebSocketCustomMessageHandler} from "./websocketmessagehandler";
+import {WebSocketHandlerService, WebSocketCustomMessageHandler} from "./websocketmessagehandler";
+
+// TODO implement reconnecting
 
 @Injectable()
 export class WebSocketService {
-  socket: WebSocket;
-  handler: WebSocketMessageHandler;
-  pendingMessages: Array<WebSocketMessage> = [];
+  private socket: WebSocket;
+  // private pendingMessages: Array<WebSocketMessage> = [];
 
   get isSocketReady(): boolean {
     return this.socket.readyState === 1;
   }
 
   // readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
-  readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
+  // readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
   readonly PING_TIME = 30000; // interval of ping of server to keep web socket connection alive
 
-  constructor(private broadcaster: BroadcasterService) {
-    this.handler = new WebSocketMessageHandler(broadcaster);
+  constructor(private handler: WebSocketHandlerService) {
   }
 
   init(host: string) {
@@ -37,9 +36,9 @@ export class WebSocketService {
         this.sendPing();
       }, this.PING_TIME);
 
-      for (let msg of this.pendingMessages) {
-        this.send(msg);
-      }
+      // for (let msg of this.pendingMessages) {
+      //   this.send(msg);
+      // }
     };
 
     ws.onmessage = (event) => {
@@ -61,11 +60,11 @@ export class WebSocketService {
   };
 
   send(data: WebSocketMessage) {
-    if (this.isSocketReady) {
+    // if (this.isSocketReady) {
       this.socket.send(JSON.stringify(data));
-    } else {
-      //this.pendingMessages.push(data);
-    }
+    // } else {
+    //   this.pendingMessages.push(data);
+    // }
     /*
      this.waitForSocketConnection((socket) => {
      socket.send(JSON.stringify(data));

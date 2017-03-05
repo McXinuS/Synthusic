@@ -1,6 +1,6 @@
 import {Component, OnInit, ElementRef, ViewChild, AfterViewChecked} from '@angular/core';
 import {RoomService} from '../../shared/room/room.service';
-import {Chat} from '../../shared/room/chat.model';
+import {ChatMessage} from '../../shared/room/chat.model';
 import {Observable} from 'rxjs';
 
 @Component({
@@ -12,12 +12,12 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('chat') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
-  messages: Observable<Chat[]>;
+  messages: Observable<ChatMessage[]>;
 
   constructor(private chatService: RoomService) { }
 
   ngOnInit() {
-    this.messages = this.chatService.messages;
+    this.messages = this.chatService.messages$;
   }
 
   ngAfterViewChecked() {

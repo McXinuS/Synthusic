@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {SequencerService} from '../../shared/sequencer/sequencer.service';
 import {SoundService} from '../../shared/sound/sound.service';
 

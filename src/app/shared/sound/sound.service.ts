@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BroadcasterService} from '../broadcaster/broadcaster.service';
 import {SequencerNote} from '../sequencer/sequencernote.model';
-import {BroadcastTopic} from '../broadcaster/broadcasttopic.enum';
 import {Enveloper} from './enveloper';
 import {Instrument} from '../instrument/instrument.model';
 import {SequencerNoteService} from '../sequencer/sequencernote.service';
@@ -13,15 +11,21 @@ class GainedOscillatorNode extends OscillatorNode{
 
 @Injectable()
 export class SoundService {
-  oscillators: Map<number, GainedOscillatorNode[]> = new Map();
-  audioContext: AudioContext;
-  noteToStop: SequencerNote;
+  private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
+  private audioContext: AudioContext;
+  private noteToStop: SequencerNote;
 
-  masterGainNode: GainNode;
+  private masterGainNode: GainNode;
   /**
    * Contains enveloper gain nodes for every instrument.
    */
-  envelopers: Map<number, Enveloper> = new Map();
+  private envelopers: Map<number, Enveloper> = new Map();
+
+  /**
+   * Array of notes, playing in the sound module.
+   */
+  playingNotes: BehaviorSubject<Array<SequencerNote>> = new BehaviorSubject([]);
+  playingCount: number = 0;
 
   get masterGain() {
     return this.masterGainNode.gain.value;
@@ -31,30 +35,13 @@ export class SoundService {
     this.masterGainNode.gain.value = gain;
   };
 
-  get audioAmpBuffer() {
-    return [];
-    //return this.analyser.getFloatTimeDomainData();
-  };
-
-  get audioFreqBuffer() {
-    return [];
-    //return this.analyser.getByteFrequencyData();
-  };
-
-  /**
-   * Array of notes, playing in the sound module.
-   */
-  playingNotes: BehaviorSubject<Array<SequencerNote>> = new BehaviorSubject([]);
-  playingCount: number = 0;
-
   /**
    * Prevents click effect when changing one note to another.
    * When stopped, every note will be fading during that period of time (ms).
    */
-  readonly RAMP_STOP_TIME = 10;
+  private readonly RAMP_STOP_TIME = 10;
 
-  constructor(private broadcaster: BroadcasterService,
-              private sequencerNoteService: SequencerNoteService) {
+  constructor(private sequencerNoteService: SequencerNoteService) {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
@@ -62,13 +49,6 @@ export class SoundService {
 
   init(masterGain: number) {
     this.masterGain = masterGain;
-
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.playNote)
-      .subscribe(note => this.playNote(note));
-    this.broadcaster.on<SequencerNote>(BroadcastTopic.stopNote)
-      .subscribe(note => this.stopNote(note));
-    this.broadcaster.on(BroadcastTopic.stopAllTotes)
-      .subscribe(() => this.stop());
   }
 
   private createOscillators(note: SequencerNote): GainedOscillatorNode[] {
@@ -207,7 +187,7 @@ export class SoundService {
     }
   };
 
-  hasOscillator(note: SequencerNote) {
+  private hasOscillator(note: SequencerNote) {
     return this.oscillators.has(note.id);
   }
 

@@ -15,13 +15,17 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  showNav(tab) {
+  showNav(tab: string) {
     let curState = this.visible.get(tab);
     this.visible.clear();
     this.visible.set(tab, !curState);
   }
 
-  confirmPageExit() {
-    
+  isVisible(tab: string) {
+    return this.visible.get(tab);
+  }
+
+  reloadPage() {
+    location.reload();
   }
 }

@@ -33,7 +33,11 @@
   display         : block;
   padding         : 10px 15px 11px 15px;
   letter-spacing  : 1px;
-  transition      : background .3s, color .3s;
+  transition      : background .3s, color .4s;
+}
+
+li a.selected {
+  background       : rgb(39, 39, 39);
 }
 
 .navbar li a:hover {

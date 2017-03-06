@@ -1,24 +1,25 @@
-import {Injectable} from "@angular/core";
-import {WebSocketMessage} from "./websocketmessage.model";
-import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
-import {WebSocketHandlerService, WebSocketCustomMessageHandler} from "./websocketmessagehandler";
+import {Injectable} from '@angular/core';
+import {WebSocketMessage} from './websocketmessage.model';
+import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
+import {WebSocketReceiverService} from './websocketreceiver.service';
 
 // TODO implement reconnecting
 
 @Injectable()
 export class WebSocketService {
   private socket: WebSocket;
+
   // private pendingMessages: Array<WebSocketMessage> = [];
 
   get isSocketReady(): boolean {
     return this.socket.readyState === 1;
   }
 
-  // readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
-  // readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
-  readonly PING_TIME = 30000; // interval of ping of server to keep web socket connection alive
+  // private readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
+  // private readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
+  private readonly PingInterval = 30000; // interval of ping of server to keep web socket connection alive
 
-  constructor(private handler: WebSocketHandlerService) {
+  constructor(private webSocketReceiverService: WebSocketReceiverService) {
   }
 
   init(host: string) {
@@ -34,7 +35,7 @@ export class WebSocketService {
 
       pingIntervalId = setInterval(() => {
         this.sendPing();
-      }, this.PING_TIME);
+      }, this.PingInterval);
 
       // for (let msg of this.pendingMessages) {
       //   this.send(msg);
@@ -42,11 +43,11 @@ export class WebSocketService {
     };
 
     ws.onmessage = (event) => {
-      this.handler.onMessage(JSON.parse(event.data));
+      this.webSocketReceiverService.onMessage(JSON.parse(event.data));
     };
 
     ws.onclose = () => {
-      setInterval(pingIntervalId);
+      clearInterval(pingIntervalId);
       /*
       console.warn(`Socket is closed. Next attempt to reconnect in ${this.RECONNECT_TIME / 1000} seconds`);
       setTimeout(() => {
@@ -59,12 +60,16 @@ export class WebSocketService {
     this.socket = ws;
   };
 
+  disconnect() {
+    this.socket.close();
+  }
+
   send(data: WebSocketMessage) {
-    // if (this.isSocketReady) {
+    if (this.isSocketReady) {
       this.socket.send(JSON.stringify(data));
-    // } else {
-    //   this.pendingMessages.push(data);
-    // }
+    } else {
+      //  this.pendingMessages.push(data);
+    }
     /*
      this.waitForSocketConnection((socket) => {
      socket.send(JSON.stringify(data));
@@ -87,17 +92,7 @@ export class WebSocketService {
    };
    */
 
-  sendPing() {
+  private sendPing() {
     this.send(new WebSocketMessage(WebSocketMessageType.ping));
   };
-
-  requestProgramState(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.handler.registerOnce(new WebSocketCustomMessageHandler(WebSocketMessageType.get_state, (data) => {
-        resolve(data);
-      }));
-      this.send(new WebSocketMessage(WebSocketMessageType.get_state));
-      setTimeout(() => reject(), 10000);
-    });
-  }
 }

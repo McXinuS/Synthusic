@@ -6,21 +6,21 @@
       </a>
     </li>
     <li>
-      <a (click)="showNav('room')">Room</a>
+      <a [class.selected]="isVisible('room')" (click)="showNav('room')">Room</a>
     </li>
     <li>
-      <a (click)="showNav('settings')">Settings</a>
+      <a [class.selected]="isVisible('settings')" (click)="showNav('settings')">Settings</a>
     </li>
 
     <li *ngIf="loaderService.offlineMode" class="right offline-mode">
-      <a (click)="confirmPageExit()">Offline mode</a>
+      <a (click)="reloadPage()">Offline mode</a>
     </li>
   </ul>
 </div>
 
-<div class="navmenu" [class.nav-collapse]="!visible.get('room')">
+<div class="navmenu" [class.nav-collapse]="!isVisible('room')">
   <app-room></app-room>
 </div>
-<div class="navmenu" [class.nav-collapse]="!visible.get('settings')">
+<div class="navmenu" [class.nav-collapse]="!isVisible('settings')">
   <app-settings></app-settings>
 </div>

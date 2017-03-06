@@ -184,6 +184,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // TODO: error while dragging oscillator
   mouseMove(e: MouseEvent) {
     let x = e.pageX - this.canvas.nativeElement.offsetLeft,
       y = e.pageY - this.canvas.nativeElement.offsetTop,

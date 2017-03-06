@@ -22,7 +22,9 @@ import {SequencerComponent} from './sequencer/sequencer.component';
 import {RoomComponent} from './navbar/room/room.component';
 import {RoomService} from './shared/room/room.service';
 import {WebSocketService} from './shared/websocket/websocket.service';
-import {WebSocketHandlerService} from "./shared/websocket/websocketmessagehandler";
+import {WebSocketSenderService} from "./shared/websocket/websocketsender.service";
+import {WebSocketReceiverService} from "./shared/websocket/websocketreceiver.service";
+import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/sequencer-instrument.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import {WebSocketHandlerService} from "./shared/websocket/websocketmessagehandle
     OscillatorSettingsComponent,
     TitleCase,
     SequencerComponent,
-    RoomComponent
+    RoomComponent,
+    SequencerInstrumentComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,8 @@ import {WebSocketHandlerService} from "./shared/websocket/websocketmessagehandle
     PopupService,
     RoomService,
     WebSocketService,
-    WebSocketHandlerService
+    WebSocketReceiverService,
+    WebSocketSenderService
   ],
   bootstrap: [AppComponent]
 })

@@ -12,16 +12,16 @@
 }
 
 #name {
-  font-size        : 2em;
+  font-size        : 1.5em;
   padding-left     : 16px;
   margin-bottom    : 15px;
-  height           : 50px;
+  height           : 45px;
   background-color : rgba(255, 255, 255, 0.2);
   transition       : background-color .3s;
 }
 
 #name:hover {
-  background-color : rgba(255, 255, 255, 0.3);
+  background-color : rgba(255, 255, 255, 0.4);
 }
 
 #name:focus {

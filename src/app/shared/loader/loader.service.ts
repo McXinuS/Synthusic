@@ -6,7 +6,8 @@ import {WebSocketService} from '../websocket/websocket.service';
 import {PopupService} from '../popup/popup.service';
 import {Settings} from './settings.model';
 import {SETTINGS_OFFLINE} from './settings.mock';
-import {CONSTANTS} from "./config.constants";
+import {CONSTANTS} from './config.constants';
+import {WebSocketSenderService} from "../websocket/websocketsender.service";
 
 @Injectable()
 export class LoaderService {
@@ -15,6 +16,7 @@ export class LoaderService {
   offlineMode: boolean;
 
   constructor(private wsService: WebSocketService,
+              private wsSenderService: WebSocketSenderService,
               private noteService: NoteService,
               private instrumentService: InstrumentService,
               private soundService: SoundService,
@@ -25,18 +27,12 @@ export class LoaderService {
     progressChange('Establishing server connection');
     this.establishWebSocketConnection()
       .then(() => {
-        this.offlineMode = false;
+        this.goOnline();
         progressChange('Parsing response');
         return this.loadSettings();
       })
       .catch (() => {
-        this.offlineMode = true;
-        this.popupService.show(
-          'Unable to connect',
-          'The remote server is not responding, going offline mode.\n' +
-          'In offline mode you are unable to share your creativity with other people.' +
-          ' Also, all your data will be lost when the page is closed.' +
-          ' Reloading the page is the way to online functional. Just. Doit.');
+        this.goOffline();
         return this.loadLocalSettings();
       })
       .then((settings: Settings) => {
@@ -47,7 +43,7 @@ export class LoaderService {
         progressChange('Initializing sound module');
         this.initSoundModule(settings);
         // DEBUG
-        //setTimeout(onDone, 1800000);
+        // setTimeout(onDone, 1800000);
         onDone();
       }, () => {
         this.popupService.show(
@@ -82,10 +78,10 @@ export class LoaderService {
 
   private async loadSettings() {
       try {
-        let state = await this.wsService.requestProgramState();
+        let state = await this.wsSenderService.requestProgramState();
         if (!state)
           return null;
-        return Object.assign({}, state, CONSTANTS);
+        return Object.assign({}, CONSTANTS, state);
       } catch (e) {
         throw new Error('Error while getting server state');
       }
@@ -105,5 +101,24 @@ export class LoaderService {
 
   private initSoundModule(settings: Settings) {
     this.soundService.init(settings.masterGainMax / 2);
+  }
+
+  goOnline() {
+    this.offlineMode = false;
+    window.onbeforeunload = null;
+  }
+
+  goOffline() {
+    this.offlineMode = true;
+    this.popupService.show(
+      'Unable to connect',
+      'The remote server is not responding, going offline mode.\n' +
+      'In offline mode you are unable to share your creativity with other people.' +
+      ' Also, all your data will be lost when the page is closed.\n' +
+      'Reloading the page is the way to get complete web site functionality.');
+    window.onbeforeunload = function(e) {
+      return true;
+    };
+    this.wsService.disconnect();
   }
 }

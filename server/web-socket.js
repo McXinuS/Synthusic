@@ -15,13 +15,10 @@ function Server(server) {
     wsLastId = 0,
     roomService = new rs();
 
-  // DEBUG
-  //roomService.addUser(-1);
-
   function onConnection(ws) {
     let id = wsLastId++;
     wsClients.set(id, ws);
-    let roomId = roomService.addUser(id);
+    roomService.addUser(id);
     notifyRoomUsersUpdate(id);
 
     console.log("New connection : id " + id);
@@ -112,7 +109,6 @@ function Server(server) {
   }
 
   function processStateMessage(message, sender) {
-    let note;
     switch (message.type) {
 
       case WebSocketMessageType.get_state:
@@ -162,6 +158,10 @@ function Server(server) {
 
   function processChatMessage(message, sender) {
     if (message.type == WebSocketMessageType.chat_new_message) {
+      message.data = {
+        message: message.data,
+        sender: sender
+      };
       broadcastToUserRoom(message, sender);
       return true;
     }

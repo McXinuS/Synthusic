@@ -14,10 +14,7 @@ body {
 h1,h2,h3 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
-}
-
-.content {
-  margin : 45px 0 0 0;
+  margin: 0;
 }
 
 .center {
@@ -52,9 +49,9 @@ h1,h2,h3 {
 }
 
 div.start-overlay {
-  background      : linear-gradient(123deg, hsla(228, 30%, 20%, 0.8), hsla(160, 60%, 20%, 0.8));
-  background-size : 400% 400%;
-  animation       : startOverlayAnimation 10s ease infinite;
+  background      : linear-gradient(123deg, hsla(228, 40%, 20%, 0.8), hsla(208, 40%, 20%, 0.8), hsla(180, 40%, 20%, 0.8));
+  background-size : 600% 600%;
+  animation       : startOverlayAnimation 15s ease infinite;
 }
 
 .start-overlay > div {

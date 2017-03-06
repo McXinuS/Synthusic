@@ -1,16 +1,17 @@
 <div class="wrapper">
-  <div #chat class="chat" (scroll)="onChatScroll()">
-    <h1 *ngIf="messages.count == 0" class="center">
+  <div #chat class="box-chat" (scroll)="onChatScroll()">
+    <h1 *ngIf="isChatEmpty" class="center">
       No messages yet. Be the first to chat!
     </h1>
-    <ul>
-      <li *ngFor="let msg of messages | async">
+    <ul *ngIf="!isChatEmpty">
+      <li *ngFor="let msg of chatMessages | async">
         {{msg.sender}}: {{msg.message}}
       </li>
     </ul>
   </div>
 
-  <div class="send">
-
+  <div class="box-send">
+    <input #messageText type="text"/>
+    <button (click)="sendMessage(messageText.value)">Send</button>
   </div>
 </div>

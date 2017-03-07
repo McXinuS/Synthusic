@@ -4,18 +4,24 @@ import {SequencerNote} from './sequencernote.model';
 import {Observable} from 'rxjs';
 import {InstrumentService} from '../instrument/instrument.service';
 import {SequencerNoteService} from './sequencernote.service';
+import {SoundService} from "../sound/sound.service";
+import {WebSocketSenderService} from "../websocket/websocketsender";
 
 @Injectable()
 export class SequencerService {
-
-  constructor(private sequencerNoteService: SequencerNoteService) {
-  }
-
   /**
    * Array of all notes in sequencer.
    */
   notes: SequencerNote[] = [];
 
+  /**
+   * Array of notes that playing at the moment.
+   */
+  playing: number[] = [];
+
+  constructor(private sequencerNoteService: SequencerNoteService,
+              private soundService: SoundService,) {
+  }
   addNote(note: SequencerNote) {
     this.notes[note.id] = note;
   }
@@ -24,14 +30,14 @@ export class SequencerService {
     this.notes[note.id] = note;
   }
 
-  /**
-   * Array of notes that playing at the moment.
-   */
-  playing: number[] = [];
+  hasNote(note: SequencerNote) {
+    return this.notes.findIndex(n => note.id == n.id) >= 0;
+  }
 
   playNote(note: SequencerNote) {
     if (this.isPlaying(note)) return;
     this.playing.push(note.id);
+    this.soundService.playNote(note);
   }
 
   stopNote(note: SequencerNote) {
@@ -40,10 +46,7 @@ export class SequencerService {
     if (nsInd != -1) {
       this.playing.splice(nsInd, 1);
     }
-  }
-
-  hasNote(note: SequencerNote) {
-    return this.notes.findIndex(n => note.id == n.id) >= 0;
+    this.soundService.stopNote(note);
   }
 
   isPlaying(note: SequencerNote) {

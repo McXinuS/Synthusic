@@ -1,11 +1,15 @@
 .content {
-  display : table;
-  height  : 100%;
-  width   : 100%;
-  margin  : 45px 0 0 0;
-  table-layout: fixed;
+  display      : table;
+  table-layout : fixed;
+  height       : 100%;
+  width        : 100%;
+  padding      : 45px 0 0 0;
 }
 
-.table-cell {
+.table-row {
   display : table-row;
+}
+
+.table-row.fill-height {
+  height: 100%;
 }

@@ -7,7 +7,7 @@ import {PopupService} from '../popup/popup.service';
 import {Settings} from './settings.model';
 import {SETTINGS_OFFLINE} from './settings.mock';
 import {CONSTANTS} from './config.constants';
-import {WebSocketSenderService} from "../websocket/websocketsender.service";
+import {WebSocketSenderService} from "../websocket/websocketsender";
 
 @Injectable()
 export class LoaderService {

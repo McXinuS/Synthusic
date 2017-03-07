@@ -8,6 +8,7 @@ import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerNoteService} from '../shared/sequencer/sequencernote.service';
 import {PopupService} from '../shared/popup/popup.service';
 import {SequencerNote} from '../shared/sequencer/sequencernote.model';
+import {SequencerService} from "../shared/sequencer/sequencer.service";
 
 @Component({
   selector: 'app-keyboard',
@@ -25,6 +26,7 @@ export class KeyboardComponent implements OnInit {
 
   constructor(private noteService: NoteService,
               private soundService: SoundService,
+              private sequencerService: SequencerService,
               private sequencerNoteService: SequencerNoteService,
               private instrumentService: InstrumentService,
               private popupService: PopupService) {
@@ -72,13 +74,17 @@ export class KeyboardComponent implements OnInit {
   playNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    this.soundService.playNote(ns);
+    this.sequencerService.addNote(ns);
+    //DEBUG
+    this.sequencerService.playNote(ns);
   }
 
   stopNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    this.soundService.stopNote(ns);
+    this.sequencerService.removeNote(ns);
+    //DEBUG
+    this.sequencerService.stopNote(ns);
   }
 
   onMiniChange(e) {

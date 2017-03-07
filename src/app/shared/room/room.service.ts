@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 import {ChatMessage} from './chat.model';
-import {WebSocketSenderService} from '../websocket/websocketsender.service';
-import {WebSocketReceiverService} from '../websocket/websocketreceiver.service';
+import {WebSocketSenderService} from '../websocket/websocketsender';
+import {WebSocketReceiverService} from '../websocket/websocketreceiver';
 
 @Injectable()
 export class RoomService {

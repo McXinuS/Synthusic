@@ -7,13 +7,12 @@
   color      : #ddd;
   box-shadow : 0 2px 10px 0 rgba(0, 0, 0, .15);
   z-index    : 99;
-  padding    : 0 80px;
 }
 
 #topnav .navbar {
   list-style-type : none;
   margin          : 0;
-  padding         : 0;
+  padding         : 0 80px;
   font-family     : "Segoe UI", Arial, sans-serif;
   font-weight     : 300;
   overflow        : hidden;
@@ -57,11 +56,15 @@ li a.selected {
   animation : alertBackground 2s linear 5;
 }
 
+.nav-content {
+  position : relative;
+  width    : 100%;
+}
+
 .navmenu {
-  position   : fixed;
-  left       : 0;
-  right      : 0;
-  max-height : 100%;
+  position   : absolute;
+  width      : 100%;
+  max-height : calc(100vh - 45px);
   overflow-y : auto;
   transition : visibility .3s, opacity .3s;
   z-index    : 10;

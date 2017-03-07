@@ -16,11 +16,13 @@
       <a (click)="reloadPage()">Offline mode</a>
     </li>
   </ul>
-</div>
 
-<div class="navmenu" [class.nav-collapse]="!isVisible('room')">
-  <app-room></app-room>
-</div>
-<div class="navmenu" [class.nav-collapse]="!isVisible('settings')">
-  <app-settings></app-settings>
+  <div class="nav-content">
+    <div class="navmenu" [class.nav-collapse]="!isVisible('room')">
+      <app-room></app-room>
+    </div>
+    <div class="navmenu" [class.nav-collapse]="!isVisible('settings')">
+      <app-settings></app-settings>
+    </div>
+  </div>
 </div>

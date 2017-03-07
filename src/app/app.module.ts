@@ -22,8 +22,6 @@ import {SequencerComponent} from './sequencer/sequencer.component';
 import {RoomComponent} from './navbar/room/room.component';
 import {RoomService} from './shared/room/room.service';
 import {WebSocketService} from './shared/websocket/websocket.service';
-import {WebSocketSenderService} from "./shared/websocket/websocketsender.service";
-import {WebSocketReceiverService} from "./shared/websocket/websocketreceiver.service";
 import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/sequencer-instrument.component';
 
 @NgModule({
@@ -56,8 +54,6 @@ import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/s
     PopupService,
     RoomService,
     WebSocketService,
-    WebSocketReceiverService,
-    WebSocketSenderService
   ],
   bootstrap: [AppComponent]
 })

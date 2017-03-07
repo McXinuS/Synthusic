@@ -1,4 +1,3 @@
-import {Injectable} from '@angular/core';
 import {WebSocketMessage} from './websocketmessage.model';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
 
@@ -12,8 +11,7 @@ export class WebSocketMessageHandler {
   }
 }
 
-@Injectable()
-export class WebSocketReceiverService {
+export class WebSocketReceiver {
   private messageHandlers: Array<WebSocketMessageHandler> = [];
   private oneTimeMessageHandlers: Array<WebSocketMessageHandler> = [];
 

@@ -13,7 +13,10 @@ class GainedOscillatorNode extends OscillatorNode{
 export class SoundService {
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
   private audioContext: AudioContext;
-  private noteToStop: SequencerNote;
+  // TODO: assign for every instrument
+  private noteToStop: SequencerNote; // the note will be stopped in enveloper's onFinished callback
+                                     // we need to remember currently fading note to stop it
+                                     // if some note will be played before enveloper released
 
   private masterGainNode: GainNode;
   /**
@@ -118,9 +121,6 @@ export class SoundService {
     // if the only note is stopped, release the enveloper
     if (this.playingCount == 0 && !forceStop) {
       this.envelopers.get(note.instrument.id).release();
-      // the note will be stopped in enveloper's onFinished callback
-      // we need to remember currently fading note to stop it
-      // if some note will be played before enveloper released
       this.noteToStop = note;
     } else {
       this.setGain(note, 0, true);

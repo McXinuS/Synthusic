@@ -1,6 +1,5 @@
 import {WebSocketMessage} from './websocketmessage.model';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
-import {WebSocketReceiverService, WebSocketReceiver} from './websocketreceiver';
 
 // TODO implement reconnecting
 
@@ -17,11 +16,7 @@ export class WebSocketClient {
   // private readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
   private readonly PingInterval = 30000; // interval of ping of server to keep web socket connection alive
 
-  constructor(private webSocketReceiver: WebSocketReceiver) {
-  }
-
-  init(host: string) {
-    this.connect(host);
+  constructor(private onMessage: (msg: WebSocketMessage) => any) {
   }
 
   connect(host: string) {
@@ -41,18 +36,18 @@ export class WebSocketClient {
     };
 
     ws.onmessage = (event) => {
-      this.webSocketReceiverService.onMessage(JSON.parse(event.data));
+      this.onMessage(JSON.parse(event.data));
     };
 
     ws.onclose = () => {
       clearInterval(pingIntervalId);
+      console.warn(`Socket is closed. Reload the page to go online`);
       /*
        console.warn(`Socket is closed. Next attempt to reconnect in ${this.RECONNECT_TIME / 1000} seconds`);
        setTimeout(() => {
        this.connect(host);
        }, this.RECONNECT_TIME);
        */
-      console.warn(`Socket is closed. Reload the page to go online`);
     };
 
     this.socket = ws;

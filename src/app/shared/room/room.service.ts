@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 import {ChatMessage} from './chat.model';
-import {WebSocketSenderService} from '../websocket/websocketsender';
-import {WebSocketReceiverService} from '../websocket/websocketreceiver';
+import {WebSocketService} from '../websocket/websocket.service';
+import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
 
 @Injectable()
 export class RoomService {
@@ -12,11 +12,11 @@ export class RoomService {
 
   private readonly MaxMessagesInChat = 100;
 
-  constructor(private webSocketSenderService: WebSocketSenderService,
-              private webSocketReceiverService: WebSocketReceiverService) {
+  constructor(private webSocketService: WebSocketService) {
     this.messagesSource = new Subject();
     this.messages$ = this.messagesSource.asObservable();
-    this.webSocketReceiverService.registerChatMessageHandler(this.addChatMessage.bind(this));
+    this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.addChatMessage.bind(this));
+
     // DEBUG
     /*
     let n = 0;
@@ -35,6 +35,6 @@ export class RoomService {
   }
 
   sendChatMessage(message: string) {
-    this.webSocketSenderService.sendChatMessage(message);
+    this.webSocketService.send(WebSocketMessageType.chat_new_message, message);
   }
 }

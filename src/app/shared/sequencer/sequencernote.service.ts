@@ -15,20 +15,23 @@ export class SequencerNoteService {
   getSequencerNote(note: Note, instrument: Instrument): SequencerNote;
   getSequencerNote(id: number): SequencerNote;
   getSequencerNote(noteOrId: any, instrument?: Instrument): SequencerNote {
-    if (typeof noteOrId == 'number') return this.Create(noteOrId);
+    // may be hash them?
     return this.Create(noteOrId, instrument);
   }
 
-  Create(note: Note, instrument: Instrument): SequencerNote;
-  Create(id: number): SequencerNote;
-  Create(noteOrId: any, instrument?: Instrument): SequencerNote {
+  private Create(note: Note, instrument: Instrument): SequencerNote;
+  private Create(id: number): SequencerNote;
+  private Create(noteOrId: any, instrument?: Instrument): SequencerNote {
     if (typeof noteOrId == 'number') {
       let [noteId, insId] = this.parseID(noteOrId);
       let n = this.noteService.getNote(noteId);
-      let instrument = this.instrumentService.getInstrument(insId);
-      return new SequencerNote(noteOrId, n, instrument);
+      let i = this.instrumentService.getInstrument(insId);
+      return new SequencerNote(noteOrId, n, i);
+    } else if (noteOrId instanceof Note) {
+      return new SequencerNote(this.getID(noteOrId, instrument), noteOrId, instrument);
+    } else {
+      throw new Error('Wrong argument type');
     }
-    return new SequencerNote(this.getID(noteOrId, instrument), noteOrId, instrument);
   }
 
   private getID(note: Note, instrument: Instrument) {
@@ -46,7 +49,7 @@ export class SequencerNoteService {
   /**
    * Checks whether the sequencerNote contains following instrument.
    */
-  hasPreffix(instrumentId: number, sequencerNoteId: number): boolean {
+  hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
     return instrumentId == sequencerNoteId % this.ID_INSTRUMENT_MULTIPLIER;
   }
 }

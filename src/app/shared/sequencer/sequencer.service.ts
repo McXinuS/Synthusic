@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Instrument} from '../instrument/instrument.model';
 import {SequencerNote} from './sequencernote.model';
-import {Observable} from 'rxjs';
-import {InstrumentService} from '../instrument/instrument.service';
 import {SequencerNoteService} from './sequencernote.service';
-import {SoundService} from "../sound/sound.service";
-import {WebSocketSenderService} from "../websocket/websocketsender";
+import {SoundService} from '../sound/sound.service';
+import {WebSocketService} from '../websocket/websocket.service';
+import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
+import {WebSocketMessage} from '../websocket/websocketmessage.model';
 
 @Injectable()
 export class SequencerService {
@@ -20,14 +19,43 @@ export class SequencerService {
   playing: number[] = [];
 
   constructor(private sequencerNoteService: SequencerNoteService,
-              private soundService: SoundService,) {
-  }
-  addNote(note: SequencerNote) {
-    this.notes[note.id] = note;
+              private soundService: SoundService,
+              private webSocketService: WebSocketService) {
+    this.webSocketService.registerHandler(WebSocketMessageType.note_add, this.onNoteReceived.bind(this, 'add'));
+    this.webSocketService.registerHandler(WebSocketMessageType.note_remove, this.onNoteReceived.bind(this, 'remove'));
   }
 
-  removeNote(note: SequencerNote) {
-    this.notes[note.id] = note;
+  /**
+   * Called when a note is received by Web Socket
+   */
+  private onNoteReceived(type: string, noteId: number) {
+    let note = this.sequencerNoteService.getSequencerNote(noteId);
+    if (type === 'add') {
+      this.addNote(note, false);
+    } else if (type === 'remove') {
+      this.removeNote(note, false);
+    }
+  }
+
+  addNote(note: SequencerNote, broadcast = true) {
+    if (this.hasNote(note)) return;
+    this.notes.push(note);
+    if (broadcast) {
+      this.webSocketService.send(WebSocketMessageType.note_add, note.id);
+    }
+  }
+
+  removeNote(note: SequencerNote, broadcast = true) {
+    if (!this.hasNote(note)) return;
+    let nsInd = this.notes.findIndex(ns => ns.id === note.id);
+    if (nsInd != -1) {
+      this.notes.splice(nsInd, 1);
+    } else {
+      return;
+    }
+    if (broadcast) {
+      this.webSocketService.send(WebSocketMessageType.note_remove, note.id);
+    }
   }
 
   hasNote(note: SequencerNote) {

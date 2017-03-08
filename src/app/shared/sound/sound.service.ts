@@ -142,7 +142,7 @@ export class SoundService {
     this.noteToStop = undefined;
 
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if (instrumentId && this.sequencerNoteService.hasPreffix(instrumentId, id)) return;
+      if (instrumentId && this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id)) return;
       for (let osc of oscArr) {
         osc.stop(0);
         osc.disconnect();

@@ -7,7 +7,6 @@ import {PopupService} from '../popup/popup.service';
 import {Settings} from './settings.model';
 import {SETTINGS_OFFLINE} from './settings.mock';
 import {CONSTANTS} from './config.constants';
-import {WebSocketSenderService} from "../websocket/websocketsender";
 
 @Injectable()
 export class LoaderService {
@@ -16,7 +15,6 @@ export class LoaderService {
   offlineMode: boolean;
 
   constructor(private wsService: WebSocketService,
-              private wsSenderService: WebSocketSenderService,
               private noteService: NoteService,
               private instrumentService: InstrumentService,
               private soundService: SoundService,
@@ -78,7 +76,7 @@ export class LoaderService {
 
   private async loadSettings() {
       try {
-        let state = await this.wsSenderService.requestProgramState();
+        let state = await this.wsService.requestProgramState();
         if (!state)
           return null;
         return Object.assign({}, CONSTANTS, state);

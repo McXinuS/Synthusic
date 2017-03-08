@@ -4,7 +4,7 @@ import {Subject} from 'rxjs';
 
 @Injectable()
 export class InstrumentService {
-  private _instruments: Instrument[];
+  private _instruments: Instrument[] = [];
   instruments$: Subject<Array<Instrument>> = new Subject();
 
   constructor() {
@@ -23,7 +23,8 @@ export class InstrumentService {
   }
 
   init(settings: Instrument[]) {
-    this.instruments$.next(settings);
+    this._instruments = settings;
+    this.instruments$.next(this._instruments);
   }
 
   // TODO: update all other services when instrument is updated

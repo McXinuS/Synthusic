@@ -118,6 +118,8 @@ function Server(server) {
         }, sender);
         return true;
 
+      // Note
+
       case WebSocketMessageType.note_add:
         roomService.getRoomByUser(sender).addNote(message.data);
         broadcastToUserRoom(message, sender);
@@ -126,6 +128,8 @@ function Server(server) {
         roomService.getRoomByUser(sender).removeNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
+
+      // Instrument
 
       case WebSocketMessageType.instrument_add:
         roomService.getRoomByUser(sender).addInstrument(message.data);

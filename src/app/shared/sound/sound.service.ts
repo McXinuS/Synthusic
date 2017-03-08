@@ -5,7 +5,7 @@ import {Instrument} from '../instrument/instrument.model';
 import {SequencerNoteService} from '../sequencer/sequencernote.service';
 import {BehaviorSubject} from 'rxjs';
 
-class GainedOscillatorNode extends OscillatorNode{
+class GainedOscillatorNode extends OscillatorNode {
   gainNode: GainNode;
 }
 
@@ -13,10 +13,12 @@ class GainedOscillatorNode extends OscillatorNode{
 export class SoundService {
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
   private audioContext: AudioContext;
-  // TODO: assign for every instrument
-  private noteToStop: SequencerNote; // the note will be stopped in enveloper's onFinished callback
-                                     // we need to remember currently fading note to stop it
-                                     // if some note will be played before enveloper released
+  /**
+   * The note will be stopped in enveloper's onFinished callback.
+   * We need to remember currently fading note to stop it
+   * if some note will be played before enveloper released.
+   */
+  private notesToStop: Map<number, SequencerNote> = new Map();
 
   private masterGainNode: GainNode;
   /**
@@ -28,7 +30,6 @@ export class SoundService {
    * Array of notes, playing in the sound module.
    */
   playingNotes: BehaviorSubject<Array<SequencerNote>> = new BehaviorSubject([]);
-  playingCount: number = 0;
 
   get masterGain() {
     return this.masterGainNode.gain.value;
@@ -85,13 +86,13 @@ export class SoundService {
   };
 
   playNote(note: SequencerNote) {
-    if (this.noteToStop != undefined && this.noteToStop.id != note.id) {
-      this.stopNote(this.noteToStop, true);
-      this.noteToStop = undefined;
+    let noteToStop = this.notesToStop.get(note.instrument.id);
+    if (noteToStop && noteToStop.id != note.id) {
+      this.stopNote(noteToStop, true);
+      this.notesToStop.delete(note.instrument.id);
     }
 
     if (!this.hasOscillator(note)) {
-      this.playingCount++;
       this.oscillators.set(note.id, this.createOscillators(note));
       this.setGain(note, 1, true);
       this.playingNotes.getValue().push(note);
@@ -109,7 +110,6 @@ export class SoundService {
     if (!this.hasOscillator(note)) return;
 
     if (this.isPlaying(note)) {
-      this.playingCount--;
       let newNotesArray = this.playingNotes.getValue(),
         ind = newNotesArray.findIndex(n => note.id == n.id);
       if (ind != -1) {
@@ -119,9 +119,9 @@ export class SoundService {
     }
 
     // if the only note is stopped, release the enveloper
-    if (this.playingCount == 0 && !forceStop) {
+    if (!forceStop && !this.isInstrumentPlaying(note.instrument)) {
       this.envelopers.get(note.instrument.id).release();
-      this.noteToStop = note;
+      this.notesToStop.set(note.instrument.id, note);
     } else {
       this.setGain(note, 0, true);
       setTimeout(() => this.stopNoteImmediately(note), this.RAMP_STOP_TIME);
@@ -131,32 +131,32 @@ export class SoundService {
   private stopNoteImmediately(note: SequencerNote) {
     if (!this.hasOscillator(note)) return;
 
-    for (let j = 0; j < note.instrument.oscillators.length; j++) {
-      this.oscillators.get(note.id)[j].stop(0);
-      this.oscillators.get(note.id)[j].disconnect();
+    let oscArr = this.oscillators.get(note.id);
+    for (let j = oscArr.length - 1; j >= 0; j--) {
+      oscArr[j].stop(0);
+      oscArr[j].disconnect();
     }
     this.oscillators.delete(note.id);
   };
 
   stop(instrumentId?: number) {
-    this.noteToStop = undefined;
-
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if (instrumentId && this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id)) return;
-      for (let osc of oscArr) {
-        osc.stop(0);
-        osc.disconnect();
+      if (!instrumentId || (instrumentId && this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id))) {
+        for (let osc of oscArr) {
+          osc.stop(0);
+          osc.disconnect();
+        }
+        this.oscillators.delete(id);
       }
     });
-    this.oscillators.clear();
 
     if (instrumentId) {
+      this.notesToStop.delete(instrumentId);
       let pl = this.playingNotes.getValue().filter(sn => sn.instrument.id != instrumentId);
       this.playingNotes.next(pl);
-      this.playingCount = pl.length;
     } else {
+      this.notesToStop.clear();
       this.playingNotes.next([]);
-      this.playingCount = 0;
     }
   };
 
@@ -191,8 +191,22 @@ export class SoundService {
     return this.oscillators.has(note.id);
   }
 
-  isPlaying(note: SequencerNote) {
+  private isPlaying(note: SequencerNote) {
     return this.playingNotes.getValue().findIndex(n => note.id == n.id) != -1;
+  }
+
+  private isInstrumentPlaying(instrument: Instrument) {
+    return this.playingNotes.getValue().findIndex(n => instrument.id == n.instrument.id) != -1;
+    /*
+     let found = false;
+     this.oscillators.forEach((o,n) => {
+     if (this.sequencerNoteService.hasInstrumentPreffix(instrument.id, n)) {
+     found = true;
+     return;
+     }
+     });
+     return found;
+     */
   }
 
   private createEnvelope(instrument: Instrument): Enveloper {

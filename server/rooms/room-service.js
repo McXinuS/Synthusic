@@ -14,10 +14,6 @@ let RoomService = function () {
     return new rm.Room(lastRoomId++);
   }
 
-  function destroyRoom(id) {
-    delete rooms.find(room => room.id === id);
-  }
-
   function addUser(id) {
     let freeRoom;
     for (let room of rooms) {
@@ -67,6 +63,14 @@ let RoomService = function () {
     return getRoomByUser(userId).users.slice();
   }
 
+  function getRoomInfoByUser(userId) {
+    let room = getRoomByUser(userId);
+    return {
+      name: room.name,
+      users: room.users.slice()
+    };
+  }
+
   /* API */
 
   this.addUser = addUser;
@@ -75,6 +79,10 @@ let RoomService = function () {
   this.getRoomByUser = getRoomByUser;
   this.getRoomStateByUser = getRoomStateByUser;
   this.getRoomUsersByUser = getRoomUsersByUser;
+  /**
+   * Returns name and users of te room.
+   */
+  this.getRoomInfoByUser = getRoomInfoByUser;
 };
 
 module.exports.RoomService = RoomService;

@@ -1,8 +1,6 @@
 import {WebSocketMessage} from './websocketmessage.model';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
 
-// TODO implement reconnecting
-
 export class WebSocketClient {
   private socket: WebSocket;
 

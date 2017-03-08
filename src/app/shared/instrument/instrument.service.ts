@@ -27,8 +27,6 @@ export class InstrumentService {
     this.instruments$.next(this._instruments);
   }
 
-  // TODO: update all other services when instrument is updated
-
   addInstrument(instrument: Instrument) {
     this._instruments.push(instrument);
     this.instruments$.next(this._instruments);

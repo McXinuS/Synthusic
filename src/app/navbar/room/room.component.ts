@@ -2,6 +2,7 @@ import {Component, OnInit, ElementRef, ViewChild, AfterViewChecked} from '@angul
 import {RoomService} from '../../shared/room/room.service';
 import {ChatMessage} from '../../shared/room/chat.model';
 import {Observable} from 'rxjs';
+import {Room} from "../../shared/room/room.model";
 
 @Component({
   selector: 'app-room',
@@ -11,15 +12,18 @@ import {Observable} from 'rxjs';
 export class RoomComponent implements OnInit, AfterViewChecked {
 
   chatMessages: Observable<ChatMessage[]>;
+  room: Observable<Room>;
   isChatEmpty: boolean = true;
   @ViewChild('chat') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
 
-  constructor(private chatService: RoomService) { }
+  constructor(private roomService: RoomService) {
+  }
 
   ngOnInit() {
-    this.chatMessages = this.chatService.messages$;
-    this.chatService.messages$.subscribe(messages => this.isChatEmpty = messages.length === 0);
+    this.room = this.roomService.room$;
+    this.chatMessages = this.roomService.messages$;
+    this.roomService.messages$.subscribe(messages => this.isChatEmpty = messages.length === 0);
   }
 
   ngAfterViewChecked() {
@@ -39,7 +43,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   sendMessage(message: string) {
     if (message) {
-      this.chatService.sendChatMessage(message);
+      this.roomService.sendChatMessage(message);
       // TODO: clear text field after message is sent
     }
   }

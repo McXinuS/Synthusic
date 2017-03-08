@@ -50,6 +50,6 @@ export class SequencerNoteService {
    * Checks whether the sequencerNote contains following instrument.
    */
   hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
-    return instrumentId == sequencerNoteId % this.ID_INSTRUMENT_MULTIPLIER;
+    return instrumentId == Math.trunc(sequencerNoteId / this.ID_INSTRUMENT_MULTIPLIER);
   }
 }

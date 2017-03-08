@@ -1,4 +1,4 @@
-.wrapper {
+.column {
   box-shadow : 0px 0px 15px 1px hsl(0, 0%, 24%);
 }
 
@@ -15,6 +15,14 @@
   border   : 1px solid hsla(0, 0%, 50%, 1);
 }
 
+.btn-send {
+  position : relative;
+  top      : -30px;
+  height   : 30px;
+  float    : right;
+}
+
 input, button {
-  color: black;
+  color         : black;
+  border-radius : 0;
 }

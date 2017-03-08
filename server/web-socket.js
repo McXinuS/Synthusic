@@ -103,8 +103,8 @@ function Server(server) {
 
   function notifyRoomUsersUpdate(userId) {
     broadcastToUserRoom({
-      type: WebSocketMessageType.room_users_update,
-      data: roomService.getRoomUsersByUser(userId)
+      type: WebSocketMessageType.room_updated,
+      data: roomService.getRoomInfoByUser(userId)
     }, userId);
   }
 

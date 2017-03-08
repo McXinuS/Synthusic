@@ -1,4 +1,12 @@
-<div class="wrapper">
+<div class="column">
+  <ul>
+    <li *ngFor="let user of room.users | async">
+      {{user}}
+    </li>
+  </ul>
+</div>
+
+<div class="column">
   <div #chat class="box-chat" (scroll)="onChatScroll()">
     <h1 *ngIf="isChatEmpty" class="center">
       No messages yet. Be the first to chat!
@@ -9,9 +17,12 @@
       </li>
     </ul>
   </div>
-
+  
   <div class="box-send">
-    <input #messageText type="text"/>
-    <button (click)="sendMessage(messageText.value)">Send</button>
+    <label>
+      Your message:
+      <input #messageText type="text">
+      <button class="btn-send" (click)="sendMessage(messageText.value)">Send</button>
+    </label>
   </div>
 </div>

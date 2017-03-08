@@ -64,13 +64,15 @@ select {
 }
 
 #keyboard-keys {
-  height     : 200px;
+  height     : 20vh;
+  min-height : 160px;
   font-size  : 0;
   transition : min-height .5s, height .5s;
 }
 
 .mini #keyboard-keys {
-  height : 120px;
+  height     : 120px;
+  min-height : 120px;
 }
 
 #keyboard::-webkit-scrollbar {

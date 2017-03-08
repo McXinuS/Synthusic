@@ -3,8 +3,6 @@ import {WebSocketMessage, WebSocketMessageHandler} from './websocketmessage.mode
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
 import {WebSocketClient} from './websocketclient';
 
-// TODO implement reconnecting
-
 @Injectable()
 export class WebSocketService {
   private client: WebSocketClient;

@@ -2,13 +2,14 @@
 
 let Room = function (id) {
   this.id = id;
+  this.name = [];
+  this.users = [];
 
   let defaults = require('./../../shared/defaults');
   this.bpm = defaults.bpm;
   this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId);
   this.instruments = defaults.instruments;
   this.notes = [];
-  this.users = [];
 
   let self = this;
 
@@ -34,6 +35,10 @@ Room.prototype = {
       notes: this.notes,
       users: this.users
     }
+  },
+
+  changeName: function (name) {
+    this.name = name;
   },
 
   addUser: function (id) {

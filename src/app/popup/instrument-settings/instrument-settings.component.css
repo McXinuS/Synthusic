@@ -12,6 +12,7 @@
 }
 
 #name {
+  font-family      : 'Courier New', monospace;
   font-size        : 1.5em;
   padding-left     : 16px;
   margin-bottom    : 15px;

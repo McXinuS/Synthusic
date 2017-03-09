@@ -55,12 +55,12 @@ let RoomService = function () {
     throw new Error('There is no room assigned with user id ' + userId);
   }
 
-  function getRoomStateByUser(userId) {
-    return getRoomByUser(userId).getState();
-  }
-
   function getRoomUsersByUser(userId) {
     return getRoomByUser(userId).users.slice();
+  }
+
+  function getRoomStateByUser(userId) {
+    return getRoomByUser(userId).getState();
   }
 
   function getRoomInfoByUser(userId) {
@@ -77,10 +77,10 @@ let RoomService = function () {
   this.removeUser = removeUser;
 
   this.getRoomByUser = getRoomByUser;
-  this.getRoomStateByUser = getRoomStateByUser;
   this.getRoomUsersByUser = getRoomUsersByUser;
+  this.getRoomStateByUser = getRoomStateByUser;
   /**
-   * Returns name and users of te room.
+   * Returns name and users of the room.
    */
   this.getRoomInfoByUser = getRoomInfoByUser;
 };

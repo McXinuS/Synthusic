@@ -19,7 +19,7 @@ function Server(server) {
     let id = wsLastId++;
     wsClients.set(id, ws);
     roomService.addUser(id);
-    notifyRoomUsersUpdate(id);
+    notifyRoomUpdate(id);
 
     console.log("New connection : id " + id);
 
@@ -28,7 +28,7 @@ function Server(server) {
     });
 
     ws.on('close', function () {
-      notifyRoomUsersUpdate(id);
+      notifyRoomUpdate(id);
       roomService.removeUser(id);
       wsClients.delete(id);
       console.log('Connection closed : id ' + id);
@@ -79,6 +79,7 @@ function Server(server) {
   function broadcastToUserRoom(message, userId) {
     let rec = roomService.getRoomUsersByUser(userId);
     if (!rec) return;
+    rec = rec.map(user => user.id); // get only ids
     rec.splice(rec.indexOf(userId), 1);
     broadcast(message, rec);
   }
@@ -101,7 +102,7 @@ function Server(server) {
     receiver.send(message);
   }
 
-  function notifyRoomUsersUpdate(userId) {
+  function notifyRoomUpdate(userId) {
     broadcastToUserRoom({
       type: WebSocketMessageType.room_updated,
       data: roomService.getRoomInfoByUser(userId)
@@ -144,15 +145,30 @@ function Server(server) {
         broadcastToUserRoom(message, sender);
         return true;
 
+      // Room
+
+      case WebSocketMessageType.room_name_update:
+        roomService.getRoomByUser(sender).changeRoomName(message.data);
+        /*
+         message.data = roomService.getRoomByUser(sender).getRoomInfoByUser();
+         broadcastToUserRoom(message, sender);
+         */
+        notifyRoomUpdate(sender);
+        return true;
+      case WebSocketMessageType.chat_new_message:
+        // put chat string to message.data
+        message.data = {
+          message: message.data,
+          sender: sender
+        };
+        broadcastToUserRoom(message, sender);
+        return true;
     }
     return false;
   }
 
   function processServiceMessage(message, sender) {
     switch (message.type) {
-      case WebSocketMessageType.room_update:
-        broadcastToUserRoom(message, sender);
-        return true;
       case WebSocketMessageType.ping:
         send({type: WebSocketMessageType.pong}, sender);
         return true;

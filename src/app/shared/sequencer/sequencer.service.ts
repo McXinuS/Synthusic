@@ -37,6 +37,14 @@ export class SequencerService {
     }
   }
 
+  init(noteIds: number[]) {
+    let note;
+    for (let id of noteIds) {
+      note = this.sequencerNoteService.getSequencerNote(id);
+      this.addNote(note, false);
+    }
+  }
+
   addNote(note: SequencerNote, broadcast = true) {
     if (this.hasNote(note)) return;
     this.notes.push(note);

@@ -21,6 +21,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    // TODO: fix messages appearing after only the second incoming message
     this.room = this.roomService.room$;
     this.chatMessages = this.roomService.messages$;
     this.roomService.messages$.subscribe(messages => this.isChatEmpty = messages.length === 0);
@@ -42,9 +43,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   sendMessage(message: string) {
-    if (message) {
-      this.roomService.sendChatMessage(message);
-      // TODO: clear text field after message is sent
-    }
+    this.roomService.sendChatMessage(message);
+    // TODO: clear text field after message is sent
   }
 }

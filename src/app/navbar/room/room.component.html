@@ -1,28 +1,33 @@
-<div class="column">
-  <ul>
-    <li *ngFor="let user of room.users | async">
-      {{user}}
-    </li>
-  </ul>
-</div>
+<div class="row">
 
-<div class="column">
-  <div #chat class="box-chat" (scroll)="onChatScroll()">
-    <h1 *ngIf="isChatEmpty" class="center">
-      No messages yet. Be the first to chat!
-    </h1>
-    <ul *ngIf="!isChatEmpty">
-      <li *ngFor="let msg of chatMessages | async">
-        {{msg.sender}}: {{msg.message}}
+  <div class="col-sm-2">
+    <p>Users in room:</p>
+    <ul>
+      <li *ngFor="let user of (room | async)?.users">
+        {{user.id}}
       </li>
     </ul>
   </div>
-  
-  <div class="box-send">
-    <label>
-      Your message:
-      <input #messageText type="text">
-      <button class="btn-send" (click)="sendMessage(messageText.value)">Send</button>
-    </label>
+
+  <div class="col-sm-10">
+    <div #chat class="box-chat" (scroll)="onChatScroll()">
+      <h1 *ngIf="isChatEmpty" class="center">
+        No messages yet. Be the first to chat!
+      </h1>
+      <ul *ngIf="!isChatEmpty">
+        <li *ngFor="let msg of chatMessages | async">
+          {{msg.sender}}: {{msg.message}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="box-send">
+      <label>
+        Your message:
+        <input #messageText type="text">
+        <button class="btn-send" (click)="sendMessage(messageText.value)">Send</button>
+      </label>
+    </div>
   </div>
+
 </div>

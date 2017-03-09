@@ -1,8 +1,10 @@
+import {User} from "./user.model";
+
 export class Room {
   name: string;
-  users: number[];
+  users: User[];
 
-  constructor(name: string, users: number[]) {
+  constructor(name: string, users: User[]) {
     this.name = name;
     this.users = users;
   }

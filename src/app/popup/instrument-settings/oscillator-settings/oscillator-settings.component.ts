@@ -184,7 +184,6 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // TODO: error while dragging oscillator
   mouseMove(e: MouseEvent) {
     let x = e.pageX - this.canvas.nativeElement.offsetLeft,
       y = e.pageY - this.canvas.nativeElement.offsetTop,
@@ -200,8 +199,8 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
         freqChange = e.movementX / this.width * this.freqScaleMax;
       if (this.gainChangeInvert) gainChange = -gainChange;
 
-      let newGain = oscillators[this.closestIndex].gain + gainChange,
-        newFreq = oscillators[this.closestIndex].freq * (1 + freqChange);
+      let newGain = (oscillators[this.closestIndex].gain) + gainChange,
+        newFreq = (oscillators[this.closestIndex].freq) * (1 + freqChange);
       if (newGain < 0) {
         this.gainChangeInvert = !this.gainChangeInvert;
         newGain = -newGain;

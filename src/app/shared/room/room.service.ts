@@ -7,6 +7,7 @@ import {Room} from "./room.model";
 
 @Injectable()
 export class RoomService {
+  private roomSource: Subject<Room>;
   room$: Observable<Room>;
 
   private _messages: ChatMessage[] = [];
@@ -16,24 +17,28 @@ export class RoomService {
   private readonly MaxMessagesInChat = 100;
 
   constructor(private webSocketService: WebSocketService) {
-    this.room$ = new Observable((observer) => {
-      this.webSocketService.registerHandler(WebSocketMessageType.room_updated, observer.next.bind(this));
-    });
+    this.roomSource = new Subject();
+    this.room$ = this.roomSource.asObservable();
+    this.webSocketService.registerHandler(WebSocketMessageType.room_updated, this.updateRoom.bind(this));
 
     this.messagesSource = new Subject();
     this.messages$ = this.messagesSource.asObservable();
     this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.addChatMessage.bind(this));
-
-    // DEBUG
-    /*
-     let n = 0;
-     setInterval(() => {
-     this.addChatMessage(new ChatMessage(0, 'Test message ' + n++));
-     }, 2500);
-     */
   }
 
-  addChatMessage(message: ChatMessage) {
+  init(room: Room) {
+    this.updateRoom(room);
+  }
+
+  private updateRoom(room: Room) {
+    this.roomSource.next(room);
+  }
+
+  changeRoomName(name: string) {
+    this.webSocketService.send(WebSocketMessageType.room_name_update, name);
+  }
+
+  private addChatMessage(message: ChatMessage) {
     if (this._messages.length >= this.MaxMessagesInChat) {
       this._messages.shift();
     }
@@ -42,10 +47,9 @@ export class RoomService {
   }
 
   sendChatMessage(message: string) {
-    this.webSocketService.send(WebSocketMessageType.chat_new_message, message);
-  }
-
-  changeRoomName(name: string) {
-    this.webSocketService.send(WebSocketMessageType.room_name_update, name);
+    if (message) {
+      this.webSocketService.send(WebSocketMessageType.chat_new_message, message);
+      this.addChatMessage(new ChatMessage('me', message));
+    }
   }
 }

@@ -7,6 +7,8 @@ import {PopupService} from '../popup/popup.service';
 import {Settings} from './settings.model';
 import {SETTINGS_OFFLINE} from './settings.mock';
 import {CONSTANTS} from './config.constants';
+import {SequencerService} from '../sequencer/sequencer.service';
+import {RoomService} from "../room/room.service";
 
 @Injectable()
 export class LoaderService {
@@ -14,19 +16,21 @@ export class LoaderService {
 
   offlineMode: boolean;
 
-  constructor(private wsService: WebSocketService,
+  constructor(private sequencerService: SequencerService,
+              private wsService: WebSocketService,
               private noteService: NoteService,
               private instrumentService: InstrumentService,
               private soundService: SoundService,
-              private popupService: PopupService) {
+              private popupService: PopupService,
+              private roomService: RoomService) {
   }
 
   init(progressChange, onDone) {
-    progressChange('Establishing server connection');
+    progressChange('Establishing server connection...');
     this.establishWebSocketConnection()
       .then(() => {
         this.goOnline();
-        progressChange('Parsing response');
+        progressChange('Parsing response...');
         return this.loadSettings();
       })
       .catch (() => {
@@ -34,12 +38,16 @@ export class LoaderService {
         return this.loadLocalSettings();
       })
       .then((settings: Settings) => {
-        progressChange('Loading notes');
+        progressChange('Initializing room...');
+        this.initRoom(settings);
+        progressChange('Loading notes...');
         this.initNotes(settings);
-        progressChange('Loading instruments');
+        progressChange('Loading instruments...');
         this.initInstruments(settings);
-        progressChange('Initializing sound module');
+        progressChange('Initializing sound module...');
         this.initSoundModule(settings);
+        progressChange('Initializing sequencer...');
+        this.initSequencer(settings);
         // DEBUG
         // setTimeout(onDone, 1800000);
         onDone();
@@ -99,6 +107,14 @@ export class LoaderService {
 
   private initSoundModule(settings: Settings) {
     this.soundService.init(settings.masterGainMax / 2);
+  }
+
+  private initSequencer(settings: Settings) {
+    this.sequencerService.init(settings.notes);
+  }
+
+  private initRoom(settings: Settings) {
+    this.roomService.init(settings.room);
   }
 
   goOnline() {

@@ -11,12 +11,12 @@ export class SequencerService {
   /**
    * Array of all notes in sequencer.
    */
-  notes: SequencerNote[] = [];
+  notes$: Observable<SequencerNote[]>;
 
   /**
    * Array of notes that playing at the moment.
    */
-  playing: number[] = [];
+  //playing: number[] = [];
 
   constructor(private sequencerNoteService: SequencerNoteService,
               private soundService: SoundService,
@@ -47,7 +47,7 @@ export class SequencerService {
 
   addNote(note: SequencerNote, broadcast = true) {
     if (this.hasNote(note)) return;
-    this.notes.push(note);
+    this.notes$.push(note);
     if (broadcast) {
       this.webSocketService.send(WebSocketMessageType.note_add, note.id);
     }
@@ -55,9 +55,9 @@ export class SequencerService {
 
   removeNote(note: SequencerNote, broadcast = true) {
     if (!this.hasNote(note)) return;
-    let nsInd = this.notes.findIndex(ns => ns.id === note.id);
+    let nsInd = this.notes$.findIndex(ns => ns.id === note.id);
     if (nsInd != -1) {
-      this.notes.splice(nsInd, 1);
+      this.notes$.splice(nsInd, 1);
     } else {
       return;
     }
@@ -67,9 +67,10 @@ export class SequencerService {
   }
 
   hasNote(note: SequencerNote) {
-    return this.notes.findIndex(n => note.id == n.id) >= 0;
+    return this.notes$.findIndex(n => note.id == n.id) >= 0;
   }
 
+  /*
   playNote(note: SequencerNote) {
     if (this.isPlaying(note)) return;
     this.playing.push(note.id);
@@ -88,4 +89,5 @@ export class SequencerService {
   isPlaying(note: SequencerNote) {
     return this.playing.indexOf(note.id) >= 0;
   }
+  */
 }

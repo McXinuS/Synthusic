@@ -16,7 +16,7 @@ export class SequencerComponent implements OnInit {
               private sequencerService: SequencerService) { }
 
   ngOnInit() {
-    this.notes = this.sequencerService.notes;
+    this.notes = this.sequencerService.notes$;
   }
 
   onInstrumentCollapse(id: number) {

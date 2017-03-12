@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
+import {Instrument} from "../../shared/instrument/instrument.model";
+import {SequencerNote} from "../../shared/sequencer/sequencernote.model";
 
 @Component({
   selector: 'app-sequencer-instrument',
@@ -6,10 +8,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./sequencer-instrument.component.css']
 })
 export class SequencerInstrumentComponent implements OnInit {
+  @Input() instrument: Instrument;
+  notes: SequencerNote[] = [];
 
   constructor() { }
 
   ngOnInit() {
+
   }
 
 }

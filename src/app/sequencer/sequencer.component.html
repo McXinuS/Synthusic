@@ -1,4 +1,3 @@
 <div>{{notes | json}}</div>
-<div *ngFor="let instrument of instrumentService.instruments | async">
-  <div></div>
-</div>
+<app-sequencer-instrument *ngFor="let instrument of instrumentService.instruments | async"
+                          [instrument]="instrument"></app-sequencer-instrument>

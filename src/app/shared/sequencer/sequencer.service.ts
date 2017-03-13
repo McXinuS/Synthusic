@@ -5,18 +5,21 @@ import {SoundService} from '../sound/sound.service';
 import {WebSocketService} from '../websocket/websocket.service';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
 import {WebSocketMessage} from '../websocket/websocketmessage.model';
+import {Subject} from "rxjs";
 
 @Injectable()
 export class SequencerService {
   /**
    * Array of all notes in sequencer.
    */
-  notes$: Observable<SequencerNote[]>;
+  _notes: SequencerNote[] = [];
+  notes$: Subject<SequencerNote[]> = new Subject();
 
   /**
    * Array of notes that playing at the moment.
    */
-  //playing: number[] = [];
+  _playing: number[] = [];
+  playing$: Subject<number[]>;
 
   constructor(private sequencerNoteService: SequencerNoteService,
               private soundService: SoundService,
@@ -47,7 +50,8 @@ export class SequencerService {
 
   addNote(note: SequencerNote, broadcast = true) {
     if (this.hasNote(note)) return;
-    this.notes$.push(note);
+    this._notes.push(note);
+    this.notes$.next(this._notes);
     if (broadcast) {
       this.webSocketService.send(WebSocketMessageType.note_add, note.id);
     }
@@ -55,11 +59,10 @@ export class SequencerService {
 
   removeNote(note: SequencerNote, broadcast = true) {
     if (!this.hasNote(note)) return;
-    let nsInd = this.notes$.findIndex(ns => ns.id === note.id);
+    let nsInd = this._notes.findIndex(ns => ns.id === note.id);
     if (nsInd != -1) {
-      this.notes$.splice(nsInd, 1);
-    } else {
-      return;
+      this._notes.splice(nsInd, 1);
+      this.notes$.next(this._notes);
     }
     if (broadcast) {
       this.webSocketService.send(WebSocketMessageType.note_remove, note.id);
@@ -67,27 +70,25 @@ export class SequencerService {
   }
 
   hasNote(note: SequencerNote) {
-    return this.notes$.findIndex(n => note.id == n.id) >= 0;
+    return this._notes.findIndex(n => note.id == n.id) >= 0;
   }
 
-  /*
   playNote(note: SequencerNote) {
     if (this.isPlaying(note)) return;
-    this.playing.push(note.id);
+    this._playing.push(note.id);
     this.soundService.playNote(note);
   }
 
   stopNote(note: SequencerNote) {
     if (!this.isPlaying(note)) return;
-    let nsInd = this.playing.indexOf(note.id);
+    let nsInd = this._playing.indexOf(note.id);
     if (nsInd != -1) {
-      this.playing.splice(nsInd, 1);
+      this._playing.splice(nsInd, 1);
     }
     this.soundService.stopNote(note);
   }
 
   isPlaying(note: SequencerNote) {
-    return this.playing.indexOf(note.id) >= 0;
+    return this._playing.indexOf(note.id) >= 0;
   }
-  */
 }

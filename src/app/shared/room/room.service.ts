@@ -7,21 +7,19 @@ import {Room} from "./room.model";
 
 @Injectable()
 export class RoomService {
-  private roomSource: Subject<Room>;
+  private roomSource: Subject<Room> = new Subject();
   room$: Observable<Room>;
 
   private _messages: ChatMessage[] = [];
-  private messagesSource: Subject<ChatMessage[]>;
+  private messagesSource: Subject<ChatMessage[]> = new Subject();
   messages$: Observable<ChatMessage[]>;
 
   private readonly MaxMessagesInChat = 100;
 
   constructor(private webSocketService: WebSocketService) {
-    this.roomSource = new Subject();
     this.room$ = this.roomSource.asObservable();
     this.webSocketService.registerHandler(WebSocketMessageType.room_updated, this.updateRoom.bind(this));
 
-    this.messagesSource = new Subject();
     this.messages$ = this.messagesSource.asObservable();
     this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.addChatMessage.bind(this));
   }

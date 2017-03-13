@@ -1,7 +1,8 @@
 canvas {
-  display : block;
-  cursor  : grab;
-  margin-bottom: 10px;
+  display       : block;
+  cursor        : grab;
+  margin-bottom : 10px;
+  border        : 1px solid #dbeeff;
 }
 
 canvas.grabbing {

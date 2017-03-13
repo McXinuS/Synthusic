@@ -74,17 +74,17 @@ export class KeyboardComponent implements OnInit {
   playNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    this.sequencerService.addNote(ns);
-    //DEBUG
     this.sequencerService.playNote(ns);
+    //DEBUG
+    this.sequencerService.addNote(ns);
   }
 
   stopNote(note: Note) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
-    this.sequencerService.removeNote(ns);
-    //DEBUG
     this.sequencerService.stopNote(ns);
+    //DEBUG
+    this.sequencerService.removeNote(ns);
   }
 
   onMiniChange(e) {

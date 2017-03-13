@@ -1,6 +1,7 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {Instrument} from "../../shared/instrument/instrument.model";
 import {SequencerNote} from "../../shared/sequencer/sequencernote.model";
+import {PopupService} from "../../shared/popup/popup.service";
 
 @Component({
   selector: 'app-sequencer-instrument',
@@ -9,12 +10,20 @@ import {SequencerNote} from "../../shared/sequencer/sequencernote.model";
 })
 export class SequencerInstrumentComponent implements OnInit {
   @Input() instrument: Instrument;
-  notes: SequencerNote[] = [];
+  @Input() notes: SequencerNote[];
+  isCollapsed: boolean = false;
 
-  constructor() { }
+  constructor(private popupService: PopupService) { }
 
   ngOnInit() {
 
   }
 
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+
+  openSettings() {
+    this.popupService.show(this.instrument);
+  }
 }

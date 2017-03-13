@@ -1,13 +1,15 @@
 import {Injectable} from '@angular/core';
 import {Instrument, Oscillator} from "./instrument.model";
-import {Subject} from 'rxjs';
+import {Subject, Observable} from 'rxjs';
 
 @Injectable()
 export class InstrumentService {
   private _instruments: Instrument[] = [];
-  instruments$: Subject<Array<Instrument>> = new Subject();
+  private instrumentsSource: Subject<Array<Instrument>> = new Subject();
+  instruments$: Observable<Array<Instrument>>;
 
   constructor() {
+    this.instruments$ = this.instrumentsSource.asObservable();
   }
 
   getInstrument(id): Instrument {
@@ -24,19 +26,19 @@ export class InstrumentService {
 
   init(settings: Instrument[]) {
     this._instruments = settings;
-    this.instruments$.next(this._instruments);
+    this.instrumentsSource.next(this._instruments);
   }
 
   addInstrument(instrument: Instrument) {
     this._instruments.push(instrument);
-    this.instruments$.next(this._instruments);
+    this.instrumentsSource.next(this._instruments);
   }
 
   updateInstrument(instrument: Instrument) {
     let index = this.getInstrumentIndex(instrument.id);
     if (index >= 0) {
       this._instruments[index] = instrument;
-      this.instruments$.next(this._instruments);
+      this.instrumentsSource.next(this._instruments);
     }
   }
 
@@ -44,7 +46,7 @@ export class InstrumentService {
     let index = this.getInstrumentIndex(id);
     if (index >= 0) {
       this._instruments.splice(index, 1);
-      this.instruments$.next(this._instruments);
+      this.instrumentsSource.next(this._instruments);
     }
   }
 

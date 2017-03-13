@@ -1,15 +1,4 @@
 .content {
-  display      : table;
-  table-layout : fixed;
-  height       : 100%;
-  width        : 100%;
-  padding      : 45px 0 0 0;
-}
-
-.table-row {
-  display : table-row;
-}
-
-.table-row.fill-height {
-  height: 100%;
+  /* TODO: make bottom margin dependent on keydoard */
+  margin   : 45px 0 120px;
 }

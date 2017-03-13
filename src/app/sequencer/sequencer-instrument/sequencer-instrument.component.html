@@ -1,3 +1,24 @@
-<p>
-  sequencer-instrument works!
-</p>
+<div class="wrapper" [class.collapsed]="isCollapsed">
+
+  <div class="instrument">
+
+    <div *ngIf="!isCollapsed">
+      <div>{{instrument.name}}</div>
+      <div class="btn-square rotating" (click)="openSettings()">
+        <span class="glyphicon glyphicon-cog"></span>
+      </div>
+      <div class="btn-square btn-collapse" (click)="toggleCollapse()">
+        <span class="glyphicon glyphicon-collapse-up"></span>
+      </div>
+    </div>
+
+    <div *ngIf="isCollapsed" class="expand">
+      <div class="center-hor" (click)="toggleCollapse()">Expand</div>
+    </div>
+  </div>
+
+  <div class="staff">
+    <div>{{notes | json}}</div>
+  </div>
+
+</div>

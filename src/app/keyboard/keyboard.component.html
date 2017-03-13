@@ -19,7 +19,7 @@
                     (change)="onInstrumentChange()">
               <option *ngFor="let instrument of instruments" [ngValue]="instrument">{{instrument.name}}</option>
             </select>
-            <div class="select-action" (click)="openSettings()">
+            <div class="btn-square rotating" (click)="openSettings()">
               <span class="glyphicon glyphicon-cog"></span>
             </div>
           </div>

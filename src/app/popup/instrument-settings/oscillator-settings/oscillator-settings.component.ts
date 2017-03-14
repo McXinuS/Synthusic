@@ -25,7 +25,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   readonly freqScaleMax = 10;
   readonly gainScaleMax = 1.1;
   readonly samples = 300;
-  Types = OscillatorType;
+  OscillatorType = OscillatorType; // make it visible for template
 
   isMouseDown: boolean = false;
   gainChangeInvert: boolean;

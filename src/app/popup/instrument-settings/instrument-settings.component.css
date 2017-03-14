@@ -18,7 +18,7 @@
   margin-bottom    : 15px;
   height           : 45px;
   background-color : rgba(255, 255, 255, 0.2);
-  transition       : background-color .3s;
+  transition       : background-color .2s, color .2s;
 }
 
 #name:hover {
@@ -27,4 +27,5 @@
 
 #name:focus {
   background-color : #fff;
+  color            : #333;
 }

@@ -14,8 +14,10 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   chatMessages: Observable<ChatMessage[]>;
   room: Observable<Room>;
   isChatEmpty: boolean = true;
-  @ViewChild('chat') private chatContainer: ElementRef;
+  @ViewChild('messages') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
+
+  myMessage: string;
 
   constructor(private roomService: RoomService) {
   }
@@ -42,8 +44,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
       >= this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
   }
 
-  sendMessage(message: string) {
-    this.roomService.sendChatMessage(message);
+  sendMessage() {
+    this.roomService.sendChatMessage(this.myMessage);
     // TODO: clear text field after message is sent
   }
 }

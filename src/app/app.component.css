@@ -1,4 +1,15 @@
+:host {
+  display        : flex;
+  flex-direction : column;
+  height         : 100%;
+}
+
 .content {
-  /* TODO: make bottom margin dependent on keydoard */
-  margin   : 45px 0 120px;
+  margin-top : 45px;
+  flex       : 1 1 auto;
+  overflow   : auto;
+}
+
+.footer {
+  flex : 0 0 auto;
 }

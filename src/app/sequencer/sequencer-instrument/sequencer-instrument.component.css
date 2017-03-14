@@ -9,7 +9,7 @@
 }
 
 .collapsed.wrapper {
-  height : 20px;
+  height : 30px;
 }
 
 .instrument {
@@ -33,12 +33,17 @@
 
 .collapsed .instrument {
   background-color : #ddd;
+  box-shadow       : inset 0 0 8px 1px #ccc;
+}
+
+.expand {
+  cursor : pointer;
 }
 
 .staff {
   height      : 100%;
   margin-left : 240px;
-  padding     : 15% 30px;
+  padding     : 15px 30px;
   transition  : inherit;
   opacity     : 1;
   visibility  : visible;

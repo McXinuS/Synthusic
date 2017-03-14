@@ -53,7 +53,7 @@ import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/s
     SoundService,
     PopupService,
     RoomService,
-    WebSocketService,
+    WebSocketService
   ],
   bootstrap: [AppComponent]
 })

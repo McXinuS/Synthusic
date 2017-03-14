@@ -3,28 +3,31 @@
 }
 
 .box-chat {
+  border     : 1px solid hsla(0, 0%, 50%, 1);
+  background : rgba(85, 85, 85, 0.85);
+}
+
+.box-messages {
   height     : 340px;
   overflow-y : auto;
-  border     : 1px solid hsla(0, 0%, 50%, 1);
-  background : rgba(85, 85, 85, 0.9);
 }
 
 .box-send {
-  position : relative;
-  top      : -1px;
-  border   : 1px solid hsla(0, 0%, 50%, 1);
+  position   : relative;
+  width      : 100%;
+  padding    : 10px 4px;
+  background : rgba(0, 0, 0, 0.1);
 }
 
-.btn-send {
-  position : relative;
-  top      : -30px;
-  height   : 30px;
-  float    : right;
+.box-send .btn-square {
+  background-color : transparent;
+  border           : none;
+  border-left      : 1px solid #999;
+  border-radius    : 0;
 }
 
-input, button {
-  color         : black;
-  border-radius : 0;
+.box-send label {
+  margin: auto 5px;
 }
 
 li {

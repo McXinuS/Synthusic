@@ -9,8 +9,8 @@
           <span class="label-value">{{soundService.masterGain | number: '1.2-2'}}</span>
         </div>
         <input type="range" id="master-gain-range" min="0" max="0.5" step="0.01" [(ngModel)]="soundService.masterGain">
-        <div *ngIf="soundService.masterGain==0" class="btn" onclick="toggleMute()">Play</div>
-        <div *ngIf="soundService.masterGain!=0" class="btn" onclick="toggleMute()">Mute</div>
+        <div *ngIf="soundService.masterGain==0" class="btn" (click)="toggleMute()">Unmute</div>
+        <div *ngIf="soundService.masterGain!=0" class="btn" (click)="toggleMute()">Mute</div>
       </div>
     </div>
 

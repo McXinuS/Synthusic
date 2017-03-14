@@ -6,10 +6,14 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
+html, body {
+  height     : 100%;
+  min-height : 100%;
+}
+
 body {
   font-family : "Open Sans",sans-serif;
   font-weight : 200;
-  height      : 100vh;
 }
 
 h1,h2,h3 {
@@ -27,7 +31,8 @@ h1,h2,h3 {
 }
 
 .center-hor {
-  margin : 0 auto;
+  margin     : 0 auto;
+  text-align : center;
 }
 
 .overlay {
@@ -94,14 +99,6 @@ div.start-overlay {
 .well:hover {
   background : rgba(0, 0, 0, .05);
   box-shadow : inset 0 0 8px 2px rgba(0, 0, 0, .05);
-}
-
-.button-group {
-  display : inline-flex;
-}
-
-label {
-  display : block;
 }
 
 meter {
@@ -174,14 +171,6 @@ input[type=range]::-webkit-slider-thumb {
   margin-top         : -13px;
 }
 
-input[type=text], select {
-  width         : 100%;
-  padding       : 0 35px 0 6px;
-  border        : 1px solid #ccc;
-  border-radius : 4px;
-  height        : 30px;
-}
-
 select {
   cursor : pointer;
 }
@@ -190,23 +179,50 @@ select[disabled] {
   background : #ddd;
 }
 
+.button-group {
+  display : inline-flex;
+}
+
 .btn-square {
+  display          : inline-block;
   width            : 30px;
   height           : 30px;
+  padding          : 0;
   border           : 1px solid #ccc;
   border-radius    : 4px;
   background-color : #fff;
   transition       : background-color .3s;
 }
 
-select + .btn-square {
-  border-radius : 0 4px 4px 0;
-  margin-left   : -30px;
+select {
+  width         : 100%;
+  padding       : 0 35px 0 6px;
+  border        : 1px solid #ccc;
+  border-radius : 4px;
+  height        : 30px;
+}
+
+input[type=text] {
+  width            : 100%;
+  padding          : 0 35px 0 6px;
+  height           : 30px;
+  outline          : none;
+  border           : none;
+  border-bottom    : 1px solid #999;
+  color            : inherit;
+  background-color : transparent;
+  transition       : .2s ease-out;
+}
+
+input:focus[type=text] {
+  border-bottom : 1px solid #ccc;
+  box-shadow    : 0 1px 0 0 #999;
+  color         : #fff;
 }
 
 .btn-square span {
   top     : 0;
-  padding : 8px;
+  padding : 7px;
 }
 
 .btn-square:hover {
@@ -219,6 +235,11 @@ select + .btn-square {
 
 .btn-square.rotating span:hover {
   transform : rotate(360deg);
+}
+
+select + .btn-square, input + .btn-square {
+  border-radius : 0 4px 4px 0;
+  margin-left   : -30px;
 }
 
 @keyframes startOverlayAnimation {

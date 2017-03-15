@@ -141,7 +141,7 @@ export class SoundService {
 
   stop(instrumentId?: number) {
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if ((typeof instrumentId != 'number') || (instrumentId && this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id))) {
+      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id)) {
         for (let osc of oscArr) {
           osc.stop(0);
           osc.disconnect();
@@ -150,9 +150,9 @@ export class SoundService {
       }
     });
 
-    if (instrumentId) {
+    if (typeof instrumentId == 'number') {
       this.notesToStop.delete(instrumentId);
-      let pl = this.playingNotes.getValue().filter(sn => sn.instrument.id != instrumentId);
+      let pl = this.playingNotes.getValue().filter(sn => sn.instrument.id !== instrumentId);
       this.playingNotes.next(pl);
     } else {
       this.notesToStop.clear();

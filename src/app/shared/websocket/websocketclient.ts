@@ -3,6 +3,7 @@ import {WebSocketMessageType} from '../../../../shared/web-socket-message-types'
 
 export class WebSocketClient {
   private socket: WebSocket;
+  onDisconnect: () => any;
 
   // private pendingMessages: Array<WebSocketMessage> = [];
 
@@ -38,8 +39,11 @@ export class WebSocketClient {
     };
 
     ws.onclose = () => {
-      clearInterval(pingIntervalId);
       console.warn(`Socket is closed. Reload the page to go online`);
+      clearInterval(pingIntervalId);
+      if (typeof this.onDisconnect == 'function') {
+        this.onDisconnect();
+      }
       /*
        console.warn(`Socket is closed. Next attempt to reconnect in ${this.RECONNECT_TIME / 1000} seconds`);
        setTimeout(() => {

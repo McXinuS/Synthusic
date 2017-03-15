@@ -1,35 +1,69 @@
-.column {
-  box-shadow : 0px 0px 15px 1px hsl(0, 0%, 24%);
+li {
+  list-style : none;
+  padding    : 4px 0;
+}
+
+.wrapper {
+  display    : flex;
+  border     : 1px solid hsla(0, 0%, 50%, 1);
+  background : hsla(0, 0%, 32%, 0.7);
 }
 
 .box-chat {
-  border     : 1px solid hsla(0, 0%, 50%, 1);
-  background : rgba(85, 85, 85, 0.85);
+  flex : 1;
 }
 
 .box-messages {
   height     : 340px;
   overflow-y : auto;
+  background : rgba(85, 85, 85, 0.85);
+}
+
+.box-messages ul {
+  padding    : 4px 16px;
+  word-break : break-all;
+}
+
+li .sender {
+  color       : #bbb;
+  font-weight : 400;
 }
 
 .box-send {
   position   : relative;
   width      : 100%;
   padding    : 10px 4px;
-  background : rgba(0, 0, 0, 0.1);
 }
 
 .box-send .btn-square {
+  position         : relative;
+  top              : -5px;
   background-color : transparent;
   border           : none;
   border-left      : 1px solid #999;
   border-radius    : 0;
 }
 
+.box-send .btn-square span {
+  top  : -1px;
+  left : -1px;
+}
+
 .box-send label {
   margin: auto 5px;
 }
 
-li {
+.box-users {
+  width       : 180px;
+  border-left : 1px solid hsla(0, 0%, 50%, 1);
+  padding     : 5px;
+}
 
+.box-users h4:first-of-type {
+  text-align : center;
+}
+
+.box-users ul {
+  padding   : 0 15px;
+  font-size : 1.2em;
 }

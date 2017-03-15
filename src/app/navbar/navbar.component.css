@@ -21,6 +21,12 @@
   font-size       : 17px;
 }
 
+@media (min-width : 768px) {
+  #topnav .navbar {
+    padding : 0 240px;
+  }
+}
+
 .navbar li {
   float : left;
 }

@@ -30,11 +30,13 @@ export class LoaderService {
     this.establishWebSocketConnection()
       .then(() => {
         this.goOnline();
+        this.wsService.setOnDisconnect(this.goOffline.bind(this)); // TODO: test it
         progressChange('Parsing response...');
         return this.loadSettings();
       })
       .catch (() => {
         this.goOffline();
+        this.wsService.disconnect();
         return this.loadLocalSettings();
       })
       .then((settings: Settings) => {
@@ -48,8 +50,6 @@ export class LoaderService {
         this.initSoundModule(settings);
         progressChange('Initializing sequencer...');
         this.initSequencer(settings);
-        // DEBUG
-        // setTimeout(onDone, 1800000);
         onDone();
       }, () => {
         this.popupService.show(
@@ -133,6 +133,5 @@ export class LoaderService {
     window.onbeforeunload = function(e) {
       return true;
     };
-    this.wsService.disconnect();
   }
 }

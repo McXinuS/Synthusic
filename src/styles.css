@@ -194,6 +194,23 @@ select[disabled] {
   transition       : background-color .3s;
 }
 
+.btn-square span {
+  top     : 0;
+  padding : 7px;
+}
+
+.btn-square:hover {
+  background-color : #e1e1e1;
+}
+
+.btn-square.rotating span {
+  transition : transform 1.5s;
+}
+
+.btn-square.rotating span:hover {
+  transform : rotate(360deg);
+}
+
 select {
   width         : 100%;
   padding       : 0 35px 0 6px;
@@ -218,23 +235,6 @@ input:focus[type=text] {
   border-bottom : 1px solid #ccc;
   box-shadow    : 0 1px 0 0 #999;
   color         : #fff;
-}
-
-.btn-square span {
-  top     : 0;
-  padding : 7px;
-}
-
-.btn-square:hover {
-  background-color : #e1e1e1;
-}
-
-.btn-square.rotating span {
-  transition : transform 1.5s;
-}
-
-.btn-square.rotating span:hover {
-  transform : rotate(360deg);
 }
 
 select + .btn-square, input + .btn-square {

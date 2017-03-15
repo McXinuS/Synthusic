@@ -60,6 +60,10 @@ export class WebSocketService {
     return this.client.isSocketReady;
   }
 
+  setOnDisconnect(callback: () => any) {
+    this.client.onDisconnect = callback;
+  }
+
   disconnect() {
     this.client.disconnect();
   }

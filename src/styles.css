@@ -19,20 +19,25 @@ body {
 h1,h2,h3 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 500;
-  margin: 0;
 }
 
 .center {
+  display         : flex;
   height          : 100%;
   width           : 100%;
-  display         : flex;
+  margin          : 0;
   align-items     : center;
   justify-content : center;
 }
 
 .center-hor {
-  margin     : 0 auto;
-  text-align : center;
+  margin-left  : auto;
+  margin-right : auto;
+  text-align   : center;
+}
+
+.glyphicon {
+  top : 2px;
 }
 
 .overlay {
@@ -44,7 +49,7 @@ h1,h2,h3 {
   right      : 0;
   background : rgba(0, 0, 0, 0.7);
   overflow-y : auto;
-  transition : visibility .5s, opacity .5s;
+  transition : visibility 0s .3s, opacity .3s;
   visibility : hidden;
   opacity    : 0;
 }
@@ -52,6 +57,7 @@ h1,h2,h3 {
 .overlay-active {
   visibility : visible;
   opacity    : 1;
+  transition : visibility .3s, opacity .3s;
 }
 
 div.start-overlay {
@@ -203,11 +209,13 @@ select[disabled] {
   background-color : #e1e1e1;
 }
 
-.btn-square.rotating span {
+/* Rotates child glyphicon on hover */
+
+.glyphicon-rotating .glyphicon {
   transition : transform 1.5s;
 }
 
-.btn-square.rotating span:hover {
+.glyphicon-rotating:hover .glyphicon {
   transform : rotate(360deg);
 }
 

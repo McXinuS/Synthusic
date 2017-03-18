@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
-import {Note} from '../../shared/note/note.model';
+import {BaseNote} from '../../shared/note/note.model';
 import {KeyChangeMode} from './keychangemode.enum';
 
 @Component({
@@ -9,7 +9,7 @@ import {KeyChangeMode} from './keychangemode.enum';
   styleUrls: ['./key.component.css']
 })
 export class KeyComponent {
-  @Input() note: Note;
+  @Input() note: BaseNote;
   @Input() highlighted: boolean;
   selected: boolean = false;
   @Output() keyStateUpdated = new EventEmitter();

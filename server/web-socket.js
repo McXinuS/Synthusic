@@ -6,7 +6,7 @@ let rs = require('./rooms/room-service').RoomService,
   ws = require('ws');
 
 const WebSocketMessageType = require('./../shared/web-socket-message-types').WebSocketMessageType;
-const CHAT_MESSAGE_LENGTH_MAX = 140;
+const CHAT_MESSAGE_LENGTH_MAX = 340;
 
 function Server(server) {
   let webSocketServer = ws.Server({
@@ -162,7 +162,6 @@ function Server(server) {
         return true;
       case WebSocketMessageType.chat_new_message:
         let str = message.data || '';
-        // TODO: test if this check is not broken
         if (str.length > CHAT_MESSAGE_LENGTH_MAX) str = str.substring(0, CHAT_MESSAGE_LENGTH_MAX);
         message.data = {
           message: str,

@@ -30,7 +30,7 @@ export class LoaderService {
     this.establishWebSocketConnection()
       .then(() => {
         this.goOnline();
-        this.wsService.setOnDisconnect(this.goOffline.bind(this)); // TODO: test it
+        this.wsService.setOnDisconnect(this.goOffline.bind(this));
         progressChange('Parsing response...');
         return this.loadSettings();
       })

@@ -46,6 +46,5 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   sendMessage() {
     this.roomService.sendChatMessage(this.myMessage);
-    // TODO: clear text field after message is sent
   }
 }

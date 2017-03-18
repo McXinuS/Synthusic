@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Note} from '../shared/note/note.model';
+import {BaseNote} from '../shared/note/note.model';
 import {NoteService} from '../shared/note/note.service';
 import {KeyChangeMode} from './key/keychangemode.enum';
 import {SoundService} from '../shared/sound/sound.service';
@@ -17,7 +17,7 @@ import {SequencerService} from "../shared/sequencer/sequencer.service";
 })
 export class KeyboardComponent implements OnInit {
   highlights: boolean[];
-  notes: Note[];
+  notes: BaseNote[];
 
   instruments: Instrument[];
   activeInstrument: Instrument;
@@ -51,7 +51,7 @@ export class KeyboardComponent implements OnInit {
     this.highlights = [];
     for (let i = 0; i < playing.length; i++) {
       if (playing[i].instrument.id == this.activeInstrument.id) {
-        this.highlights[playing[i].note.index] = true;
+        this.highlights[playing[i].note.id] = true;
       }
     }
   }
@@ -71,7 +71,7 @@ export class KeyboardComponent implements OnInit {
     }
   }
 
-  playNote(note: Note) {
+  playNote(note: BaseNote) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     this.sequencerService.playNote(ns);
@@ -79,7 +79,7 @@ export class KeyboardComponent implements OnInit {
     this.sequencerService.addNote(ns);
   }
 
-  stopNote(note: Note) {
+  stopNote(note: BaseNote) {
     if (!this.activeInstrument) return;
     let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
     this.sequencerService.stopNote(ns);

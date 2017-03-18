@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Note} from './note.model';
+import {BaseNote} from './note.model';
 import {Scale} from './scale.model';
 import {Settings} from "../loader/settings.model";
 
 @Injectable()
 export class NoteService {
-  private _notes: Note[] = [];
-  get notes(): Note[] {
+  private _notes: BaseNote[] = [];
+  get notes(): BaseNote[] {
     return this._notes;
   }
 
@@ -15,13 +15,13 @@ export class NoteService {
     return this._noteCount;
   }
 
-  private _firstNote: Note;
-  get firstNote(): Note {
+  private _firstNote: BaseNote;
+  get firstNote(): BaseNote {
     return this._firstNote;
   }
 
-  private _lastNote: Note;
-  get lastNote(): Note {
+  private _lastNote: BaseNote;
+  get lastNote(): BaseNote {
     return this._lastNote;
   }
 
@@ -59,13 +59,13 @@ export class NoteService {
       let fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
       let isAccidental = !!name[1];
       let freq = this.getFrequency(name, octave);
-      this._notes[i] = new Note(name, octave, fullname, isAccidental, freq, i);
+      this._notes[i] = new BaseNote(name, octave, fullname, isAccidental, freq, i);
     }
   }
 
-  getNote(index: number): Note;
-  getNote(fullname: string): Note;
-  getNote(indexOrFullname: number | string): Note {
+  getNote(index: number): BaseNote;
+  getNote(fullname: string): BaseNote;
+  getNote(indexOrFullname: number | string): BaseNote {
     if (typeof indexOrFullname == 'number') {
       return this._notes[indexOrFullname];
     }

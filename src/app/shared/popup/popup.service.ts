@@ -10,10 +10,16 @@ export class PopupService {
   isShown: boolean = false;
   isInstrument: boolean = false;
 
+  // closeTimeoutId: number;
+  // isClosing: boolean = false;
+  // readonly CloseTimeout: number = 300;
+
   show(instrument: Instrument);
   show(header:string, message: String);
   show(content: any, content2?: string) {
     if (this.isShown) return;
+
+    // if (this.isClosing) this.close(false);
 
     if (typeof content == 'object') {
       this.instrument = content;
@@ -25,7 +31,17 @@ export class PopupService {
     this.isShown = true;
   }
 
-  close() {
+  close() { // delay = true) {
+    // if (delay) {
+    //   this.isClosing = true;
+    //   this.closeTimeoutId = setTimeout(this.close.bind(this, false), this.CloseTimeout);
+    // } else {
+    //   clearInterval(this.closeTimeoutId);
+    //   this.isClosing = false;
+    //   this.isInstrument = false;
+    //   this.isShown = false;
+    // }
+
     this.isInstrument = false;
     this.isShown = false;
   }

@@ -1,55 +1,53 @@
 import {Injectable} from "@angular/core";
-import {SequencerNote} from "./sequencernote.model";
-import {Instrument} from "../instrument/instrument.model";
-import {Note} from "../note/note.model";
-import {InstrumentService} from "../instrument/instrument.service";
-import {NoteService} from "../note/note.service";
+import {SequencerNote, NoteDuration, NotePosition} from "./sequencernote.model";
 
 @Injectable()
 export class SequencerNoteService {
-  readonly ID_INSTRUMENT_MULTIPLIER = 200;
 
-  constructor(private noteService: NoteService, private instrumentService: InstrumentService) {
+  private readonly ID_MULTIPLIER_INSTRUMENT = 200;
+  private readonly ID_MULTIPLIER_BASE_NOTE = 1;
+  private readonly ID_MULTIPLIER_POSITION = 200;
+  private readonly ID_MULTIPLIER_DURATION = 16;
+
+  constructor() {
   }
 
-  getSequencerNote(note: Note, instrument: Instrument): SequencerNote;
-  getSequencerNote(id: number): SequencerNote;
-  getSequencerNote(noteOrId: any, instrument?: Instrument): SequencerNote {
+  getSequencerNote(baseNoteId: number,
+                   instrumentId: number,
+                   duration?: NoteDuration,
+                   position?: NotePosition): SequencerNote {
     // may be hash them?
-    return this.Create(noteOrId, instrument);
-  }
-
-  private Create(note: Note, instrument: Instrument): SequencerNote;
-  private Create(id: number): SequencerNote;
-  private Create(noteOrId: any, instrument?: Instrument): SequencerNote {
-    if (typeof noteOrId == 'number') {
-      let [noteId, insId] = this.parseID(noteOrId);
-      let n = this.noteService.getNote(noteId);
-      let i = this.instrumentService.getInstrument(insId);
-      return new SequencerNote(noteOrId, n, i);
-    } else if (noteOrId instanceof Note) {
-      return new SequencerNote(this.getID(noteOrId, instrument), noteOrId, instrument);
+    if (typeof duration == 'undefined' && typeof position == 'undefined') {
+      return this.Create(baseNoteId, instrumentId, NoteDuration.Infinite, {bar: 0, offset: 0});
     } else {
-      throw new Error('Wrong argument type');
+      return this.Create(baseNoteId, instrumentId, duration, position);
     }
   }
 
-  private getID(note: Note, instrument: Instrument) {
-    return this.getPrefix(instrument.id) + note.index;
+  private Create(baseNoteId: number,
+                 instrumentId: number,
+                 duration: NoteDuration,
+                 position: NotePosition): SequencerNote {
+    return new SequencerNote(this.getID(baseNoteId, instrumentId, duration, position),
+      baseNoteId, instrumentId, duration, position);
   }
 
-  private parseID(id: number) {
-    return [id % this.ID_INSTRUMENT_MULTIPLIER, Math.trunc(id / this.ID_INSTRUMENT_MULTIPLIER)];
-  }
-
-  getPrefix(instrumentId: number): number {
-    return instrumentId * this.ID_INSTRUMENT_MULTIPLIER;
+  private getID(baseNoteId: number,
+                instrumentId: number,
+                duration: NoteDuration,
+                position: NotePosition) {
+    return instrumentId * this.ID_MULTIPLIER_INSTRUMENT
+      + baseNoteId * this.ID_MULTIPLIER_BASE_NOTE
+      + duration * this.ID_MULTIPLIER_DURATION
+      + position * this.ID_MULTIPLIER_POSITION;
   }
 
   /**
-   * Checks whether the sequencerNote contains following instrument.
+   * Checks whether the Sequencer Note ID includes Instrument ID as prefix.
+   * It is likely to be faster in most cases to make a check by this static method, then acquiring Instrument model
+   * from service and comparing IDs manually.
    */
   hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
-    return instrumentId == Math.trunc(sequencerNoteId / this.ID_INSTRUMENT_MULTIPLIER);
+    return instrumentId == Math.trunc(sequencerNoteId / this.ID_MULTIPLIER_INSTRUMENT);
   }
 }

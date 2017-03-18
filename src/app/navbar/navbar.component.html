@@ -6,14 +6,17 @@
       </a>
     </li>
     <li>
-      <a [class.selected]="isVisible('room')" (click)="showNav('room')">Room</a>
+      <a [class.selected]="isVisible('room')" (click)="showNav('room')">
+        <span class="glyphicon glyphicon-user"></span> Room</a>
     </li>
     <li>
-      <a [class.selected]="isVisible('settings')" (click)="showNav('settings')">Settings</a>
+      <a [class.selected]="isVisible('settings')" (click)="showNav('settings')">
+        <span class="glyphicon glyphicon-wrench"></span> Settings</a>
     </li>
 
-    <li *ngIf="loaderService.offlineMode" class="right offline-mode">
-      <a (click)="reloadPage()">Offline mode</a>
+    <li *ngIf="loaderService.offlineMode" class="right offline-mode glyphicon-rotating">
+      <a (click)="reloadPage()">
+        <span class="glyphicon glyphicon-refresh"></span> Offline mode</a>
     </li>
   </ul>
 

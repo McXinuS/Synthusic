@@ -1,6 +1,12 @@
-<label for="name">Instrument name</label><input id="name" type="text" [(ngModel)]="instrument.name">
+<h2 class="center-hor">Instrument Settings</h2>
 
-<app-oscillator-settings [instrument]="instrument"></app-oscillator-settings>
+<label for="name">Name</label>
+<input id="name" type="text" [(ngModel)]="instrument.name">
+
+<div class="oscillators">
+  <label>Oscillators</label>
+  <app-oscillator-settings [instrument]="instrument"></app-oscillator-settings>
+</div>
 
 <div class="envelope">
   <label>Envelope</label>

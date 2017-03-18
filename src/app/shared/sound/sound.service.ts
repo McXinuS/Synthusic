@@ -4,6 +4,8 @@ import {Enveloper} from './enveloper';
 import {Instrument} from '../instrument/instrument.model';
 import {SequencerNoteService} from '../sequencer/sequencernote.service';
 import {BehaviorSubject} from 'rxjs';
+import {InstrumentService} from "../instrument/instrument.service";
+import {NoteService} from "../note/note.service";
 
 class GainedOscillatorNode extends OscillatorNode {
   gainNode: GainNode;
@@ -45,7 +47,9 @@ export class SoundService {
    */
   private readonly RAMP_STOP_TIME = 10;
 
-  constructor(private sequencerNoteService: SequencerNoteService) {
+  constructor(private sequencerNoteService: SequencerNoteService,
+              private instrumentService: InstrumentService,
+              private noteService: NoteService) {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);

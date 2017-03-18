@@ -19,7 +19,7 @@
                     (change)="onInstrumentChange()">
               <option *ngFor="let instrument of instruments" [ngValue]="instrument">{{instrument.name}}</option>
             </select>
-            <div class="btn-square rotating" (click)="openSettings()">
+            <div class="btn-square glyphicon-rotating" (click)="openSettings()">
               <span class="glyphicon glyphicon-cog"></span>
             </div>
           </div>
@@ -30,7 +30,7 @@
     <div #keyboardKeys id="keyboard-keys">
       <app-keyboard-key *ngFor="let note of notes"
                         [note]="note"
-                        [highlighted]="highlights[note.index]"
+                        [highlighted]="highlights[note.id]"
                         (keyStateUpdated)="onKeyStateUpdated($event)"></app-keyboard-key>
     </div>
 

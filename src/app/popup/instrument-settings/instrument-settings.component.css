@@ -1,14 +1,9 @@
-.well {
-  margin : 0;
+label {
+  font-size : 1.2em;
 }
 
-#instrumentCanvas {
-  display : block;
-}
-
-.envelope {
-  border-top  : solid #999 1px;
-  padding-top : 5px;
+h2 {
+  margin-top : 0;
 }
 
 #name {
@@ -17,6 +12,8 @@
   padding-left     : 16px;
   margin-bottom    : 15px;
   height           : 45px;
+  border           : 1px solid #dbeeff;
+  border-radius    : 10px;
   background-color : rgba(255, 255, 255, 0.2);
   transition       : background-color .2s, color .2s;
 }
@@ -28,4 +25,5 @@
 #name:focus {
   background-color : #fff;
   color            : #333;
+  box-shadow       : 0 1px 0 0 #1bc5fe;
 }

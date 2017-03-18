@@ -22,10 +22,10 @@ export class SequencerComponent implements OnInit {
     this.sequencerService.notes$.subscribe((notes: SequencerNote[]) => {
       this.notes.length = 0; // clear source
       for (let note of notes) {
-        if (!(this.notes[note.instrument.id] instanceof Array)) {
-          this.notes[note.instrument.id] = [];
+        if (!(this.notes[note.instrumentId] instanceof Array)) {
+          this.notes[note.instrumentId] = [];
         }
-        this.notes[note.instrument.id].push(note);
+        this.notes[note.instrumentId].push(note);
       }
     });
   }

@@ -31,8 +31,7 @@ export class SequencerService {
   /**
    * Called when a note is received by Web Socket
    */
-  private onNoteReceived(type: string, noteId: number) {
-    let note = this.sequencerNoteService.getSequencerNote(noteId);
+  private onNoteReceived(type: string, note: SequencerNote) {
     if (type === 'add') {
       this.addNote(note, false);
     } else if (type === 'remove') {
@@ -40,10 +39,8 @@ export class SequencerService {
     }
   }
 
-  init(noteIds: number[]) {
-    let note;
-    for (let id of noteIds) {
-      note = this.sequencerNoteService.getSequencerNote(id);
+  init(notes: SequencerNote[]) {
+    for (let note of notes) {
       this.addNote(note, false);
     }
   }
@@ -53,7 +50,7 @@ export class SequencerService {
     this._notes.push(note);
     this.notes$.next(this._notes);
     if (broadcast) {
-      this.webSocketService.send(WebSocketMessageType.note_add, note.id);
+      this.webSocketService.send(WebSocketMessageType.note_add, note);
     }
   }
 
@@ -65,7 +62,7 @@ export class SequencerService {
       this.notes$.next(this._notes);
     }
     if (broadcast) {
-      this.webSocketService.send(WebSocketMessageType.note_remove, note.id);
+      this.webSocketService.send(WebSocketMessageType.note_remove, note);
     }
   }
 

@@ -14,29 +14,50 @@ export class SequencerNote {
   }
 }
 
-// TODO: triplet, dotted
-export enum NoteDuration {
-  Infinite = 1,
-  Whole = 1,
-  Half = .5,
-  Quarter = .25,
-  Eighth = .125
-}
+export class NoteDuration {
+  baseDuration: NoteDurationEnum;
+  dotted: boolean;
+  triplet: boolean;
 
-const NoteDurationId: Map<NoteDuration, number> = new Map();
-for (let dur of NoteDuration) {
-  if (typeof dur == 'string') {
+  private readonly DottedShift: number = 0x10000;
+  private readonly TripletShift: number = 0x01000;
 
+  constructor(baseDuration: NoteDurationEnum, dotted?: boolean, triplet?: boolean) {
+    this.baseDuration = baseDuration;
+    this.dotted = dotted || false;
+    this.triplet = triplet || false;
+  }
+
+  getHash(): number {
+    let res = -Math.log2(this.baseDuration);
+    if (this.dotted) res |= this.DottedShift;
+    if (this.triplet) res |= this.TripletShift;
+    return res;
   }
 }
-export const NoteDurationValue;
+
+// TODO: 16, 32
+export enum NoteDurationEnum {
+  Infinite = -1,
+  Whole = 1,
+  Half = Whole / 2,
+  Quarter = Half / 2,
+  Eighth = Quarter / 2,
+  Sixteenth = Eighth / 2,
+  ThirtySecond = Sixteenth / 2
+}
 
 export class NotePosition {
   bar: number;
   offset: number;
+  private BarMax: number = 1000;
 
   constructor(bar: number, offset: number) {
     this.bar = bar;
     this.offset = offset;
+  }
+
+  getHash(): number {
+    return this.offset * this.BarMax + this.bar;
   }
 }

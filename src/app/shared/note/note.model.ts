@@ -4,21 +4,19 @@
  */
 export class BaseNote {
   readonly id: number;
-
   readonly name: string;
   readonly octave: number;
   readonly fullname: string;
-
   readonly isAccidental: boolean;
   readonly freq: number;
 
-  constructor(name: string, octave: number, fullname: string, isAccidental: boolean, freq: number, id: number) {
+  constructor(id: number, name: string, octave: number, fullname: string, isAccidental: boolean, freq: number) {
+    this.id = id;
     this.name = name;
     this.octave = octave;
     this.fullname = fullname;
     this.isAccidental = isAccidental;
     this.freq = freq;
-    this.id = id;
   }
 
   toString() {

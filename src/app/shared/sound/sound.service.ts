@@ -60,8 +60,11 @@ export class SoundService {
   }
 
   private createOscillators(note: SequencerNote): GainedOscillatorNode[] {
+    let instrument = this.instrumentService.getInstrument(note.instrumentId),
+      baseNote = this.noteService.getNote(note.baseNoteId);
+
     let inputNode;
-    if (!this.envelopers.has(note.instrument.id)) {
+    if (!this.envelopers.has(note.instrumentId)) {
       let enveloper = this.createEnvelope(note.instrument);
       this.envelopers.set(note.instrument.id, enveloper);
       inputNode = enveloper.getGainNode();

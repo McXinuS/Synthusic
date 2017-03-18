@@ -10,25 +10,9 @@ export class NoteService {
     return this._notes;
   }
 
-  private _noteCount: number;
-  get noteCount(): number {
-    return this._noteCount;
-  }
-
-  private _firstNote: BaseNote;
-  get firstNote(): BaseNote {
-    return this._firstNote;
-  }
-
-  private _lastNote: BaseNote;
-  get lastNote(): BaseNote {
-    return this._lastNote;
-  }
-
   private _scale: Scale;
-  get scale(): Scale {
-    return this._scale;
-  }
+  private _firstNote: BaseNote;
+  noteCount: number;
 
   // interval of each note from 'A' note
   readonly interval = {
@@ -52,15 +36,16 @@ export class NoteService {
       accidentalPlaceholder = this._scale.accidentalPlaceholder,
       accidentalSign = this._scale.accidentalSign;
 
-    this._noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
-    for (let i = 0; i < this._noteCount; i++) {
+    this.noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
+    for (let i = 0; i < this.noteCount; i++) {
       let octave = startOctave + Math.floor((i + scale.indexOf(startName)) / scaleLength);
       let name = scale[(scale.indexOf(startName) + i) % scaleLength];
       let fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
       let isAccidental = !!name[1];
       let freq = this.getFrequency(name, octave);
-      this._notes[i] = new BaseNote(name, octave, fullname, isAccidental, freq, i);
+      this._notes[i] = new BaseNote(i, name, octave, fullname, isAccidental, freq);
     }
+    this._firstNote = this.notes[0];
   }
 
   getNote(index: number): BaseNote;
@@ -87,7 +72,7 @@ export class NoteService {
    * @returns {string[]} Array with name and octave.
    */
   private parseFullName(fullname): [string, number] {
-    let res: [string, number];
+    let res: [string, number] = ['', 0];
     if (fullname.length == 2) {
       res[0] = fullname[0];
       res[1] = parseFloat(fullname[1]);

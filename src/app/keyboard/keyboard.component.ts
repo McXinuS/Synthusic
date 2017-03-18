@@ -50,8 +50,8 @@ export class KeyboardComponent implements OnInit {
   updateHighlight(playing: SequencerNote[]) {
     this.highlights = [];
     for (let i = 0; i < playing.length; i++) {
-      if (playing[i].instrument.id == this.activeInstrument.id) {
-        this.highlights[playing[i].note.id] = true;
+      if (playing[i].instrumentId == this.activeInstrument.id) {
+        this.highlights[playing[i].baseNoteId] = true;
       }
     }
   }
@@ -73,7 +73,7 @@ export class KeyboardComponent implements OnInit {
 
   playNote(note: BaseNote) {
     if (!this.activeInstrument) return;
-    let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
+    let ns = this.sequencerNoteService.getSequencerNote(note.id, this.activeInstrument.id);
     this.sequencerService.playNote(ns);
     //DEBUG
     this.sequencerService.addNote(ns);
@@ -81,7 +81,7 @@ export class KeyboardComponent implements OnInit {
 
   stopNote(note: BaseNote) {
     if (!this.activeInstrument) return;
-    let ns = this.sequencerNoteService.getSequencerNote(note, this.activeInstrument);
+    let ns = this.sequencerNoteService.getSequencerNote(note.id, this.activeInstrument.id);
     this.sequencerService.stopNote(ns);
     //DEBUG
     this.sequencerService.removeNote(ns);

@@ -1,13 +1,13 @@
 import {Injectable} from "@angular/core";
-import {SequencerNote, NoteDuration, NotePosition} from "./sequencernote.model";
+import {SequencerNote, NoteDuration, NotePosition, NoteDurationEnum} from "./sequencernote.model";
 
 @Injectable()
 export class SequencerNoteService {
 
-  private readonly ID_MULTIPLIER_INSTRUMENT = 200;
   private readonly ID_MULTIPLIER_BASE_NOTE = 1;
-  private readonly ID_MULTIPLIER_POSITION = 200;
-  private readonly ID_MULTIPLIER_DURATION = 16;
+  private readonly ID_MULTIPLIER_INSTRUMENT = this.ID_MULTIPLIER_BASE_NOTE * 200;
+  private readonly ID_MULTIPLIER_DURATION = this.ID_MULTIPLIER_INSTRUMENT * 10000;
+  private readonly ID_MULTIPLIER_POSITION = this.ID_MULTIPLIER_DURATION * 32;
 
   constructor() {
   }
@@ -18,7 +18,8 @@ export class SequencerNoteService {
                    position?: NotePosition): SequencerNote {
     // may be hash them?
     if (typeof duration == 'undefined' && typeof position == 'undefined') {
-      return this.Create(baseNoteId, instrumentId, NoteDuration.Infinite, {bar: 0, offset: 0});
+      return this.Create(baseNoteId, instrumentId,
+        new NoteDuration(NoteDurationEnum.Infinite), new NotePosition(0, 0));
     } else {
       return this.Create(baseNoteId, instrumentId, duration, position);
     }
@@ -38,8 +39,8 @@ export class SequencerNoteService {
                 position: NotePosition) {
     return instrumentId * this.ID_MULTIPLIER_INSTRUMENT
       + baseNoteId * this.ID_MULTIPLIER_BASE_NOTE
-      + duration * this.ID_MULTIPLIER_DURATION
-      + position * this.ID_MULTIPLIER_POSITION;
+      + duration.getHash() * this.ID_MULTIPLIER_DURATION
+      + position.getHash() * this.ID_MULTIPLIER_POSITION;
   }
 
   /**
@@ -47,7 +48,7 @@ export class SequencerNoteService {
    * It is likely to be faster in most cases to make a check by this static method, then acquiring Instrument model
    * from service and comparing IDs manually.
    */
-  hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
-    return instrumentId == Math.trunc(sequencerNoteId / this.ID_MULTIPLIER_INSTRUMENT);
-  }
+   hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
+     return instrumentId == Math.trunc(sequencerNoteId / this.ID_MULTIPLIER_INSTRUMENT);
+   }
 }

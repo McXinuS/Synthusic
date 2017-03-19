@@ -1,5 +1,7 @@
 import {Instrument} from "./instrument.model";
 
+// TODO: move to shared
+
 export const INSTRUMENTS: Instrument[] = [
   {
     id: 10,

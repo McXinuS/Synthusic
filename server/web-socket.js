@@ -124,12 +124,10 @@ function Server(server) {
       // Note
 
       case WebSocketMessageType.note_add:
-        if (typeof message.data != 'number') return false;
         roomService.getRoomByUser(sender).addNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.note_remove:
-        if (typeof message.data != 'number') return false;
         roomService.getRoomByUser(sender).removeNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;

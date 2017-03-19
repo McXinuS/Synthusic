@@ -14,13 +14,13 @@ export class SequencerNote {
   }
 }
 
+const InfiniteNoteHash = 0x11111;
+const DottedShift = 0x10000;
+const TripletShift = 0x01000;
 export class NoteDuration {
   baseDuration: NoteDurationEnum;
   dotted: boolean;
   triplet: boolean;
-
-  private readonly DottedShift: number = 0x10000;
-  private readonly TripletShift: number = 0x01000;
 
   constructor(baseDuration: NoteDurationEnum, dotted?: boolean, triplet?: boolean) {
     this.baseDuration = baseDuration;
@@ -29,9 +29,11 @@ export class NoteDuration {
   }
 
   getHash(): number {
+    if (this.baseDuration == NoteDurationEnum.Infinite) return InfiniteNoteHash;
+
     let res = -Math.log2(this.baseDuration);
-    if (this.dotted) res |= this.DottedShift;
-    if (this.triplet) res |= this.TripletShift;
+    if (this.dotted) res |= DottedShift;
+    if (this.triplet) res |= TripletShift;
     return res;
   }
 }
@@ -47,10 +49,10 @@ export enum NoteDurationEnum {
   ThirtySecond = Sixteenth / 2
 }
 
+const BarMax = 1000;
 export class NotePosition {
   bar: number;
   offset: number;
-  private BarMax: number = 1000;
 
   constructor(bar: number, offset: number) {
     this.bar = bar;
@@ -58,6 +60,6 @@ export class NotePosition {
   }
 
   getHash(): number {
-    return this.offset * this.BarMax + this.bar;
+    return this.offset * BarMax + this.bar;
   }
 }

@@ -64,11 +64,7 @@ let RoomService = function () {
   }
 
   function getRoomInfoByUser(userId) {
-    let room = getRoomByUser(userId);
-    return {
-      name: room.name,
-      users: room.users.slice()
-    };
+    return getRoomByUser(userId).getRoomInfo();
   }
 
   /* API */

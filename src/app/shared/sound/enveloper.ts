@@ -1,6 +1,6 @@
 import {Envelope} from '../instrument/instrument.model';
 
-export enum EnveloperState {
+enum EnveloperState {
   STATE_STARTED,
   STATE_DECAYING,
   STATE_SUSTAINED,
@@ -17,19 +17,18 @@ export class Enveloper {
   funcTimeoutId: number = -1;
   onFinished: () => void;
 
-  constructor(audioCtx: AudioContext, envelope: Envelope, onFinished?: () => any) {
+  constructor(audioCtx: AudioContext,
+              destination: AudioNode,
+              envelope: Envelope,
+              onFinished?: () => any) {
     this.audioCtx = audioCtx;
     this.gainNode = audioCtx.createGain();
     this.gainNode.gain.value = 0;
-
     this.envelope = envelope;
-
     this.onFinished = onFinished;
-  }
 
-  connect(destination) {
     this.gainNode.connect(destination);
-  };
+  }
 
   updateState(type) {
     switch (type) {
@@ -76,16 +75,8 @@ export class Enveloper {
     this.updateState(EnveloperState.STATE_RELEASING);
   };
 
-  getGainNode() {
+  getAudioNode() {
     return this.gainNode;
-  };
-
-  getState() {
-    return this.state;
-  };
-
-  getGain() {
-    return this.gainNode.gain.value;
   };
 
 // converts time from millis to seconds and adds it to the current time

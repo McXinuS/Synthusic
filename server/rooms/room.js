@@ -35,17 +35,17 @@ Room.prototype = {
       bpm: this.bpm,
       instruments: this.instruments,
       notes: this.notes,
-      room: this.getInfo()
+      room: this.getRoomInfo()
     }
   },
 
   /**
    * Returns room's name and users
    */
-  getInfo: function () {
+  getRoomInfo: function () {
     return {
       name: this.name,
-      users: this.users
+      users: this.users.slice()
     }
   },
 
@@ -57,21 +57,20 @@ Room.prototype = {
     this.users.push(new usr(id));
   },
   removeUser: function(id) {
-    let i = this.users.findIndex(user => user.id === id);
-    if (i != -1) {
-      this.users.splice(i, 1);
-    }
+    let index = this.users.findIndex(user => user.id === id);
+    if (index >= 0) this.users.splice(index, 1);
   },
   hasUser: function(id) {
-    return this.users.findIndex(user => user.id === id) != -1;
+    return this.users.findIndex(user => user.id === id)  >= 0;
   },
 
   addNote: function (note) {
-    this.notes.push(note);
+    let index = this.instruments.findIndex(n => n.id === note.id);
+    if (index >= 0) this.notes.push(note);
   },
   removeNote: function (note) {
     let index = this.notes.indexOf(note);
-    if (index >= 0) this.notes.splice(index);
+    if (index >= 0) this.notes.splice(index, 1);
   },
 
   addInstrument: function (instrument) {
@@ -79,12 +78,14 @@ Room.prototype = {
     this.instruments.push(instrument);
   },
   updateInstrument: function (instrument) {
-    let i = this.instruments.findIndex(ins => ins.id == instrument.id);
-    if (i != -1) this.instruments[i] = instrument;
+    let index = this.instruments.findIndex(ins => ins.id === instrument.id);
+    if (index  >= 0) this.instruments[index] = instrument;
   },
   deleteInstrument: function (id) {
-    delete this.instruments.find(ins => ins.id == id);
+    let index = this.instruments.findIndex(ins => ins.id === id);
+    if (index  >= 0) this.instruments.splice(index, 1);
   }
 };
+
 
 module.exports.Room = Room;

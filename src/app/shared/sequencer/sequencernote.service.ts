@@ -29,8 +29,10 @@ export class SequencerNoteService {
                  instrumentId: number,
                  duration: NoteDuration,
                  position: NotePosition): SequencerNote {
-    return new SequencerNote(this.getID(baseNoteId, instrumentId, duration, position),
-      baseNoteId, instrumentId, duration, position);
+    return new SequencerNote(
+      this.getID(baseNoteId, instrumentId, duration, position),
+      baseNoteId, instrumentId, duration, position
+    );
   }
 
   private getID(baseNoteId: number,
@@ -49,6 +51,7 @@ export class SequencerNoteService {
    * from service and comparing IDs manually.
    */
    hasInstrumentPreffix(instrumentId: number, sequencerNoteId: number): boolean {
-     return instrumentId == Math.trunc(sequencerNoteId / this.ID_MULTIPLIER_INSTRUMENT);
+    const InstrumentIdMax = 1000;
+    return instrumentId == Math.trunc(sequencerNoteId / this.ID_MULTIPLIER_INSTRUMENT % InstrumentIdMax);
    }
 }

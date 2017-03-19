@@ -6,9 +6,20 @@ import {SequencerNoteService} from '../sequencer/sequencernote.service';
 import {BehaviorSubject} from 'rxjs';
 import {InstrumentService} from "../instrument/instrument.service";
 import {NoteService} from "../note/note.service";
+import {Panner} from "./panner";
 
 class GainedOscillatorNode extends OscillatorNode {
   gainNode: GainNode;
+}
+
+class InstrumentModifiers {
+  enveloper: Enveloper;
+  panner: Panner;
+
+  constructor(enveloper: Enveloper, panner: Panner) {
+    this.enveloper = enveloper;
+    this.panner = panner;
+  }
 }
 
 @Injectable()
@@ -24,9 +35,9 @@ export class SoundService {
 
   private masterGainNode: GainNode;
   /**
-   * Contains enveloper gain nodes for every instrument.
+   * Contains InstrumentModifiers for every instrument.
    */
-  private envelopers: Map<number, Enveloper> = new Map();
+  private modifiers: Map<number, InstrumentModifiers> = new Map();
 
   /**
    * Array of notes, playing in the sound module.
@@ -60,21 +71,21 @@ export class SoundService {
   }
 
   private createOscillators(note: SequencerNote): GainedOscillatorNode[] {
-    let instrument = this.instrumentService.getInstrument(note.instrumentId),
+    let instrument = this.getInstrument(note.instrumentId),
       baseNote = this.noteService.getNote(note.baseNoteId);
 
     let inputNode;
-    if (!this.envelopers.has(note.instrumentId)) {
-      let enveloper = this.createEnvelope(note.instrument);
-      this.envelopers.set(note.instrument.id, enveloper);
-      inputNode = enveloper.getGainNode();
+    if (!this.modifiers.has(note.instrumentId)) {
+      let modifier = this.createInstrumentModifiers(instrument, this.masterGainNode);
+      this.modifiers.set(note.instrumentId, modifier);
+      inputNode = modifier.enveloper.getAudioNode();
     } else {
-      inputNode = this.envelopers.get(note.instrument.id).getGainNode();
+      inputNode = this.getEnveloper(note.instrumentId).getAudioNode();
     }
 
     let oscillators = [];
-    let basePitch = note.note.freq;
-    for (let oscillator of note.instrument.oscillators) {
+    let basePitch = baseNote.freq;
+    for (let oscillator of instrument.oscillators) {
       let gainNode = this.audioContext.createGain();
       gainNode.connect(inputNode);
       gainNode.gain.value = 0;
@@ -93,10 +104,10 @@ export class SoundService {
   };
 
   playNote(note: SequencerNote) {
-    let noteToStop = this.notesToStop.get(note.instrument.id);
+    let noteToStop = this.notesToStop.get(note.instrumentId);
     if (noteToStop && noteToStop.id != note.id) {
       this.stopNote(noteToStop, true);
-      this.notesToStop.delete(note.instrument.id);
+      this.notesToStop.delete(note.instrumentId);
     }
 
     if (!this.hasOscillator(note)) {
@@ -106,7 +117,7 @@ export class SoundService {
       this.playingNotes.next(this.playingNotes.getValue());
     }
 
-    this.envelopers.get(note.instrument.id).start();
+    this.getEnveloper(note.instrumentId).start();
   };
 
   /**
@@ -114,7 +125,7 @@ export class SoundService {
    * @param forceStop Don't save the note to stop it later with envelope callback, stop it right now instead.
    */
   stopNote(note: SequencerNote, forceStop: boolean = false) {
-    if (!this.hasOscillator(note)) return;
+    if(!this.hasOscillator(note)) return;
 
     if (this.isPlaying(note)) {
       let newNotesArray = this.playingNotes.getValue(),
@@ -125,10 +136,10 @@ export class SoundService {
       }
     }
 
-    // if the only note is stopped, release the enveloper
-    if (!forceStop && !this.isInstrumentPlaying(note.instrument)) {
-      this.envelopers.get(note.instrument.id).release();
-      this.notesToStop.set(note.instrument.id, note);
+    if (!forceStop && !this.isInstrumentPlaying(note.instrumentId)) {
+      // if the only note is stopped, release the enveloper
+      this.getEnveloper(note.instrumentId).release();
+      this.notesToStop.set(note.instrumentId, note);
     } else {
       this.setGain(note, 0, true);
       setTimeout(() => this.stopNoteImmediately(note), this.RAMP_STOP_TIME);
@@ -159,7 +170,7 @@ export class SoundService {
 
     if (typeof instrumentId == 'number') {
       this.notesToStop.delete(instrumentId);
-      let pl = this.playingNotes.getValue().filter(sn => sn.instrument.id !== instrumentId);
+      let pl = this.playingNotes.getValue().filter(sn => sn.instrumentId !== instrumentId);
       this.playingNotes.next(pl);
     } else {
       this.notesToStop.clear();
@@ -170,7 +181,8 @@ export class SoundService {
 
   getGain(note: SequencerNote) {
     if (!this.hasOscillator(note)) return 0;
-    return this.oscillators.get(note.id)[0].gainNode.gain.value / note.instrument.oscillators[0].gain;
+    let baseGain = this.getInstrument(note.instrumentId).oscillators[0].gain;
+    return this.oscillators.get(note.id)[0].gainNode.gain.value / baseGain;
   };
 
   /**
@@ -180,12 +192,13 @@ export class SoundService {
   setGain(note: SequencerNote, targetGain: number, ramp: boolean = false) {
     if (!this.hasOscillator(note)) return;
 
-    let oscArr = this.oscillators.get(note.id);
-    let gain;
-    let rampTime = this.audioContext.currentTime + this.RAMP_STOP_TIME / 1000.0;
+    let oscArr = this.oscillators.get(note.id),
+      instrument = this.getInstrument(note.instrumentId),
+      gain,
+      rampTime = this.audioContext.currentTime + this.RAMP_STOP_TIME / 1000.0;
 
-    for (let j = 0; j < note.instrument.oscillators.length; j++) {
-      gain = targetGain * note.instrument.oscillators[j].gain;
+    for (let j = 0; j < oscArr.length; j++) {
+      gain = targetGain * instrument.oscillators[j].gain;
       if (ramp) {
         oscArr[j].gainNode.gain.linearRampToValueAtTime(gain, rampTime);
       } else {
@@ -202,8 +215,8 @@ export class SoundService {
     return this.playingNotes.getValue().findIndex(n => note.id == n.id) != -1;
   }
 
-  private isInstrumentPlaying(instrument: Instrument) {
-    return this.playingNotes.getValue().findIndex(n => instrument.id == n.instrument.id) != -1;
+  private isInstrumentPlaying(instrumentId: number) {
+    return this.playingNotes.getValue().findIndex(n => instrumentId == n.instrumentId) != -1;
     /*
      let found = false;
      this.oscillators.forEach((o,n) => {
@@ -216,13 +229,43 @@ export class SoundService {
      */
   }
 
-  private createEnvelope(instrument: Instrument): Enveloper {
-    let enveloper = new Enveloper(this.audioContext,
+  private createInstrumentModifiers(instrument: Instrument, destination: AudioNode): InstrumentModifiers {
+    let panner = this.createPanner(instrument, destination);
+    return new InstrumentModifiers(
+      this.createEnvelope(instrument, panner.getAudioNode()),
+      panner
+    );
+  }
+
+  // TODO: add panner settings to instrument model
+  private createPanner(instrument: Instrument, destination: AudioNode): Panner {
+    return new Panner(
+      this.audioContext,
+      destination
+    );
+  }
+
+  private createEnvelope(instrument: Instrument, destination: AudioNode): Enveloper {
+    return new Enveloper(
+      this.audioContext,
+      destination,
       instrument.envelope,
       function () {
         this.stop(instrument.id);
       }.bind(this));
-    enveloper.connect(this.masterGainNode);
-    return enveloper;
+  }
+
+  private getInstrument(instrumentId: number) {
+    return this.instrumentService.getInstrument(instrumentId);
+  }
+
+  private getEnveloper(instrumentId: number) {
+    let mod = this.modifiers.get(instrumentId);
+    return mod ? mod.enveloper : null;
+  }
+
+  getPanner(instrumentId: number) {
+    let mod = this.modifiers.get(instrumentId);
+    return mod ? mod.panner : null;
   }
 }

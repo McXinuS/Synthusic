@@ -64,6 +64,17 @@ export class SoundService {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
+
+    this.instrumentService.instruments$.subscribe(instruments => {
+      for (let instrument of instruments) {
+        if (!this.modifiers.has(instrument.id)) {
+          this.modifiers.set(
+            instrument.id,
+            this.createInstrumentModifiers(instrument, this.masterGainNode)
+          );
+        }
+      }
+    });
   }
 
   init(masterGain: number) {
@@ -125,7 +136,7 @@ export class SoundService {
    * @param forceStop Don't save the note to stop it later with envelope callback, stop it right now instead.
    */
   stopNote(note: SequencerNote, forceStop: boolean = false) {
-    if(!this.hasOscillator(note)) return;
+    if (!this.hasOscillator(note)) return;
 
     if (this.isPlaying(note)) {
       let newNotesArray = this.playingNotes.getValue(),

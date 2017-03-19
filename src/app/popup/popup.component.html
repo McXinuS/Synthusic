@@ -1,4 +1,5 @@
-<div class="overlay center"
+<div #overlay
+  class="overlay center"
      [class.overlay-active]="popupService.isShown"
      (click)="close($event)">
   <div class="popup"
@@ -7,7 +8,8 @@
 
     <app-instrument-settings
       *ngIf="popupService.isInstrument"
-      [instrument]="popupService.instrument"></app-instrument-settings>
+      [instrument]="popupService.instrument"
+      [popupScrollTop]="overlay.scrollTop"></app-instrument-settings>
 
     <div *ngIf="!popupService.isInstrument"
          class="popup-text">

@@ -10,6 +10,7 @@ import {InstrumentService} from '../../../shared/instrument/instrument.service';
 
 export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   @Input() instrument: Instrument;
+  @Input() popupScrollTop: number;
 
   @ViewChild('instrumentCanvas') canvas: ElementRef;
   ctx: CanvasRenderingContext2D;
@@ -162,7 +163,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   }
 
   mouseDown(e: MouseEvent) {
-    this.gainChangeInvert = (e.pageY - this.canvas.nativeElement.offsetTop) > this.height / 2 ? false : true;
+    this.gainChangeInvert = this.getMouseCoordinates(e).x <= this.height / 2;
     if (e.which == 1) {
       this.isMouseDown = true;
       this.selectedIndex = this.closestIndex;
@@ -185,16 +186,13 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   }
 
   mouseMove(e: MouseEvent) {
-    let x = e.pageX - this.canvas.nativeElement.offsetLeft,
-      y = e.pageY - this.canvas.nativeElement.offsetTop,
+    let {x, y} = this.getMouseCoordinates(e),
       oscillators = this.instrument.oscillators;
 
     if (!this.isMouseDown) {
       this.closestIndex = this.findClosesOscillator(x, y);
       if (this.selectedIndex == -1) this.selectedOscillator = oscillators[this.closestIndex];
-
     } else if (this.closestIndex != -1) {
-
       let gainChange = e.movementY / this.height * 2 * this.gainScaleMax,
         freqChange = e.movementX / this.width * this.freqScaleMax;
       if (this.gainChangeInvert) gainChange = -gainChange;
@@ -212,7 +210,15 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
       oscillators[this.closestIndex].gain = newGain;
       oscillators[this.closestIndex].freq = newFreq;
     }
+
     this.draw();
+  }
+
+  getMouseCoordinates(event: MouseEvent) {
+    return {
+      x: event.clientX - this.canvas.nativeElement.offsetLeft,
+      y: event.clientY + this.popupScrollTop - this.canvas.nativeElement.offsetTop
+    };
   }
 
   mouseUp() {

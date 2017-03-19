@@ -1,0 +1,43 @@
+
+<div class="row">
+  <div class="col-md-6">
+    <div>
+      <span class="label-desc">Attack</span>
+      <span class="label-value">{{instrument.envelope.attack}}</span>
+    </div>
+    <input type="range" min="0" max="2500" step="10"
+           [value]="instrument.envelope.attack"
+           (change)="updateEnvelopeConfig('attack', $event.target.value)">
+  </div>
+  <div class="col-md-6">
+    <div>
+      <span class="label-desc">Decay</span>
+      <span class="label-value">{{instrument.envelope.decay}}</span>
+    </div>
+    <input type="range" min="0" max="2500" step="10"
+           [value]="instrument.envelope.decay"
+           (change)="updateEnvelopeConfig('decay', $event.target.value)">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div>
+      <span class="label-desc">Sustain</span>
+      <span class="label-value">{{instrument.envelope.sustain}}</span>
+    </div>
+    <input type="range" min="0" max="1" step="0.01"
+           [value]="instrument.envelope.sustain"
+           (change)="updateEnvelopeConfig('sustain', $event.target.value)">
+  </div>
+  <div class="col-md-6">
+    <div>
+      <span class="label-desc">Release</span>
+      <span class="label-value">{{instrument.envelope.release}}</span>
+    </div>
+    <input type="range" min="0" max="2500" step="10"
+           [value]="instrument.envelope.release"
+           (change)="updateEnvelopeConfig('release', $event.target.value)">
+  </div>
+
+</div>

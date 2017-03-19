@@ -23,6 +23,8 @@ import {RoomComponent} from './navbar/room/room.component';
 import {RoomService} from './shared/room/room.service';
 import {WebSocketService} from './shared/websocket/websocket.service';
 import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/sequencer-instrument.component';
+import { PannerSettingsComponent } from './popup/instrument-settings/panner-settings/panner-settings.component';
+import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-settings/envelope-settings.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/s
     TitleCase,
     SequencerComponent,
     RoomComponent,
-    SequencerInstrumentComponent
+    SequencerInstrumentComponent,
+    PannerSettingsComponent,
+    EnvelopeSettingsComponent
   ],
   imports: [
     BrowserModule,

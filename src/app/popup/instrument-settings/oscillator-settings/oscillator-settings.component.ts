@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import {Instrument, Oscillator, OscillatorType} from '../../../shared/instrument/instrument.model';
 import {InstrumentService} from '../../../shared/instrument/instrument.service';
+import {BaseCanvasComponent, Point} from "../../basecanvas.component";
 
 @Component({
   selector: 'app-oscillator-settings',
@@ -8,27 +9,14 @@ import {InstrumentService} from '../../../shared/instrument/instrument.service';
   styleUrls: ['./oscillator-settings.component.css']
 })
 
-export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
+export class OscillatorSettingsComponent extends BaseCanvasComponent {
   @Input() instrument: Instrument;
-  @Input() popupScrollTop: number;
-
-  @ViewChild('instrumentCanvas') canvas: ElementRef;
-  ctx: CanvasRenderingContext2D;
-
-  get height() {
-    return this.canvas.nativeElement.height;
-  }
-
-  get width() {
-    return this.canvas.nativeElement.width;
-  }
 
   readonly freqScaleMax = 10;
   readonly gainScaleMax = 1.1;
   readonly samples = 300;
   OscillatorType = OscillatorType; // make it visible for template
 
-  isMouseDown: boolean = false;
   gainChangeInvert: boolean;
   closestIndex: number = -1;
   selectedIndex: number = -1;
@@ -61,24 +49,7 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
   constructor(private instrumentService: InstrumentService) {
   }
 
-  ngOnInit() {
-  }
-
-  ngAfterViewInit() {
-    this.ctx = this.canvas.nativeElement.getContext('2d');
-    this.fitCanvasToContainer();
-    this.draw();
-  }
-
-
-  fitCanvasToContainer() {
-    let el = this.canvas.nativeElement;
-    el.style.width = '100%';
-    el.width = el.offsetWidth;
-    el.height = el.offsetHeight;
-  }
-
-  draw() {
+  render() {
     this.checkCache();
 
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -128,7 +99,8 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
     this.ctx.font = '14px Arial';
     this.ctx.fillStyle = '#888';
     const markLength = 10, numberMargin = 5;
-    for (let i = 0.5, x; i <= 8; i *= 2) {
+    let x;
+    for (let i = 0.5; i <= 8; i *= 2) {
       x = (w / this.freqScaleMax) * i;
       this.ctx.fillText(i.toString(), x + numberMargin, h / 2 - numberMargin);
       this.ctx.moveTo(x, h / 2 - markLength / 2);
@@ -162,13 +134,13 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  mouseDown(e: MouseEvent) {
+  onMouseDown(e: MouseEvent) {
     this.gainChangeInvert = this.getMouseCoordinates(e).x <= this.height / 2;
     if (e.which == 1) {
       this.isMouseDown = true;
       this.selectedIndex = this.closestIndex;
       this.selectedOscillator = this.instrument.oscillators[this.selectedIndex];
-      this.draw();
+      this.render();
     } else if (e.which == 3) {
       if (this.closestIndex != -1) {
         this.instrumentService.deleteOscillator(this.instrument.id, this.instrument.oscillators[this.closestIndex]);
@@ -181,16 +153,16 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
         osc.type = 'sine';
         this.instrumentService.addOscillator(this.instrument.id, osc);
       }
-      this.draw();
+      this.render();
     }
   }
 
-  mouseMove(e: MouseEvent) {
-    let {x, y} = this.getMouseCoordinates(e),
+  onMouseMove(e: MouseEvent) {
+    let point = this.getMouseCoordinates(e),
       oscillators = this.instrument.oscillators;
 
     if (!this.isMouseDown) {
-      this.closestIndex = this.findClosesOscillator(x, y);
+      this.closestIndex = this.findClosesOscillator(point);
       if (this.selectedIndex == -1) this.selectedOscillator = oscillators[this.closestIndex];
     } else if (this.closestIndex != -1) {
       let gainChange = e.movementY / this.height * 2 * this.gainScaleMax,
@@ -211,37 +183,33 @@ export class OscillatorSettingsComponent implements OnInit, AfterViewInit {
       oscillators[this.closestIndex].freq = newFreq;
     }
 
-    this.draw();
+    this.render();
   }
 
-  getMouseCoordinates(event: MouseEvent) {
-    return {
-      x: event.clientX - this.canvas.nativeElement.offsetLeft,
-      y: event.clientY + this.popupScrollTop - this.canvas.nativeElement.offsetTop
-    };
-  }
-
-  mouseUp() {
+  onMouseUp() {
     if (this.isMouseDown) {
       this.isMouseDown = false;
       this.removeDuplicates();
     }
   }
 
-  mouseLeave() {
-    this.mouseUp();
-    this.draw();
+  onMouseLeave() {
+    this.onMouseUp();
+    this.render();
   }
 
   updateProperty(type: string, value: number, broadcast: boolean = false, oscillator?: Oscillator) {
     this.instrumentService.updateOscillator(this.instrument.id, oscillator || this.selectedOscillator, type, value);
-    this.draw();
+    this.render();
   }
 
-  findClosesOscillator(x: number, y: number): number {
+  findClosesOscillator(point: Point): number {
     let closestInd = -1, distanceMin = 50, distanceCur;
     for (let i = 0; i < this.instrument.oscillators.length; i++) {
-      distanceCur = Math.abs(this.getOscillatorY(this.instrument.oscillators[i], x, this.width, this.height) - y);
+      distanceCur = Math.abs(
+        this.getOscillatorY(this.instrument.oscillators[i], point.x, this.width, this.height)
+        - point.y
+      );
       if (distanceMin > distanceCur) {
         distanceMin = distanceCur;
         closestInd = i;

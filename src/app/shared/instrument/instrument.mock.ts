@@ -1,6 +1,17 @@
-import {Instrument} from "./instrument.model";
+import {Instrument, Envelope, Panner} from "./instrument.model";
 
 // TODO: move to shared
+
+const envelopeDefaults: Envelope = {
+  attack: 150,
+  decay: 250,
+  sustain: 0.7,
+  release: 550
+};
+const pannerDefaults: Panner = {
+  x: 0,
+  y: 0.3
+};
 
 export const INSTRUMENTS: Instrument[] = [
   {
@@ -15,12 +26,8 @@ export const INSTRUMENTS: Instrument[] = [
       {type: 'sine', freq: 6, gain: 0.4},
       {type: 'sine', freq: 7, gain: 0.3}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   },
   {
     id: 11,
@@ -31,12 +38,8 @@ export const INSTRUMENTS: Instrument[] = [
       {type: 'triangle', freq: 3, gain: 0.6},
       {type: 'triangle', freq: 4, gain: 0.4}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   },
   {
     id: 0,
@@ -44,12 +47,8 @@ export const INSTRUMENTS: Instrument[] = [
     oscillators: [
       {type: 'sine', freq: 1, gain: 1}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   },
   {
     id: 1,
@@ -57,12 +56,8 @@ export const INSTRUMENTS: Instrument[] = [
     oscillators: [
       {type: 'square', freq: 1, gain: 1}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   },
   {
     id: 2,
@@ -70,12 +65,8 @@ export const INSTRUMENTS: Instrument[] = [
     oscillators: [
       {type: 'sawtooth', freq: 1, gain: 1}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   },
   {
     id: 3,
@@ -83,11 +74,7 @@ export const INSTRUMENTS: Instrument[] = [
     oscillators: [
       {type: 'triangle', freq: 1, gain: 1}
     ],
-    envelope: {
-      attack: 150,
-      decay: 250,
-      sustain: 0.7,
-      release: 550
-    }
+    envelope: envelopeDefaults,
+    panner: pannerDefaults
   }
 ];

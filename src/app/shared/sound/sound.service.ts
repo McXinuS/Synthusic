@@ -243,7 +243,7 @@ export class SoundService {
   private createInstrumentModifiers(instrument: Instrument, destination: AudioNode): InstrumentModifiers {
     let panner = this.createPanner(instrument, destination);
     return new InstrumentModifiers(
-      this.createEnvelope(instrument, panner.getAudioNode()),
+      this.createEnveloper(instrument, panner.getAudioNode()),
       panner
     );
   }
@@ -252,11 +252,12 @@ export class SoundService {
   private createPanner(instrument: Instrument, destination: AudioNode): Panner {
     return new Panner(
       this.audioContext,
-      destination
+      destination,
+      instrument.panner
     );
   }
 
-  private createEnvelope(instrument: Instrument, destination: AudioNode): Enveloper {
+  private createEnveloper(instrument: Instrument, destination: AudioNode): Enveloper {
     return new Enveloper(
       this.audioContext,
       destination,

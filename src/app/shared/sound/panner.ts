@@ -2,7 +2,7 @@ export class Panner {
 
   private pannerNode: PannerNode;
 
-  constructor(audioCtx: AudioContext, destination: AudioNode) {
+  constructor(audioCtx: AudioContext, destination: AudioNode, panner: Panner) {
     let listener = audioCtx.listener;
     listener.setOrientation(0, 0, -1, 0, 1, 0);
 
@@ -11,7 +11,7 @@ export class Panner {
     this.pannerNode.refDistance = 0.01;
     this.pannerNode.rolloffFactor = 0.01;
     this.pannerNode.setOrientation(0, 0, -1);
-    this.changePosition({x: 0, y: 0.3});
+    this.changePosition(panner);
 
     this.pannerNode.connect(destination);
   }

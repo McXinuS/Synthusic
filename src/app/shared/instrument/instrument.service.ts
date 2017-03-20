@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Instrument, Oscillator} from "./instrument.model";
+import {Instrument, Oscillator, Panner} from "./instrument.model";
 import {Subject, Observable} from 'rxjs';
 
 @Injectable()
@@ -14,12 +14,6 @@ export class InstrumentService {
 
   getInstrument(id): Instrument {
     return this._instruments.find(ins => {
-      return ins.id == id;
-    });
-  }
-
-  getInstrumentIndex(id): number {
-    return this._instruments.findIndex(ins => {
       return ins.id == id;
     });
   }
@@ -50,8 +44,17 @@ export class InstrumentService {
     }
   }
 
+  private getInstrumentIndex(id): number {
+    return this._instruments.findIndex(ins => {
+      return ins.id == id;
+    });
+  }
+
   updateEnvelope(id: number, type: string, value: number) {
     this.getInstrument(id).envelope[type] = value;
+  }
+
+  updatePanner(id: number, panner: Panner) {
   }
 
   addOscillator(id: number, oscillator: Oscillator) {
@@ -74,7 +77,7 @@ export class InstrumentService {
   }
 
   private findOscillatorIndex(instrument: Instrument, osc: Oscillator) {
-    return instrument.oscillators.findIndex((cur: Oscillator) => {
+    return instrument.oscillators.findIndex(cur => {
       return cur.freq === osc.freq && cur.gain === osc.gain && cur.type === osc.type;
     });
   }

@@ -1,10 +1,10 @@
-<canvas #instrumentCanvas id="instrumentCanvas"
+<canvas #canvas id="instrumentCanvas"
         [class.grabbing]="isMouseDown"
         height='250px'
-        (mousedown)="mouseDown($event)"
-        (mousemove)="mouseMove($event)"
-        (mouseup)="mouseUp()"
-        (mouseleave)="mouseLeave()"
+        (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseLeave()"
         (contextmenu)="$event.preventDefault();"></canvas>
 
 <div>

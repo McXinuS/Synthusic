@@ -3,6 +3,7 @@ export class Instrument {
   name: string;
   oscillators: Oscillator[];
   envelope: Envelope;
+  panner: Panner;
 }
 
 export class Envelope {
@@ -19,3 +20,10 @@ export class Oscillator {
 }
 
 export const OscillatorType = ['sine', 'square', 'sawtooth', 'triangle'];
+
+export class Panner {
+  // -1 < x < 1
+  x: number;
+  // 0 < y < 1
+  y: number;
+}

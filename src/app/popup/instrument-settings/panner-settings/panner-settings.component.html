@@ -1,1 +1,5 @@
-<canvas class="panner-canvas" width="150px" height="150px"></canvas>
+<canvas class="canvas" height="150px"
+        (mousedown)="onMouseDown($event)"
+        (mousemove)="onMouseMove($event)"
+        (mouseup)="onMouseUp()"
+        (mouseleave)="onMouseLeave()"></canvas>

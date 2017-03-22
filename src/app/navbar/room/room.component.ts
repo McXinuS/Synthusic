@@ -26,7 +26,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     // TODO: fix messages appearing after only the second incoming message
     this.room = this.roomService.room$;
     this.chatMessages = this.roomService.messages$;
-    this.roomService.messages$.subscribe(messages => this.isChatEmpty = messages.length === 0);
+    this.chatMessages.subscribe(messages => this.isChatEmpty = messages.length === 0);
   }
 
   ngAfterViewChecked() {

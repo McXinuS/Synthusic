@@ -38,7 +38,6 @@ export class NoteDuration {
   }
 }
 
-// TODO: 16, 32
 export enum NoteDurationEnum {
   Infinite = -1,
   Whole = 1,

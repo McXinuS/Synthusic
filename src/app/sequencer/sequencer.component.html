@@ -2,11 +2,5 @@
   <app-sequencer-instrument *ngFor="let instrument of instruments | async"
                             [instrument]="instrument"
                             [notes]="notes[instrument.id]"></app-sequencer-instrument>
-  <div>
-    <!-- TODO: Add new instrument -->
-  </div>
-</div>
-
-<div class="player">
-
+  <app-sequencer-instrument-create></app-sequencer-instrument-create>
 </div>

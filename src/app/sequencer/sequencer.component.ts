@@ -13,6 +13,7 @@ import {Observable} from "rxjs";
 export class SequencerComponent implements OnInit {
   notes: Array<Array<SequencerNote>> = [];
   instruments: Observable<Array<Instrument>>;
+  newInstrument: Instrument;
 
   constructor(private instrumentService: InstrumentService,
               private sequencerService: SequencerService) { }

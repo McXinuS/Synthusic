@@ -25,6 +25,8 @@ import {WebSocketService} from './shared/websocket/websocket.service';
 import { SequencerInstrumentComponent } from './sequencer/sequencer-instrument/sequencer-instrument.component';
 import { PannerSettingsComponent } from './popup/instrument-settings/panner-settings/panner-settings.component';
 import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-settings/envelope-settings.component';
+import { SequencerInstrumentCreateComponent } from './sequencer/sequencer-instrument-create/sequencer-instrument-create.component';
+import { SequencerFooterComponent } from './sequencer/sequencer-footer/sequencer-footer.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-
     RoomComponent,
     SequencerInstrumentComponent,
     PannerSettingsComponent,
-    EnvelopeSettingsComponent
+    EnvelopeSettingsComponent,
+    SequencerInstrumentCreateComponent,
+    SequencerFooterComponent
   ],
   imports: [
     BrowserModule,

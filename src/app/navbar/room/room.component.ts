@@ -11,7 +11,7 @@ import {Room} from "../../shared/room/room.model";
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  chatMessages: Observable<ChatMessage[]>;
+  chatMessages: ChatMessage[];
   room: Observable<Room>;
   isChatEmpty: boolean = true;
   @ViewChild('messages') private chatContainer: ElementRef;
@@ -23,10 +23,11 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    // TODO: fix messages appearing after only the second incoming message
     this.room = this.roomService.room$;
-    this.chatMessages = this.roomService.messages$;
-    this.chatMessages.subscribe(messages => this.isChatEmpty = messages.length === 0);
+    this.roomService.messages$.subscribe(messages => {
+      this.chatMessages = messages;
+      this.isChatEmpty = messages.length === 0;
+    });
   }
 
   ngAfterViewChecked() {

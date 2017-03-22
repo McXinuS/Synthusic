@@ -6,7 +6,7 @@
         No messages yet. Be the first to chat!
       </h1>
       <ul *ngIf="!isChatEmpty">
-        <li *ngFor="let msg of chatMessages | async">
+        <li *ngFor="let msg of chatMessages">
           <span class="sender">{{msg.sender}}</span>: {{msg.message}}
         </li>
       </ul>

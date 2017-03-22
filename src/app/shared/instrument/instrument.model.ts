@@ -2,11 +2,11 @@ export class Instrument {
   id: number;
   name: string;
   oscillators: Oscillator[];
-  envelope: Envelope;
-  panner: Panner;
+  envelope: EnvelopeConfig;
+  panner: PannerConfig;
 }
 
-export class Envelope {
+export class EnvelopeConfig {
   attack: number;
   decay: number;
   sustain: number;
@@ -21,7 +21,7 @@ export class Oscillator {
 
 export const OscillatorType = ['sine', 'square', 'sawtooth', 'triangle'];
 
-export class Panner {
+export class PannerConfig {
   // -1 < x < 1
   x: number;
   // 0 < y < 1

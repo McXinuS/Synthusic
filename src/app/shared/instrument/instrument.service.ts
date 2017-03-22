@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Instrument, Oscillator, Panner} from "./instrument.model";
-import {Subject, Observable} from 'rxjs';
+import {Instrument, Oscillator, PannerConfig} from "./instrument.model";
+import {Subject, Observable, BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class InstrumentService {
   private _instruments: Instrument[] = [];
-  private instrumentsSource: Subject<Array<Instrument>> = new Subject();
+  private instrumentsSource: Subject<Array<Instrument>> = new BehaviorSubject(this._instruments);
   instruments$: Observable<Array<Instrument>>;
 
   constructor() {
@@ -54,14 +54,15 @@ export class InstrumentService {
     this.getInstrument(id).envelope[type] = value;
   }
 
-  updatePanner(id: number, panner: Panner) {
+  updatePanner(id: number, panner: PannerConfig) {
+    this.getInstrument(id).panner = panner;
   }
 
   addOscillator(id: number, oscillator: Oscillator) {
     this.getInstrument(id).oscillators.push(oscillator);
   }
 
-  updateOscillator(id: number, oscillator: Oscillator, type: string, value: number | number) {
+  updateOscillator(id: number, oscillator: Oscillator, type: string, value: number | string) {
     let instrument = this.getInstrument(id),
       index = this.findOscillatorIndex(instrument, oscillator);
     if (index >= 0) {

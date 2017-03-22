@@ -1,11 +1,11 @@
-import {ElementRef, ViewChild, Input} from "@angular/core";
+import {ElementRef, ViewChild, Input, AfterViewInit} from "@angular/core";
 
 export class Point {
   x: number;
   y: number;
 }
 
-export abstract class BaseCanvasComponent {
+export abstract class BaseCanvasComponent implements AfterViewInit{
   @Input() popupScrollTop: number;
 
   @ViewChild('canvas') canvas: ElementRef;
@@ -21,10 +21,13 @@ export abstract class BaseCanvasComponent {
     return this.canvas.nativeElement.width;
   }
 
+  constructor() {
+
+  }
+
   ngAfterViewInit() {
     this.ctx = this.canvas.nativeElement.getContext('2d');
     this.fitCanvasToContainer();
-    this.render();
   }
 
   protected fitCanvasToContainer() {
@@ -38,8 +41,8 @@ export abstract class BaseCanvasComponent {
 
   protected getMouseCoordinates(event: MouseEvent): Point {
     return {
-      x: event.clientX - this.canvas.nativeElement.offsetLeft,
-      y: event.clientY + this.popupScrollTop - this.canvas.nativeElement.offsetTop
+      x: event.clientX - this.canvas.nativeElement.getBoundingClientRect().left,
+      y: event.clientY - this.canvas.nativeElement.getBoundingClientRect().top
     };
   }
 }

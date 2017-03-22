@@ -1,8 +1,10 @@
+import {PannerConfig} from "../instrument/instrument.model";
+
 export class Panner {
 
   private pannerNode: PannerNode;
 
-  constructor(audioCtx: AudioContext, destination: AudioNode, panner: Panner) {
+  constructor(audioCtx: AudioContext, destination: AudioNode, panner: PannerConfig) {
     let listener = audioCtx.listener;
     listener.setOrientation(0, 0, -1, 0, 1, 0);
 

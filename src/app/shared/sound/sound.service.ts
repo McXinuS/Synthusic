@@ -3,7 +3,7 @@ import {SequencerNote} from '../sequencer/sequencernote.model';
 import {Enveloper} from './enveloper';
 import {Instrument} from '../instrument/instrument.model';
 import {SequencerNoteService} from '../sequencer/sequencernote.service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject, Observable} from 'rxjs';
 import {InstrumentService} from "../instrument/instrument.service";
 import {NoteService} from "../note/note.service";
 import {Panner} from "./panner";
@@ -39,10 +39,12 @@ export class SoundService {
    */
   private modifiers: Map<number, InstrumentModifiers> = new Map();
 
+  private _playingNotes = [];
+  private playingNotesSource: Subject<Array<SequencerNote>> = new BehaviorSubject(this._playingNotes);
   /**
    * Array of notes, playing in the sound module.
    */
-  playingNotes: BehaviorSubject<Array<SequencerNote>> = new BehaviorSubject([]);
+  playingNotes$: Observable<Array<SequencerNote>>;
 
   get masterGain() {
     return this.masterGainNode.gain.value;
@@ -64,6 +66,8 @@ export class SoundService {
     this.audioContext = new AudioContext();
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
+
+    this.playingNotes$ = this.playingNotesSource.asObservable();
 
     this.instrumentService.instruments$.subscribe(instruments => {
       for (let instrument of instruments) {
@@ -124,8 +128,8 @@ export class SoundService {
     if (!this.hasOscillator(note)) {
       this.oscillators.set(note.id, this.createOscillators(note));
       this.setGain(note, 1, true);
-      this.playingNotes.getValue().push(note);
-      this.playingNotes.next(this.playingNotes.getValue());
+      this._playingNotes.push(note);
+      this.playingNotesSource.next(this._playingNotes);
     }
 
     this.getEnveloper(note.instrumentId).start();
@@ -139,11 +143,10 @@ export class SoundService {
     if (!this.hasOscillator(note)) return;
 
     if (this.isPlaying(note)) {
-      let newNotesArray = this.playingNotes.getValue(),
-        ind = newNotesArray.findIndex(n => note.id == n.id);
+      let ind = this._playingNotes.findIndex(n => note.id == n.id);
       if (ind != -1) {
-        newNotesArray.splice(ind, 1);
-        this.playingNotes.next(newNotesArray);
+        this._playingNotes.splice(ind, 1);
+        this.playingNotesSource.next(this._playingNotes);
       }
     }
 
@@ -181,12 +184,12 @@ export class SoundService {
 
     if (typeof instrumentId == 'number') {
       this.notesToStop.delete(instrumentId);
-      let pl = this.playingNotes.getValue().filter(sn => sn.instrumentId !== instrumentId);
-      this.playingNotes.next(pl);
+      this._playingNotes.filter(sn => sn.instrumentId !== instrumentId);
     } else {
       this.notesToStop.clear();
-      this.playingNotes.next([]);
+      this._playingNotes.splice(0, this._playingNotes.length);
     }
+    this.playingNotesSource.next(this._playingNotes);
   };
 
 
@@ -223,11 +226,11 @@ export class SoundService {
   }
 
   private isPlaying(note: SequencerNote) {
-    return this.playingNotes.getValue().findIndex(n => note.id == n.id) != -1;
+    return this._playingNotes.findIndex(n => note.id == n.id) != -1;
   }
 
   private isInstrumentPlaying(instrumentId: number) {
-    return this.playingNotes.getValue().findIndex(n => instrumentId == n.instrumentId) != -1;
+    return this._playingNotes.findIndex(n => instrumentId == n.instrumentId) != -1;
     /*
      let found = false;
      this.oscillators.forEach((o,n) => {
@@ -248,7 +251,6 @@ export class SoundService {
     );
   }
 
-  // TODO: add panner settings to instrument model
   private createPanner(instrument: Instrument, destination: AudioNode): Panner {
     return new Panner(
       this.audioContext,
@@ -276,7 +278,7 @@ export class SoundService {
     return mod ? mod.enveloper : null;
   }
 
-  getPanner(instrumentId: number) {
+  private getPanner(instrumentId: number) {
     let mod = this.modifiers.get(instrumentId);
     return mod ? mod.panner : null;
   }

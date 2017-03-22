@@ -47,6 +47,12 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
   };
 
   constructor(private instrumentService: InstrumentService) {
+    super();
+  }
+
+  ngAfterViewInit() {
+    super.ngAfterViewInit();
+    this.render();
   }
 
   render() {
@@ -135,7 +141,7 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
   }
 
   onMouseDown(e: MouseEvent) {
-    this.gainChangeInvert = this.getMouseCoordinates(e).x <= this.height / 2;
+    this.gainChangeInvert = this.getMouseCoordinates(e).y <= this.height / 2;
     if (e.which == 1) {
       this.isMouseDown = true;
       this.selectedIndex = this.closestIndex;
@@ -193,13 +199,25 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
     }
   }
 
+  onDoubleClick(e) {
+    if (e.which == 1 && this.selectedIndex != -1) {
+      let newTypeIndex = (OscillatorType.indexOf(this.selectedOscillator.type) + 1) % OscillatorType.length;
+      this.updateProperty('type', OscillatorType[newTypeIndex], true);
+      this.render();
+    }
+  }
+
   onMouseLeave() {
     this.onMouseUp();
     this.render();
   }
 
-  updateProperty(type: string, value: number, broadcast: boolean = false, oscillator?: Oscillator) {
-    this.instrumentService.updateOscillator(this.instrument.id, oscillator || this.selectedOscillator, type, value);
+  updateProperty(type: string,
+                 value: number | string,
+                 broadcast: boolean = false,
+                 oscillator: Oscillator = this.selectedOscillator) {
+    if (type != 'type' && typeof value == 'string') value = parseFloat(value);
+    this.instrumentService.updateOscillator(this.instrument.id, oscillator, type, value);
     this.render();
   }
 

@@ -21,6 +21,7 @@ export class KeyboardComponent implements OnInit {
 
   instruments: Instrument[];
   activeInstrument: Instrument;
+  playingNotes: SequencerNote[];
 
   miniMode: boolean = false;
 
@@ -35,8 +36,9 @@ export class KeyboardComponent implements OnInit {
   ngOnInit() {
     this.notes = this.noteService.notes;
 
-    this.soundService.playingNotes.subscribe((playing: SequencerNote[]) => {
-      this.updateHighlight(playing);
+    this.soundService.playingNotes$.subscribe((playingNotes: SequencerNote[]) => {
+      this.playingNotes = playingNotes;
+      this.updateHighlight();
     });
 
     this.instrumentService.instruments$.subscribe(instruments => {
@@ -47,8 +49,9 @@ export class KeyboardComponent implements OnInit {
     });
   }
 
-  updateHighlight(playing: SequencerNote[]) {
+  updateHighlight() {
     this.highlights = [];
+    let playing = this.playingNotes;
     for (let i = 0; i < playing.length; i++) {
       if (playing[i].instrumentId == this.activeInstrument.id) {
         this.highlights[playing[i].baseNoteId] = true;
@@ -57,7 +60,7 @@ export class KeyboardComponent implements OnInit {
   }
 
   onInstrumentChange() {
-    this.updateHighlight(this.soundService.playingNotes.getValue());
+    this.updateHighlight();
   }
 
   onKeyStateUpdated(e) {

@@ -12,11 +12,13 @@
 <div class="row">
   <div class="col-md-6 panner">
     <label>Panner</label>
-    <app-panner-settings [instrument]="instrument"></app-panner-settings>
+    <app-panner-settings [instrument]="instrument"
+                         [popupScrollTop]="popupScrollTop"></app-panner-settings>
   </div>
-  
+
   <div class="col-md-6 envelope">
     <label>Envelope</label>
-    <app-envelope-settings [instrument]="instrument"></app-envelope-settings>
+    <app-envelope-settings [instrument]="instrument"
+                           [popupScrollTop]="popupScrollTop"></app-envelope-settings>
   </div>
 </div>

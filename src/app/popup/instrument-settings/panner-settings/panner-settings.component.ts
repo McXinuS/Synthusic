@@ -3,6 +3,24 @@ import {Instrument, PannerConfig} from "../../../shared/instrument/instrument.mo
 import {InstrumentService} from "../../../shared/instrument/instrument.service";
 import {BaseCanvasComponent, Point} from "../../basecanvas.component";
 
+class Rectangle {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  width: number;
+  height: number;
+
+  constructor(x0: number, y0: number, w: number, h: number) {
+    this.x0 = x0;
+    this.y0 = y0;
+    this.x1 = x0 + w;
+    this.y1 = y0 + h;
+    this.width = w;
+    this.height = h;
+  }
+}
+
 @Component({
   selector: 'app-panner-settings',
   templateUrl: './panner-settings.component.html',
@@ -10,21 +28,21 @@ import {BaseCanvasComponent, Point} from "../../basecanvas.component";
 })
 export class PannerSettingsComponent extends BaseCanvasComponent implements OnInit {
   @Input() instrument: Instrument;
-  private selectedInstrument: Instrument; // TODO
+  private selectedInstrument: Instrument;
   private instruments: Instrument[];
+  private instrumentBoxes: Map<number, Rectangle> = new Map();
 
-  private center: {x: number, y: number};
+  private center: { x: number, y: number };
   private readonly CanvasHeightScale = 0.7;
 
   private keyboardIcon: HTMLImageElement;
   private keyboardIconSelected: HTMLImageElement;
-  private readonly CanvasGradientColorMin = '#bbb';
-  private readonly CanvasGradientColorMax = '#fff';
-  private background: CanvasGradient;
-
   private readonly IconsToLoad = 2;
   private iconsLoaded = 0;
 
+  private background: CanvasGradient;
+  private readonly CanvasGradientColorMin = '#bbb';
+  private readonly CanvasGradientColorMax = '#fff';
   private readonly CanvasTextColorDefault = '#000';
   private readonly CanvasTextColorSelected = '#6a6';
 
@@ -32,11 +50,14 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
     super();
     this.instrumentService.instruments$.subscribe(instruments => {
       this.instruments = instruments;
+      this.render();
     });
   }
 
   ngOnInit() {
     this.isMouseDown = false;
+
+    this.selectedInstrument = this.instrument;
 
     this.keyboardIcon = new Image();
     this.keyboardIcon.src = 'img/keyboard_icon.gif';
@@ -62,25 +83,26 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
   }
 
   render() {
-    if (!this.instruments) return;
+    if (!this.instrument || !this.instruments) return;
+
+    this.recalculateInstrumentBoxes();
 
     this.ctx.fillStyle = this.background;
     this.ctx.fillRect(0, 0, this.width, this.height);
 
-    let point, icon, isMainInstrument;
+    let box, icon, isMainInstrument;
     for (let instrument of this.instruments) {
       isMainInstrument = instrument.id === this.instrument.id;
-      this.ctx.save();
-      point = this.pannerToCanvasCoordinates(instrument.panner);
-      this.ctx.translate(point.x, point.y);
+      box = this.instrumentBoxes.get(instrument.id);
       icon = isMainInstrument ? this.keyboardIconSelected : this.keyboardIcon;
-      this.ctx.translate(-icon.width / 2, -icon.height / 2);
+      this.ctx.save();
+      this.ctx.translate(box.x0, box.y0);
       this.ctx.drawImage(icon, 0, 0);
       this.ctx.textAlign = "center";
       this.ctx.fillStyle = isMainInstrument
         ? this.CanvasTextColorSelected
         : this.CanvasTextColorDefault;
-      this.ctx.fillText(instrument.name, icon.width / 2, icon.height + 14);
+      this.ctx.fillText(instrument.name, box.width / 2, box.height + 14);
       this.ctx.restore();
       this.ctx.fill();
     }
@@ -88,6 +110,7 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
 
   onMouseDown(e) {
     this.isMouseDown = true;
+    this.selectInstrument(this.getMouseCoordinates(e));
     this.onMouseMove(e);
   }
 
@@ -105,8 +128,36 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
     this.isMouseDown = false;
   }
 
+  private recalculateInstrumentBoxes() {
+    this.instrumentBoxes.clear();
+    let icon, point;
+    for (let instrument of this.instruments) {
+      icon = instrument.id === this.instrument.id
+        ? this.keyboardIconSelected : this.keyboardIcon;
+      point = this.pannerToCanvasCoordinates(instrument.panner);
+      this.instrumentBoxes.set(instrument.id, new Rectangle(
+        point.x - icon.width / 2, point.y - icon.height / 2,
+        icon.width, icon.height
+      ));
+    }
+  }
+
+  private selectInstrument(coord: Point) {
+    let currentBox;
+    // iterate with respect of to z-index
+    for (let i = this.instruments.length - 1; i >= 0; i--) {
+      currentBox = this.instrumentBoxes.get(this.instruments[i].id);
+      if ((currentBox.x0 <= coord.x && coord.x <= currentBox.x1) &&
+        (currentBox.y0 <= coord.y && coord.y <= currentBox.y1)) {
+        this.selectedInstrument = this.instruments[i];
+        return;
+      }
+    }
+    this.selectedInstrument = this.instrument;
+  }
+
   private updatePanner(panner: PannerConfig) {
-    this.instrumentService.updatePanner(this.instrument.id, panner);
+    this.instrumentService.updatePanner(this.selectedInstrument.id, panner);
     this.render();
   }
 
@@ -117,10 +168,10 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
     }
   }
 
-  private canvasToPannerCoordinates(point: Point): PannerConfig {
+  private canvasToPannerCoordinates(coord: Point): PannerConfig {
     return {
-      x: (point.x - this.center.x) / this.width * 2,
-      y: point.y / this.center.y
+      x: (coord.x - this.center.x) / this.width * 2,
+      y: coord.y / this.center.y
     }
   }
 

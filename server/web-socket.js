@@ -1,7 +1,5 @@
 'use strict';
 
-// TODO: notify client that its message was accepted and processed
-
 exports.Server = Server;
 
 let rs = require('./rooms/room-service').RoomService,

@@ -1,0 +1,11 @@
+.wrapper {
+  background-color : #a4c798;
+}
+
+.wrapper:hover {
+  background-color : #92c78a;
+}
+
+.wrapper-wait {
+  background-color : #aacabf;
+}

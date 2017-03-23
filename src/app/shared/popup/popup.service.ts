@@ -10,39 +10,36 @@ export class PopupService {
   isShown: boolean = false;
   isInstrument: boolean = false;
 
-  // closeTimeoutId: number;
-  // isClosing: boolean = false;
-  // readonly CloseTimeout: number = 300;
+  closeTimeoutId: number;
+  isClosing: boolean = false;
+  readonly CloseTimeout: number = 300;
 
-  show(instrument: Instrument);
-  show(header:string, message: String);
-  show(content: any, content2?: string) {
-    if (this.isShown) return;
-
-    // if (this.isClosing) this.close(false);
-
-    if (typeof content == 'object') {
-      this.instrument = content;
-      this.isInstrument = true;
-    } else if (typeof content == 'string') {
-      this.header = content;
-      this.message = content2;
-    }
+  private show() {
+    if (this.isClosing) this.close(false);
     this.isShown = true;
   }
 
-  close() { // delay = true) {
-    // if (delay) {
-    //   this.isClosing = true;
-    //   this.closeTimeoutId = setTimeout(this.close.bind(this, false), this.CloseTimeout);
-    // } else {
-    //   clearInterval(this.closeTimeoutId);
-    //   this.isClosing = false;
-    //   this.isInstrument = false;
-    //   this.isShown = false;
-    // }
-
+  showMessage(header: string, message: string) {
+    this.header = header;
+    this.message = message;
     this.isInstrument = false;
+    this.show();
+  }
+
+  showInstrument(instrument: Instrument) {
+    this.instrument = instrument;
+    this.isInstrument = true;
+    this.show();
+  }
+
+  close(delay = true) {
     this.isShown = false;
+    if (delay) {
+      this.isClosing = true;
+      this.closeTimeoutId = setTimeout(this.close.bind(this, false), this.CloseTimeout);
+    } else {
+      clearInterval(this.closeTimeoutId);
+      this.isClosing = false;
+    }
   }
 }

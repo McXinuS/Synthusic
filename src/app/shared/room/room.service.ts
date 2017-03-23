@@ -47,7 +47,7 @@ export class RoomService {
   sendChatMessage(message: string) {
     if (message) {
       this.webSocketService.send(WebSocketMessageType.chat_new_message, message);
-      this.addChatMessage(new ChatMessage('me', message));
+      // this.addChatMessage(new ChatMessage('me', message));
     }
   }
 }

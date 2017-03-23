@@ -95,6 +95,6 @@ export class KeyboardComponent implements OnInit {
   }
 
   openSettings() {
-    this.popupService.show(this.activeInstrument);
+    this.popupService.showInstrument(this.activeInstrument);
   }
 }

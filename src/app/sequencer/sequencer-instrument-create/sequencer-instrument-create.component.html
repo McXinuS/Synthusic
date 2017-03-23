@@ -1,3 +1,4 @@
-<p>
-  sequencer-instrument-create works!
-</p>
+<div class="wrapper" [class.wrapper-wait]="waitingForInstrument">
+    <div *ngIf="waitingForInstrument" class="center-hor spinner"></div>
+    <div *ngIf="!waitingForInstrument" class="center-hor" (click)="openCreateDialog()">Add new instrument</div>
+</div>

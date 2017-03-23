@@ -1,9 +1,9 @@
 <div #overlay
   class="overlay center"
      [class.overlay-active]="popupService.isShown"
-     (click)="close($event)">
+     (click)="close($event)"
+     *ngIf="popupService.isShown || popupService.isClosing">
   <div class="popup"
-       *ngIf="popupService.isShown"
        (click)="$event.stopPropagation()">
 
     <app-instrument-settings

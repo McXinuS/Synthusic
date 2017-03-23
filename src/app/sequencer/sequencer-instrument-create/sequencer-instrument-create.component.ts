@@ -10,7 +10,8 @@ import {PopupService} from "../../shared/popup/popup.service";
 })
 export class SequencerInstrumentCreateComponent implements OnInit {
 
-  newInstrument: Instrument;
+  waitingForInstrument: boolean = false;
+  instrument: Instrument;
 
   constructor(private instrumentService: InstrumentService,
               private popupService: PopupService) { }
@@ -18,13 +19,15 @@ export class SequencerInstrumentCreateComponent implements OnInit {
   ngOnInit() {
   }
 
-  openCreateDialog() {
-    // TODO
-    this.newInstrument = new Instrument();
-    this.popupService.show(this.newInstrument);
-  }
+  async openCreateDialog() {
+    try {
+      this.waitingForInstrument = true;
+      this.instrument = await this.instrumentService.createInstrument();
+      this.popupService.showInstrument(this.instrument);
+    } catch (e) {
 
-  addInstrument() {
-    this.instrumentService.addInstrument(this.newInstrument);
+    } finally {
+      this.waitingForInstrument = false;
+    }
   }
 }

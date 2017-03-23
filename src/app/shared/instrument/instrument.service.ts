@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Instrument, Oscillator, PannerConfig} from "./instrument.model";
 import {Subject, Observable, BehaviorSubject} from 'rxjs';
+import {WebSocketService} from "../websocket/websocket.service";
+import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
 
 @Injectable()
 export class InstrumentService {
@@ -8,8 +10,19 @@ export class InstrumentService {
   private instrumentsSource: Subject<Array<Instrument>> = new BehaviorSubject(this._instruments);
   instruments$: Observable<Array<Instrument>>;
 
-  constructor() {
+  constructor(private webSocketService: WebSocketService) {
     this.instruments$ = this.instrumentsSource.asObservable();
+    this.webSocketService.registerHandler(WebSocketMessageType.instrument_add, this.addInstrument.bind(this));
+  }
+
+  async createInstrument(): Promise<Instrument> {
+    try {
+      let instrument = await this.webSocketService.sendAsync<Instrument>(WebSocketMessageType.instrument_add);
+      if (instrument == null) return null;
+      return instrument;
+    } catch (e) {
+      throw e;
+    }
   }
 
   getInstrument(id): Instrument {
@@ -23,7 +36,7 @@ export class InstrumentService {
     this.instrumentsSource.next(this._instruments);
   }
 
-  addInstrument(instrument: Instrument) {
+  private addInstrument(instrument: Instrument) {
     this._instruments.push(instrument);
     this.instrumentsSource.next(this._instruments);
   }

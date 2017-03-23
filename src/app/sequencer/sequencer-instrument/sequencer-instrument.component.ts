@@ -24,6 +24,6 @@ export class SequencerInstrumentComponent implements OnInit {
   }
 
   openSettings() {
-    this.popupService.show(this.instrument);
+    this.popupService.showInstrument(this.instrument);
   }
 }

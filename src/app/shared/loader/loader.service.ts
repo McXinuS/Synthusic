@@ -9,6 +9,7 @@ import {SETTINGS_OFFLINE} from './settings.mock';
 import {CONSTANTS} from './config.constants';
 import {SequencerService} from '../sequencer/sequencer.service';
 import {RoomService} from "../room/room.service";
+import {WebSocketMessageType} from "../../../../shared/web-socket-message-types";
 
 @Injectable()
 export class LoaderService {
@@ -52,7 +53,7 @@ export class LoaderService {
         this.initSequencer(settings);
         onDone();
       }, () => {
-        this.popupService.show(
+        this.popupService.showMessage(
           'Unable to initialize app',
           'Something went wrong during the loading if the application. Try to reload the page.');
         onDone();
@@ -82,9 +83,9 @@ export class LoaderService {
     });
   }
 
-  private async loadSettings() {
+  private async loadSettings(): Promise<Settings> {
       try {
-        let state = await this.wsService.requestProgramState();
+        let state: Settings = await this.wsService.sendAsync<Settings>(WebSocketMessageType.get_state);
         if (!state)
           return null;
         return Object.assign({}, CONSTANTS, state);
@@ -124,7 +125,7 @@ export class LoaderService {
 
   goOffline() {
     this.offlineMode = true;
-    this.popupService.show(
+    this.popupService.showMessage(
       'Unable to connect',
       'The remote server is not responding, going offline mode.\n' +
       'In offline mode you are unable to share your creativity with other people.' +

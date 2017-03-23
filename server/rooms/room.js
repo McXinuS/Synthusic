@@ -1,6 +1,8 @@
 'use strict';
 
-let usr = require('./user.model');
+let User = require('./../models/user.js');
+let Instrument = require('./../models/instrument.js');
+let Defaults = require('./../defaults/defaults');
 
 let Room = function (id) {
   this.id = id;
@@ -9,7 +11,7 @@ let Room = function (id) {
 
   let defaults = require('./../../shared/defaults');
   this.bpm = defaults.bpm;
-  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId);
+  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
   this.instruments = defaults.instruments;
   this.notes = [];
 
@@ -54,7 +56,7 @@ Room.prototype = {
   },
 
   addUser: function (id) {
-    this.users.push(new usr(id));
+    this.users.push(new User(id));
   },
   removeUser: function(id) {
     let index = this.users.findIndex(user => user.id === id);
@@ -73,9 +75,11 @@ Room.prototype = {
     if (index >= 0) this.notes.splice(index, 1);
   },
 
-  addInstrument: function (instrument) {
-    instrument.id = this.lastInstrumentId++;
+  createInstrument: function () {
+    let instrument = Object.assign({}, Defaults.instrument);
+    instrument.id = ++this.lastInstrumentId;
     this.instruments.push(instrument);
+    return instrument;
   },
   updateInstrument: function (instrument) {
     let index = this.instruments.findIndex(ins => ins.id === instrument.id);

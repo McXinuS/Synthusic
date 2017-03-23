@@ -78,13 +78,16 @@ function Server(server) {
   /**
    * Broadcast message to the particular users.
    * @param message String or an object, containing message type.
-   * @param userId Array of user ids or websockets.
+   * @param userId ID or websocket of user, whose room's users will be broadcasted with message.
+   * @param includeSender Indicates whether or not the message will be sent to user.
    */
-  function broadcastToUserRoom(message, userId) {
+  function broadcastToUserRoom(message, userId, includeSender = false) {
     let rec = roomService.getRoomUsersByUser(userId);
     if (!rec) return;
     rec = rec.map(user => user.id); // get only ids
-    rec.splice(rec.indexOf(userId), 1);
+    if (!includeSender) {
+      rec.splice(rec.indexOf(userId), 1);
+    }
     broadcast(message, rec);
   }
 
@@ -137,8 +140,8 @@ function Server(server) {
       // Instrument
 
       case WebSocketMessageType.instrument_add:
-        roomService.getRoomByUser(sender).addInstrument(message.data);
-        broadcastToUserRoom(message, sender);
+        message.data = roomService.getRoomByUser(sender).createInstrument();
+        broadcastToUserRoom(message, sender, true);
         return true;
       case WebSocketMessageType.instrument_update:
         roomService.getRoomByUser(sender).updateInstrument(message.data);
@@ -183,12 +186,12 @@ function Server(server) {
   }
 
   function processChatMessage(message, sender) {
-    if (message.type == WebSocketMessageType.chat_new_message) {
+    if (message.type === WebSocketMessageType.chat_new_message) {
       message.data = {
         message: message.data,
         sender: sender
       };
-      broadcastToUserRoom(message, sender);
+      broadcastToUserRoom(message, sender, true);
       return true;
     }
     return false;

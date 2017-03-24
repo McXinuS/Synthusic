@@ -55,7 +55,7 @@ export class NoteService {
       return this._notes[indexOrFullname];
     }
     if (typeof indexOrFullname == 'string') {
-      let no = this.parseFullName(indexOrFullname);
+      let no = this.parseFullName(indexOrFullname.toUpperCase());
       let index = this.getIndex(no[0], no[1]);
       return this._notes[index];
     }

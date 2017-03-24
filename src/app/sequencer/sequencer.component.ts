@@ -14,16 +14,15 @@ import {Bar} from "../shared/sequencer/bar.model";
 export class SequencerComponent implements OnInit {
 
   /**
-   * map of all notes, split by their instrument
+   * Map of all notes, split by their instrument containing
    * array of notes, split by their position
-   * @type {Map<any, any>}
    */
   notes: Map<number, Map<number, Array<SequencerNote>>> = new Map();
   instruments: Observable<Array<Instrument>>;
   bars: Array<Bar>;
 
   readonly InitialBarWidth = 100;
-  readonly BarWidthMultiplier = 20; // shows dependency of bar's width from minimal duration of its notes
+  readonly BarNoteDistanceMultiplier = 20; // shows dependency of bar's width from minimal duration of its notes
 
   constructor(private instrumentService: InstrumentService,
               private sequencerService: SequencerService) {
@@ -32,7 +31,7 @@ export class SequencerComponent implements OnInit {
 
   ngOnInit() {
     for (let i = 0; i < this.sequencerService.BarCount; i++) {
-      this.bars[i] = new Bar(i, this.InitialBarWidth);
+      this.bars[i] = new Bar(i, this.InitialBarWidth, this.BarNoteDistanceMultiplier);
     }
     this.bars[0].isFirst = true;
     this.bars[this.sequencerService.BarCount - 1].isLast = true;
@@ -41,26 +40,34 @@ export class SequencerComponent implements OnInit {
     this.instruments.subscribe(instruments => {
       for (let instrument of instruments) {
         if (!(this.notes.has(instrument.id))) {
-          this.notes.set(instrument.id, new Map());
+          let barMap = new Map();
+          for (let i = 0; i < this.sequencerService.BarCount; i++) {
+            barMap.set(i, []);
+          }
+          this.notes.set(instrument.id, barMap);
         }
       }
     });
     this.sequencerService.notes$.subscribe(this.onNotesUpdated.bind(this));
   }
 
+  resetNotes() {
+    this.notes.forEach(insMap => {
+      insMap.forEach(barArr => {
+        barArr.length = 0;
+      });
+    });
+  }
+
   // TODO optimize: don't change array if no note is replaced
-  onNotesUpdated(notes) {
-    this.notes.forEach(insMap => insMap.clear());
-    this.notes.clear();
-    let insNotes,
-      barNotes;
+  onNotesUpdated(notes: SequencerNote[]) {
+    this.resetNotes();
     for (let note of notes) {
-      insNotes = this.notes.get(note.instrumentId);
-      if (!(insNotes.has(note.position.bar))) {
-        insNotes.set(note.position.bar, []);
-      }
-      barNotes = insNotes.get(note.position.bar);
-      barNotes.push(note);
+      if (note.duration.baseDuration === NoteDurationEnum.Infinite) continue;
+      this.notes
+        .get(note.instrumentId)
+        .get(note.position.bar)
+        .push(note);
     }
     this.updateBars(notes);
   }
@@ -78,7 +85,8 @@ export class SequencerComponent implements OnInit {
     }
 
     for (let bar of this.bars) {
-      bar.width = this.InitialBarWidth + this.BarWidthMultiplier / widthMin[bar.index];
+      bar.noteDistance = this.BarNoteDistanceMultiplier / widthMin[bar.index];
+      bar.width = this.InitialBarWidth + bar.noteDistance;
     }
   }
 }

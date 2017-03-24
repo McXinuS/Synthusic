@@ -3,9 +3,10 @@
 }
 
 .wrapper {
-  position   : relative;
-  height     : 180px;
-  transition : height .3s, background-color .5s, visibility 0s .3s, opacity .3s linear;
+  white-space : nowrap;
+  position    : relative;
+  height      : 180px;
+  transition  : height .3s, background-color .5s, visibility .3s, opacity .3s linear;
 }
 
 .collapsed.wrapper {

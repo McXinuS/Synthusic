@@ -13,7 +13,7 @@ let Room = function (id) {
   this.bpm = defaults.bpm;
   this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
   this.instruments = defaults.instruments;
-  this.notes = [];
+  this.notes = defaults.notes || [];
 
   let self = this;
 

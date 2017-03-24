@@ -46,5 +46,9 @@ module.exports = {
         y: 0.3
       }
     }
+  ],
+  // DEBUG
+  notes: [
+    {"id":139810000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":0.5,"dotted":false,"triplet":false},"position":{"bar":1,"offset":0.5}}
   ]
 };

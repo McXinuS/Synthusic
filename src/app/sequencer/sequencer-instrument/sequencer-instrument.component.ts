@@ -6,7 +6,7 @@ import {Bar} from "../../shared/sequencer/bar.model";
 import {Observable} from "rxjs";
 
 @Component({
-  selector: 'app-sequencer-instrument',
+  selector: 'div[app-sequencer-instrument]',
   templateUrl: './sequencer-instrument.component.html',
   styleUrls: ['./sequencer-instrument.component.css']
 })
@@ -19,7 +19,6 @@ export class SequencerInstrumentComponent implements OnInit {
   constructor(private popupService: PopupService) { }
 
   ngOnInit() {
-    let q = 1;
   }
 
   toggleCollapse() {

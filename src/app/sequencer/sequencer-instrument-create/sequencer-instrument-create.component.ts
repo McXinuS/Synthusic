@@ -4,7 +4,7 @@ import {Instrument} from "../../shared/instrument/instrument.model";
 import {PopupService} from "../../shared/popup/popup.service";
 
 @Component({
-  selector: 'app-sequencer-instrument-create',
+  selector: 'div[app-sequencer-instrument-create]',
   templateUrl: './sequencer-instrument-create.component.html',
   styleUrls: ['./sequencer-instrument-create.component.css']
 })

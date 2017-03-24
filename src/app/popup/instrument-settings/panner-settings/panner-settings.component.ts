@@ -44,7 +44,7 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
   private readonly CanvasGradientColorMin = '#bbb';
   private readonly CanvasGradientColorMax = '#fff';
   private readonly CanvasTextColorDefault = '#000';
-  private readonly CanvasTextColorSelected = '#6a6';
+  private readonly CanvasTextColorSelected = '#585';
 
   constructor(private instrumentService: InstrumentService) {
     super();

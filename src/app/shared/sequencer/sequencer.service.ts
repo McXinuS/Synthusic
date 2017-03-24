@@ -21,6 +21,8 @@ export class SequencerService {
   _playing: number[] = [];
   playing$: Subject<number[]>;
 
+  readonly BarCount = 20;
+
   constructor(private sequencerNoteService: SequencerNoteService,
               private soundService: SoundService,
               private webSocketService: WebSocketService) {

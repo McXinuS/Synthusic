@@ -18,7 +18,7 @@ export class Panner {
     this.pannerNode.connect(destination);
   }
 
-  changePosition(position) {
+  changePosition(position: PannerConfig) {
     this.pannerNode.setPosition(position.x, 0, position.y);
   }
 

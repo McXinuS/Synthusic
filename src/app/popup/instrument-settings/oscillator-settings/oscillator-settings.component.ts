@@ -185,8 +185,12 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
       if (newFreq <= 0.25) newFreq = 0.25;
       if (newFreq > 8) newFreq = 8;
 
-      oscillators[this.closestIndex].gain = newGain;
-      oscillators[this.closestIndex].freq = newFreq;
+      if (oscillators[this.closestIndex].gain !== newGain) {
+        this.updateProperty('gain', newGain, true);
+      }
+      if (oscillators[this.closestIndex].freq !== newFreq) {
+        this.updateProperty('freq', newFreq, true);
+      }
     }
 
     this.render();

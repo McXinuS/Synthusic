@@ -75,6 +75,15 @@ export class Enveloper {
     this.updateState(EnveloperState.STATE_RELEASING);
   };
 
+  onStateUpdated(config?: EnvelopeConfig) {
+    if (config) {
+      this.envelope = config;
+    }
+    if (this.state === EnveloperState.STATE_SUSTAINED) {
+      this.gainNode.gain.value = this.envelope.sustain;
+    }
+  }
+
   getAudioNode() {
     return this.gainNode;
   };

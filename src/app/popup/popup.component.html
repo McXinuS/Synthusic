@@ -1,0 +1,24 @@
+<div #overlay
+  class="overlay center"
+     [class.overlay-active]="popupService.isShown"
+     (click)="close($event)"
+     *ngIf="popupService.isShown || popupService.isClosing">
+  <div class="popup"
+       (click)="$event.stopPropagation()">
+
+    <app-instrument-settings
+      *ngIf="popupService.isInstrument"
+      [instrument]="popupService.instrument"
+      [popupScrollTop]="overlay.scrollTop"></app-instrument-settings>
+
+    <div *ngIf="!popupService.isInstrument"
+         class="popup-text">
+      <h2>{{popupService.header}}</h2>
+      <p>{{popupService.message}}</p>
+    </div>
+
+    <div class="btn-group">
+      <div class="btn btn-primary" (click)="close()">Close</div>
+    </div>
+  </div>
+</div>

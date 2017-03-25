@@ -1,0 +1,10 @@
+<div class="key" [class.key-black]="note.isAccidental" [class.key-white]="!note.isAccidental"
+     [class.playing]="highlighted" [class.selected]="selected && highlighted"
+     (mousedown)="onMouseDown($event)" (mouseup)="onMouseUp($event)" (contextmenu)="onContextMenu($event)"
+     (mouseenter)="onMouseEnter($event)" (mouseleave)="onMouseLeave($event)">
+  <p>
+    <span *ngIf="note.isAccidental">{{note.fullname.substring(0,2)}}</span>
+    <span *ngIf="!note.isAccidental">{{note.name}}</span>
+    <span class="upper">{{note.octave}}</span>
+  </p>
+</div>

@@ -1,0 +1,31 @@
+<div id="topnav">
+  <ul class="navbar">
+    <li>
+      <a id="logo-holder">
+        <img src="assets/img/favicon_lowres.png" width="32px" height="32px"/>
+      </a>
+    </li>
+    <li>
+      <a [class.selected]="isVisible('room')" (click)="showNav('room')">
+        <span class="glyphicon glyphicon-user"></span> Room</a>
+    </li>
+    <li>
+      <a [class.selected]="isVisible('settings')" (click)="showNav('settings')">
+        <span class="glyphicon glyphicon-wrench"></span> Settings</a>
+    </li>
+
+    <li *ngIf="loaderService.offlineMode" class="right offline-mode glyphicon-rotating">
+      <a (click)="reloadPage()">
+        <span class="glyphicon glyphicon-refresh"></span> Offline mode</a>
+    </li>
+  </ul>
+
+  <div class="nav-content">
+    <div class="navmenu" [class.nav-collapse]="!isVisible('room')">
+      <app-room></app-room>
+    </div>
+    <div class="navmenu" [class.nav-collapse]="!isVisible('settings')">
+      <app-settings></app-settings>
+    </div>
+  </div>
+</div>

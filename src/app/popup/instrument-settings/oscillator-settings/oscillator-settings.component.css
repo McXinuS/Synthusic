@@ -1,0 +1,10 @@
+canvas {
+  display       : block;
+  cursor        : grab;
+  margin-bottom : 10px;
+  border        : 1px solid #dbeeff;
+}
+
+canvas.grabbing {
+  cursor : grabbing;
+}

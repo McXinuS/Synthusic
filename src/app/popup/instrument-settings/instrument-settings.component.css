@@ -1,0 +1,54 @@
+:host {
+  user-select : none;
+}
+
+h2 {
+  margin-top : 0;
+}
+
+label {
+  display   : block;
+  font-size : 1.2em;
+}
+
+.description {
+  padding : 8px 8px 20px 8px;
+}
+
+.description p {
+  font-family : monospace;
+  font-size   : 0.9em;
+  margin      : 0;
+}
+
+#name {
+  font-family      : 'Courier New', monospace;
+  font-size        : 1.5em;
+  padding-left     : 16px;
+  margin-bottom    : 15px;
+  height           : 45px;
+  border           : 1px solid #dbeeff;
+  border-radius    : 10px;
+  background-color : rgba(255, 255, 255, 0.2);
+  transition       : background-color .2s, color .2s;
+}
+
+#name:hover {
+  background-color : rgba(255, 255, 255, 0.4);
+}
+
+#name:focus {
+  background-color : #fff;
+  color            : #333;
+  box-shadow       : 0 1px 0 0 #dbeeff;
+}
+
+.oscillators {
+  border-right : 1px solid #333;
+}
+
+.panner {
+  padding-bottom : 10px;
+  margin-bottom  : 10px;
+  border-bottom  : 1px solid #333;
+}

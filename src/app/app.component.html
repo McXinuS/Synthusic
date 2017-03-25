@@ -1,0 +1,17 @@
+<div class="center overlay start-overlay" [class.overlay-active]="!loadDone">
+  <div>
+    <h1 class="text-outline">{{loaderMessage}}</h1>
+    <div class="center-hor spinner"></div>
+  </div>
+</div>
+
+<app-popup></app-popup>
+<app-navbar></app-navbar>
+
+<div class="content">
+    <app-sequencer></app-sequencer>
+</div>
+<div class="footer">
+  <app-sequencer-footer></app-sequencer-footer>
+  <app-keyboard></app-keyboard>
+</div>

@@ -1,0 +1,462 @@
+.content {
+	margin : 80px 0 35px 0;
+}
+
+/* Background */
+
+#background {
+	background-color        : #000;
+	z-index                 : -1;
+	width                   : 100%;
+	height                  : 100%;
+	position                : fixed;
+	bottom                  : 0;
+	-webkit-background-size : cover;
+}
+
+#background > .star {
+	position         : absolute;
+	background-color : #000;
+	width            : 1px;
+	height           : 1px;
+	border-radius    : 50%;
+}
+
+#background > .star.grow {
+	background-color : #fff;
+}
+
+/* Navigation */
+
+#topnav {
+	position   : fixed;
+	top        : 0;
+	width      : 100%;
+	height     : 45px;
+	background : rgb(80, 80, 80);
+	color      : #ddd;
+	box-shadow : 0 2px 10px 0 rgba(0, 0, 0, .15);
+	z-index    : 999;
+}
+
+#topnav .navbar {
+	list-style-type : none;
+	margin          : 0;
+	padding         : 0;
+	overflow        : hidden;
+	min-height      : 0;
+	border          : 0;
+	font-size       : 17px;
+}
+
+.navbar li {
+	float       : left;
+	font-family : "Segoe UI", Arial, sans-serif;
+}
+
+.navbar li a {
+	color           : inherit;
+	cursor          : pointer;
+	text-decoration : none;
+	display         : block;
+	padding         : 10px 15px 11px 15px;
+	letter-spacing  : 1px;
+	transition      : all .3s;
+}
+
+.navbar li a:hover {
+	background-color : #000000;
+	color            : #ffffff;
+}
+
+/* Settings */
+
+#nav_settings {
+	background : rgba(60, 60, 60, .9);
+	color      : #ddd;
+	padding    : 24px 48px;
+	margin     : 45px 0 -45px 0;
+}
+
+#nav_settings .btn {
+	background   : rgba(100, 100, 100, .5);
+	border-color : #3a3a3a;
+	color        : inherit;
+}
+
+#nav_settings .dropdown-menu {
+	background : #646464;
+	width      : 100%;
+}
+
+#nav_settings .dropdown-menu > li > a:focus, #nav_settings .dropdown-menu > li > a:hover {
+	background : #888;
+}
+
+#nav_settings .dropdown-menu > li > a.selected {
+	background : #888;
+}
+
+#panner-field {
+
+}
+
+/* State */
+
+#state-container {
+	background : rgba(100, 120, 100, .5);
+	color      : #ddd;
+}
+
+/* Keyboard */
+
+#instr-container {
+	background : url(../img/woodtexture8.jpg);
+}
+
+#keyboard {
+	margin-bottom : 15px;
+	border        : 5px solid #582E16;
+	max-width     : 100%;
+	transition    : all .5s ease;
+	overflow-x    : auto;
+	overflow-y    : hidden;
+	white-space   : nowrap;
+	border-radius : 3px;
+}
+
+#keyboard-up {
+	background : url(../img/piano-up.jpg);
+	cursor     : move;
+	height     : 94px;
+}
+
+#keyboard-keys {
+	height     : 300px;
+	font-size  : 0;
+	transition : height .5s;
+}
+
+.key {
+	position   : relative;
+	border     : 1px solid;
+	display    : inline-block;
+	cursor     : pointer;
+	box-sizing : border-box;
+	transition : background-color .2s, transform .2s;
+}
+
+.key-white {
+	/*6.6 white keys on the screen on small screens*/
+	width            : 15%;
+	background-color : #fff;
+	height           : 100%;
+	z-index          : 1;
+}
+
+.key-black {
+	width            : 10%;
+	margin           : 0 -5%;
+	vertical-align   : top;
+	background-color : #000;
+	height           : 65%;
+	z-index          : 3;
+	box-shadow       : 0 0 10px rgba(0, 0, 0, .5);
+}
+
+.key-black:before {
+	top        : -50px;
+	left       : 50%;
+	content    : " ";
+	height     : 50px;
+	width      : .01px;
+	position   : absolute;
+	transform  : skewX(-10deg);
+	box-shadow : 0 0 50px 10px #000;
+}
+
+@media (min-width : 768px) {
+	.key-white {
+		/*10 white keys on the screen*/
+		width : 10%;
+	}
+
+	.key-black {
+		width  : 6%;
+		margin : 0 -3%;
+	}
+}
+
+@media (min-width : 992px) {
+	.key-white {
+		/*17 white keys on the screen*/
+		width : 6%;
+	}
+
+	.key-black {
+		width  : 4%;
+		margin : 0 -2%;
+	}
+}
+
+.key > span {
+	transition  : color .75s, bottom .5s;
+	font-family : 'VT323', monospace;
+	position    : absolute;
+	bottom      : 10px;
+	left        : 50%;
+	transform   : translate(-50%, 0);
+}
+
+.key-white > span {
+	color     : #4c4c4c;
+	font-size : calc(.5vw + 30px);
+}
+
+.key-black > span {
+	color     : #bebebe;
+	font-size : calc(.5vw + 20px);
+}
+
+.key:hover {
+	transform : scale(1.03, 1);
+	z-index   : 2;
+}
+
+.key-white:hover {
+	background-color : #efe;
+}
+
+.key-white:hover > span {
+	color : #000000;
+}
+
+.key-black:hover {
+	background-color : #020;
+}
+
+.key-black:hover > span {
+	color : #ffffff;
+}
+
+.key.playing {
+	background-color : #b3ffad;
+}
+
+.key-white.playing {
+	box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, .2);
+}
+
+.key.playing > span {
+	color : #000000;
+}
+
+.key-white.selected {
+	background-color : #dcdcdc;
+}
+
+.key-white.selected {
+	box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, .2);
+}
+
+.key-black.selected {
+	background-color : #ccc;
+}
+
+.key.selected > span {
+	color : #000000;
+}
+
+.keyboard-mini #keyboard-keys {
+	height : 120px;
+}
+
+.keyboard-mini .key-black {
+	height     : 60%;
+	box-shadow : 0 0 5px rgba(0, 0, 0, .5);
+}
+
+.keyboard-mini .key-black:before {
+	box-shadow : none;
+}
+
+.keyboard-mini .key-white > span {
+	bottom : 0
+}
+
+.keyboard-mini .key-black > span {
+	bottom    : 0;
+	transform : translate(-50%, -35%);
+}
+
+#keyboard::-webkit-scrollbar {
+	width  : 10px;
+	height : 24px;
+}
+
+#keyboard::-webkit-scrollbar-track {
+	background : url(../img/piano-down.jpg);
+}
+
+#keyboard::-webkit-scrollbar-thumb {
+	background-color : rgba(88, 46, 22, .7);
+}
+
+/* Oscilloscope */
+
+#oscilloscope {
+	background : rgba(141, 195, 138, .95);
+}
+
+#oscilloscope-wrapper {
+	/*margin-top : 15px;
+	padding    : 30px 40px;*/
+	position   : relative;
+}
+
+.osc-canvas {
+	border-radius : 30px;
+	box-shadow    : 5px 5px 40px 10px rgba(0, 0, 0, .25);
+	position      : relative;
+}
+
+/* Common */
+
+.dropdown-menu > li > a {
+	color : inherit !important;
+}
+
+.dropdown-menu > li > a.selected {
+	background : #f5f5f5;
+}
+
+.container-block {
+	border-radius : 5px;
+	margin-bottom : 5px;
+}
+
+.container-title {
+	font-size     : 24px;
+	border-bottom : 1px solid;
+	margin-bottom : 10px;
+	cursor        : pointer;
+}
+
+.label-value {
+	float : right;
+}
+
+.inline-block {
+	display : inline-block;
+}
+
+.hidden {
+	display : none;
+}
+
+.well {
+	background   : rgba(255, 255, 255, .02);
+	border-color : #5a5a5a;
+	transition   : all .2s ease-in-out;
+}
+
+.well:hover {
+	background : rgba(255, 255, 255, .03);
+	box-shadow : inset 0 0 6px 1px rgba(0, 0, 0, .15);
+}
+
+.list-group {
+	margin : 0;
+}
+
+.list-group-item {
+	background-color : inherit !important;
+	border           : inherit !important;
+}
+
+.title-arrow {
+	float  : right;
+	cursor : pointer;
+}
+
+.title-arrow-up {
+	border              : 14px solid transparent;
+	border-top          : 0;
+	border-bottom-color : #6ea972;
+}
+
+.title-arrow-down {
+	border           : 14px solid transparent;
+	border-bottom    : 0;
+	border-top-color : #6ea972;
+}
+
+meter {
+	width  : 100%;
+	height : 1.35em;
+}
+
+meter::-webkit-meter-bar {
+	font-size     : 0;
+	border        : 1px solid black;
+	border-radius : 1px;
+	background    : rgba(240, 240, 240, .1);
+}
+
+meter::-webkit-meter-optimum-value {
+	background    : #86CC00; /* Green */
+	border-radius : 1px;
+}
+
+meter::-webkit-meter-suboptimum-value {
+	background    : #FFDB1A; /* Yellow */
+	border-radius : 1px;
+}
+
+meter::-webkit-meter-even-less-good-value {
+	background    : #CC4600; /* Red */
+	border-radius : 1px;
+}
+
+input[type=range] {
+	-webkit-appearance : none;
+	margin             : 14px 0 14px 0;
+	height             : 22px;
+	background         : transparent;
+}
+
+input[type=range]:focus {
+	outline : none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background : #367ebd;
+}
+
+input[type=range][disabled]::-webkit-slider-runnable-track {
+	background : #aaa;
+}
+
+input[type=range][disabled]::-webkit-slider-thumb {
+	background : #ddd;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+	width      : 100%;
+	height     : 8px;
+	cursor     : pointer;
+	background : #3071a9;
+	border     : 1px solid #010101;
+}
+
+input[type=range]::-webkit-slider-thumb {
+	box-shadow         : 1px 1px 1px #000000, 0 0 1px #0d0d0d;
+	border             : 1px solid #000000;
+	height             : 30px;
+	width              : 16px;
+	border-radius      : 3px;
+	background         : #ffffff;
+	cursor             : pointer;
+	-webkit-appearance : none;
+	margin-top         : -13px;
+}

@@ -1,0 +1,153 @@
+.key {
+  position   : relative;
+  border     : 1px solid;
+  display    : inline-block;
+  cursor     : pointer;
+  box-sizing : border-box;
+  transition : background-color .3s cubic-bezier(0.4, 0, 0.2, 1), transform .2s, height .5s;
+}
+
+.key-white {
+  /*6.6 white keys on the screen on small screens*/
+  width            : 15%;
+  background-color : #fff;
+  height           : 100%;
+  z-index          : 1;
+}
+
+.key-black {
+  width            : 10%;
+  margin           : 0 -5%;
+  vertical-align   : top;
+  background-color : #000;
+  height           : 65%;
+  z-index          : 3;
+  box-shadow       : 0 0 10px rgba(0, 0, 0, .5);
+}
+
+.key-black:before {
+  top        : -50px;
+  left       : 50%;
+  content    : "";
+  height     : 50px;
+  position   : absolute;
+  transform  : skewX(-10deg);
+  box-shadow : 0 0 50px 10px #000;
+}
+
+@media (min-width : 768px) {
+  .key-white {
+    /*10 white keys on the screen*/
+    width : 10%;
+  }
+
+  .key-black {
+    width  : 6%;
+    margin : 0 -3%;
+  }
+}
+
+@media (min-width : 992px) {
+  .key-white {
+    /*17 white keys on the screen*/
+    width : 6%;
+  }
+
+  .key-black {
+    width  : 4%;
+    margin : 0 -2%;
+  }
+}
+
+.key p {
+  display         : flex;
+  width           : 100%;
+  margin          : 0;
+  justify-content : center;
+  transition      : color .75s, bottom .5s, transform .5s;
+  font-family     : 'VT323', 'Courier New', monospace;
+  position        : absolute;
+  bottom          : 10px;
+}
+
+.key-white p {
+  color     : #4c4c4c;
+  font-size : calc(.5vw + 30px);
+}
+
+.key-black p {
+  color     : #bebebe;
+  font-size : calc(.5vw + 20px);
+}
+
+.upper {
+  vertical-align : super;
+  font-size      : 0.5em;
+}
+
+.key:hover {
+  transform : scale(1.03, 1);
+  z-index   : 2;
+}
+
+.key-white:hover {
+  background-color : #efe;
+}
+
+.key-white:hover p {
+  color : #000000;
+}
+
+.key-black:hover {
+  background-color : #020;
+}
+
+.key-black:hover p {
+  color : #ffffff;
+}
+
+.key.playing {
+  background-color : #b3ffad;
+}
+
+.key-white.playing {
+  box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, .2);
+}
+
+.key.playing p {
+  color : #000000;
+}
+
+.key-white.selected {
+  background-color : #dcdcdc;
+}
+
+.key-white.selected {
+  box-shadow : inset 0 0 12px 1px rgba(0, 0, 0, .2);
+}
+
+.key-black.selected {
+  background-color : #ccc;
+}
+
+.key.selected p {
+  color : #000000;
+}
+
+.mini .key-black {
+  height     : 60%;
+  box-shadow : 0 0 5px rgba(0, 0, 0, .5);
+}
+
+.mini .key-black:before {
+  box-shadow : none;
+}
+
+.mini .key-white p {
+  bottom : 0
+}
+
+.mini .key-black p {
+  bottom    : 50%;
+  transform : translateY(50%);
+}

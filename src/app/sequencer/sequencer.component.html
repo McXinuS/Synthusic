@@ -1,0 +1,7 @@
+<div class="sequencer">
+  <div app-sequencer-instrument *ngFor="let instrument of instruments | async"
+                            [instrument]="instrument"
+                            [notes]="notes.get(instrument.id)"
+                            [bars]="bars"></div>
+  <div app-sequencer-instrument-create></div>
+</div>

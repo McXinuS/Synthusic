@@ -37,14 +37,16 @@ export class InstrumentService {
    * Request server to create new instrument.
    * Instrument will be added to application with web socket service handler.
    */
-  async createInstrument(): Promise<Instrument> {
-    try {
-      let instrument = await this.webSocketService.sendAsync<Instrument>(WebSocketMessageType.instrument_add);
-      if (instrument == null) return null;
-      return instrument;
-    } catch (e) {
-      throw e;
-    }
+  createInstrument(): Promise<Instrument> {
+    return new Promise((resolve, reject) => {
+      this.webSocketService.sendAsync<Instrument>(WebSocketMessageType.instrument_add)
+        .then((instrument) => {
+          if (!instrument) {
+            reject();
+          }
+          resolve(instrument);
+        }, reject)
+    });
   }
 
   private addInstrument(instrument: Instrument) {

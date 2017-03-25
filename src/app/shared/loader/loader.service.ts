@@ -83,15 +83,16 @@ export class LoaderService {
     });
   }
 
-  private async loadSettings(): Promise<Settings> {
-      try {
-        let state: Settings = await this.wsService.sendAsync<Settings>(WebSocketMessageType.get_state);
-        if (!state)
-          return null;
-        return Object.assign({}, CONSTANTS, state);
-      } catch (e) {
-        throw new Error('Error while getting server state');
-      }
+  private loadSettings(): Promise<Settings> {
+    return new Promise((resolve, reject) => {
+      this.wsService.sendAsync<Settings>(WebSocketMessageType.get_state)
+        .then((state) => {
+          if (!state) {
+            reject();
+          }
+          resolve(Object.assign({}, CONSTANTS, state));
+        }, reject)
+    });
   }
 
   private loadLocalSettings(): Settings {

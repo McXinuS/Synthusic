@@ -5,13 +5,13 @@ export class WebSocketClient {
   private socket: WebSocket;
   onDisconnect: () => any;
 
-  // private pendingMessages: Array<WebSocketMessage> = [];
+  private pendingMessages: Array<WebSocketMessage> = [];
 
   get isSocketReady(): boolean {
     return this.socket.readyState === 1;
   }
 
-  // private readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
+  private readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
   // private readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
   private readonly PingInterval = 30000; // interval of ping of server to keep web socket connection alive
 
@@ -29,9 +29,9 @@ export class WebSocketClient {
         this.sendPing();
       }, this.PingInterval);
 
-      // for (let msg of this.pendingMessages) {
-      //   this.send(msg);
-      // }
+      for (let msg of this.pendingMessages) {
+        this.send(msg);
+      }
     };
 
     ws.onmessage = (event) => {
@@ -63,29 +63,9 @@ export class WebSocketClient {
     if (this.isSocketReady) {
       this.socket.send(JSON.stringify(data));
     } else {
-      //  this.pendingMessages.push(data);
+      this.pendingMessages.push(data);
     }
-    /*
-     this.waitForSocketConnection((socket) => {
-     socket.send(JSON.stringify(data));
-     });
-     */
   };
-
-  /**
-   * Wait for socket to be ready.
-   */
-  /*
-   waitForSocketConnection(callback) {
-   if (this.isSocketReady) {
-   if (callback != null) callback(this.socket);
-   } else {
-   setTimeout(function () {
-   this.waitForSocketConnection(callback);
-   }.bind(this), this.SEND_WAIT_TIME);
-   }
-   };
-   */
 
   private sendPing() {
     this.send(new WebSocketMessage(WebSocketMessageType.ping));

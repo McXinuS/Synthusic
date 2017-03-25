@@ -164,14 +164,14 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
   private pannerToCanvasCoordinates(panner: PannerConfig): Point {
     return {
       x: panner.x * this.width / 2 + this.center.x,
-      y: panner.y * this.center.y
+      y: this.center.y * (1 - panner.y)
     }
   }
 
   private canvasToPannerCoordinates(coord: Point): PannerConfig {
     return {
       x: (coord.x - this.center.x) / this.width * 2,
-      y: coord.y / this.center.y
+      y: 1 - coord.y / this.center.y
     }
   }
 

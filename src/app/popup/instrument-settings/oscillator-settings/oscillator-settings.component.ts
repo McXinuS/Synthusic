@@ -53,6 +53,9 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
   ngAfterViewInit() {
     super.ngAfterViewInit();
     this.render();
+    this.instrumentService.instruments$.subscribe(instruments => {
+      this.render();
+    });
   }
 
   render() {

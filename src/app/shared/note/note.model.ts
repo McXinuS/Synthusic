@@ -4,14 +4,17 @@
  */
 export class BaseNote {
   readonly id: number;
+  readonly index: number;
   readonly name: string;
   readonly octave: number;
   readonly fullname: string;
   readonly isAccidental: boolean;
   readonly freq: number;
 
-  constructor(id: number, name: string, octave: number, fullname: string, isAccidental: boolean, freq: number) {
+  constructor(id: number, index: number, name: string, octave: number,
+              fullname: string, isAccidental: boolean, freq: number) {
     this.id = id;
+    this.index = index;
     this.name = name;
     this.octave = octave;
     this.fullname = fullname;

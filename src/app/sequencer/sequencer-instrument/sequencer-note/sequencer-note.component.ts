@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NoteDurationEnum, SequencerNote} from "../../../shared/sequencer/sequencernote.model";
+import {NoteService} from "../../../shared/note/note.service";
 
 @Component({
   selector: 'g[app-note]',
@@ -11,9 +12,10 @@ export class SequencerNoteComponent implements OnInit {
 
   durations = NoteDurationEnum;
 
-  constructor() { }
+  constructor(private noteService: NoteService) { }
 
   ngOnInit() {
+    this.noteService.noteCount
   }
 
 }

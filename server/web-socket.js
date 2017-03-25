@@ -161,15 +161,6 @@ function Server(server) {
          */
         notifyRoomUpdate(sender);
         return true;
-      case WebSocketMessageType.chat_new_message:
-        let str = message.data || '';
-        if (str.length > CHAT_MESSAGE_LENGTH_MAX) str = str.substring(0, CHAT_MESSAGE_LENGTH_MAX);
-        message.data = {
-          message: str,
-          sender: sender
-        };
-        broadcastToUserRoom(message, sender);
-        return true;
     }
     return false;
   }
@@ -179,23 +170,23 @@ function Server(server) {
       case WebSocketMessageType.ping:
         send({type: WebSocketMessageType.pong}, sender);
         return true;
+
+      case WebSocketMessageType.chat_new_message:
+        let str = message.data || '';
+        if (str.length > CHAT_MESSAGE_LENGTH_MAX) {
+          str = str.substring(0, CHAT_MESSAGE_LENGTH_MAX);
+        }
+        message.data = {
+          message: str,
+          sender: sender
+        };
+        broadcastToUserRoom(message, sender, true);
+        return true;
     }
     return false;
   }
 
-  function processChatMessage(message, sender) {
-    if (message.type === WebSocketMessageType.chat_new_message) {
-      message.data = {
-        message: message.data,
-        sender: sender
-      };
-      broadcastToUserRoom(message, sender, true);
-      return true;
-    }
-    return false;
-  }
-
-  let messageHandlers = [processStateMessage, processServiceMessage, processChatMessage];
+  let messageHandlers = [processStateMessage, processServiceMessage];
 
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {

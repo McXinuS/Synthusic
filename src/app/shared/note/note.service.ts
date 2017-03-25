@@ -37,13 +37,20 @@ export class NoteService {
       accidentalSign = this._scale.accidentalSign;
 
     this.noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
+    let index,
+      octave,
+      name,
+      fullname,
+      isAccidental,
+      freq;
     for (let i = 0; i < this.noteCount; i++) {
-      let octave = startOctave + Math.floor((i + scale.indexOf(startName)) / scaleLength);
-      let name = scale[(scale.indexOf(startName) + i) % scaleLength];
-      let fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
-      let isAccidental = !!name[1];
-      let freq = this.getFrequency(name, octave);
-      this._notes[i] = new BaseNote(i, name, octave, fullname, isAccidental, freq);
+      octave = startOctave + Math.floor((i + scale.indexOf(startName)) / scaleLength);
+      name = scale[(scale.indexOf(startName) + i) % scaleLength];
+      fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
+      isAccidental = !!name[1];
+      if (!isAccidental) index++;
+      freq = this.getFrequency(name, octave);
+      this._notes[i] = new BaseNote(i, index, name, octave, fullname, isAccidental, freq);
     }
     this._firstNote = this.notes[0];
   }

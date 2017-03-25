@@ -219,21 +219,6 @@ export class SoundService {
     }
   };
 
-  setInstrumentObservable(observable: Observable<Array<Instrument>>) {
-    this.instruments$ = observable;
-    this.instruments$.subscribe(instruments => {
-      this.instruments = instruments;
-      for (let instrument of instruments) {
-        if (!this.modifiers.has(instrument.id)) {
-          this.modifiers.set(
-            instrument.id,
-            this.createInstrumentModifiers(instrument, this.masterGainNode)
-          );
-        }
-      }
-    });
-  }
-
   onInstrumentUpdate(instrumentId: number) {
     let instrument = this.instruments[instrumentId];
     this.onOscillatorsUpdate(instrument.id);
@@ -273,6 +258,21 @@ export class SoundService {
 
   onPannerUpdate(instrumentId: number, panner: PannerConfig) {
     this.getPanner(instrumentId).changePosition(panner);
+  }
+
+  setInstrumentObservable(observable: Observable<Array<Instrument>>) {
+    this.instruments$ = observable;
+    this.instruments$.subscribe(instruments => {
+      this.instruments = instruments;
+      for (let instrument of instruments) {
+        if (!this.modifiers.has(instrument.id)) {
+          this.modifiers.set(
+            instrument.id,
+            this.createInstrumentModifiers(instrument, this.masterGainNode)
+          );
+        }
+      }
+    });
   }
 
   private hasOscillator(note: SequencerNote): boolean {

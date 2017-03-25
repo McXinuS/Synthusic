@@ -3,22 +3,40 @@
 <label for="name">Name</label>
 <input id="name" type="text" [(ngModel)]="instrument.name">
 
-<div class="oscillators">
-  <label>Oscillators</label>
-  <app-oscillator-settings [instrument]="instrument"
-                           [popupScrollTop]="popupScrollTop"></app-oscillator-settings>
-</div>
-
 <div class="row">
-  <div class="col-md-6 panner">
-    <label>Panner</label>
-    <app-panner-settings [instrument]="instrument"
-                         [popupScrollTop]="popupScrollTop"></app-panner-settings>
+
+  <div class="col-md-8 oscillators">
+
+    <label>Oscillators</label>
+    <div class="description">
+      <p>Create, update and remove oscillators.</p>
+      <p> - mouse left: select oscillator</p>
+      <p> - mouse right: remove selected oscillator or add new one if no selection</p>
+      <p> - mouse move: change frequency scale and gain of selected oscillator</p>
+      <p> - mouse double click: change type of selected oscillator</p>
+    </div>
+    <app-oscillator-settings [instrument]="instrument"
+                             [popupScrollTop]="popupScrollTop"></app-oscillator-settings>
+
   </div>
 
-  <div class="col-md-6 envelope">
-    <label>Envelope</label>
-    <app-envelope-settings [instrument]="instrument"
-                           [popupScrollTop]="popupScrollTop"></app-envelope-settings>
+  <div class="col-md-4">
+
+    <div class="panner">
+      <label>Panner</label>
+      <div class="description">
+        <p>Adjust instrument location on the scene. The darkest part of gradient indicates the observer point.</p>
+      </div>
+      <app-panner-settings [instrument]="instrument"
+                           [popupScrollTop]="popupScrollTop"></app-panner-settings>
+    </div>
+
+    <div class="envelope">
+      <label>Envelope</label>
+      <app-envelope-settings [instrument]="instrument"
+                             [popupScrollTop]="popupScrollTop"></app-envelope-settings>
+    </div>
+
   </div>
+
 </div>

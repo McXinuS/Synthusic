@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Instrument} from "../instrument/instrument.model";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 @Injectable()
 export class PopupService {
@@ -27,9 +28,13 @@ export class PopupService {
   }
 
   showInstrument(instrument: Instrument) {
-    this.instrument = instrument;
+    this.updateInstrument(instrument);
     this.isInstrument = true;
     this.show();
+  }
+
+  updateInstrument(instrument: Instrument) {
+    this.instrument = instrument;
   }
 
   close(delay = true) {

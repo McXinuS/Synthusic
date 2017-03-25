@@ -14,6 +14,8 @@ export class NoteService {
   private _firstNote: BaseNote;
   noteCount: number;
 
+  E3index: number;
+
   // interval of each note from 'A' note
   readonly interval = {
     'C': -9,
@@ -37,7 +39,7 @@ export class NoteService {
       accidentalSign = this._scale.accidentalSign;
 
     this.noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
-    let index,
+    let index = 0,
       octave,
       name,
       fullname,
@@ -53,6 +55,7 @@ export class NoteService {
       this._notes[i] = new BaseNote(i, index, name, octave, fullname, isAccidental, freq);
     }
     this._firstNote = this.notes[0];
+    this.E3index = this.getNote('E3').index;
   }
 
   getNote(index: number): BaseNote;

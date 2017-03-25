@@ -1,0 +1,16 @@
+<svg>
+  <text x="5" y="42" font-family="Verdana" font-size="12">{{state.index+1}}</text>
+
+  <line *ngFor="let y of linesY"
+        x1="0" [attr.y1]="y"
+        x2="100%" [attr.y2]="y" class="line"></line>
+
+  <line *ngIf="state.isFirst"
+        x1="0" [attr.y1]="linesY[0]"
+        x2="0" [attr.y2]="linesY[LinesCount-1]" class="line"></line>
+  <line x1="100%" [attr.y1]="linesY[0]"
+        x2="100%" [attr.y2]="linesY[LinesCount-1]" class="line"></line>
+
+  <g app-note *ngFor="let note of notes"
+     [note]="note"></g>
+</svg>

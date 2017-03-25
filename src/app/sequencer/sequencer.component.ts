@@ -13,6 +13,8 @@ import {Bar} from "../shared/sequencer/bar.model";
 })
 export class SequencerComponent implements OnInit {
 
+  collapsed: boolean[] = [];
+
   /**
    * Map of all notes, split by their instrument containing
    * array of notes, split by their position

@@ -12,9 +12,7 @@ import {Observable} from "rxjs";
 })
 export class SequencerInstrumentComponent implements OnInit {
   @Input() instrument: Instrument;
-  @Input() notes: Map<number, Array<SequencerNote>>;
-  @Input() bars: Bar[];
-  isCollapsed: boolean = false;
+  @Input() collapsed: boolean[];
 
   constructor(private popupService: PopupService) { }
 
@@ -22,7 +20,7 @@ export class SequencerInstrumentComponent implements OnInit {
   }
 
   toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
+    this.collapsed[this.instrument.id] = !this.collapsed[this.instrument.id];
   }
 
   openSettings() {

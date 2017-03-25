@@ -1,0 +1,35 @@
+.sequencer {
+  transition : height .3s, background-color .5s, visibility .3s, opacity .3s linear;
+}
+
+.instruments {
+  float      : left;
+  transition : inderit;
+}
+
+.staff {
+  overflow    : auto;
+  margin-left : 240px;
+  transition  : inderit;
+}
+
+.staff-instrument {
+  height      : 180px;
+  padding     : 15px 30px;
+  opacity     : 1;
+  visibility  : visible;
+  white-space : nowrap;
+  transition  : inderit;
+}
+
+.staff-instrument.collapsed {
+  opacity    : 0;
+  visibility : hidden;
+  height     : 30px;
+}
+
+.bar {
+  display  : inline-block;
+  position : relative;
+  height   : 100%;
+}

@@ -1,7 +1,24 @@
 <div class="sequencer">
-  <div app-sequencer-instrument *ngFor="let instrument of instruments | async"
-                            [instrument]="instrument"
-                            [notes]="notes.get(instrument.id)"
-                            [bars]="bars"></div>
+
+  <div class="instruments">
+    <div app-sequencer-instrument *ngFor="let instrument of instruments | async"
+         [class.collapsed]="collapsed[instrument.id]"
+         [instrument]="instrument"
+         [collapsed]="collapsed"></div>
+  </div>
+
+  <div class="staff">
+    <div *ngFor="let instrument of instruments | async"
+         class="staff-instrument"
+         [class.collapsed]="collapsed[instrument.id]">
+      <div app-bar *ngFor="let bar of bars"
+           [state]="bar"
+           [notes]="notes.get(instrument.id).get(bar.index)"
+           class="bar"
+           [style.width.px]="bar.width"></div>
+    </div>
+  </div>
+
   <div app-sequencer-instrument-create></div>
+
 </div>

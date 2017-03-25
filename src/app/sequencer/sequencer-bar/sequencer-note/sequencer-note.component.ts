@@ -12,10 +12,9 @@ export class SequencerNoteComponent implements OnInit {
 
   durations = NoteDurationEnum;
 
-  constructor(private noteService: NoteService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.noteService.noteCount
   }
 
 }

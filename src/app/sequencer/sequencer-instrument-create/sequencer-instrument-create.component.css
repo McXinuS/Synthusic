@@ -1,5 +1,6 @@
 .wrapper {
   background-color : #a4c798;
+  transition       : inderit;
 }
 
 .wrapper:hover {
@@ -8,4 +9,8 @@
 
 .wrapper-wait {
   background-color : #aacabf;
+}
+
+.wrapper-wait:hover {
+  background-color : #a2c0b6;
 }

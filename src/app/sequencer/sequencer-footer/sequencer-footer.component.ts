@@ -8,9 +8,15 @@ import {SequencerService} from "../../shared/sequencer/sequencer.service";
 })
 export class SequencerFooterComponent implements OnInit {
 
+  collapsed: boolean = false;
+
   constructor(private sequencerService: SequencerService) { }
 
   ngOnInit() {
+  }
+
+  toggleCollapsed() {
+    this.collapsed = !this.collapsed;
   }
 
   play() {

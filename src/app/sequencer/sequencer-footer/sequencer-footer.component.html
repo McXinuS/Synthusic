@@ -1,20 +1,28 @@
 <div class="wrapper">
 
-  <div (click)="$event.preventDefault()" class="buttons">
-    <div class="btn-seq-foot btn-staff-page medium" [class.inactive]="!sequencerService.canGoPrevPage" (click)="goPrevPage()">
+  <div (click)="$event.preventDefault()" class="group" [class.collapsed]="collapsed">
+    <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!sequencerService.canGoPrevPage"
+         (click)="goPrevPage()">
       <span class="glyphicon glyphicon-step-backward"></span>
     </div>
-    <div class="btn-seq-foot btn-pause medium" (click)="pause()">
+    <div class="btn-seq-foot medium btn-pause" (click)="pause()">
       <span class="glyphicon glyphicon-pause"></span>
     </div>
-    <div class="btn-seq-foot btn-play large" (click)="play()">
+    <div class="btn-seq-foot large btn-play" (click)="play()">
       <span class="glyphicon glyphicon-play"></span>
     </div>
-    <div class="btn-seq-foot btn-stop medium" (click)="stop()">
+    <div class="btn-seq-foot medium btn-stop" (click)="stop()">
       <span class="glyphicon glyphicon-stop"></span>
     </div>
-    <div class="btn-seq-foot btn-staff-page medium" [class.inactive]="!sequencerService.canGoNextPage" (click)="goNextPage()">
+    <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!sequencerService.canGoNextPage"
+         (click)="goNextPage()">
       <span class="glyphicon glyphicon-step-forward"></span>
+    </div>
+    <span>Page {{sequencerService.currentPage+1}} out of {{sequencerService.PageCount}}</span>
+    <div class="btn-seq-foot small btn-staff-collapse" (click)="toggleCollapsed()">
+      <span class="glyphicon"
+            [class.glyphicon-menu-up]="collapsed"
+            [class.glyphicon-menu-down]="!collapsed"></span>
     </div>
   </div>
 

@@ -1,6 +1,7 @@
 .wrapper {
   background : url(../../assets/img/woodtexture8.jpg);
   width      : 100%;
+  position   : relative;
   z-index    : 9;
   box-shadow : 0 -2px 10px 0 rgba(0, 0, 0, .15);
 }
@@ -60,15 +61,15 @@ select {
 }
 
 #keyboard-keys {
-  height     : 20vh;
-  min-height : 160px;
+  height     : 15vh;
+  min-height : 130px;
   font-size  : 0;
   transition : min-height .5s, height .5s;
 }
 
 .mini #keyboard-keys {
-  height     : 120px;
-  min-height : 120px;
+  height     : 100px;
+  min-height : 100px;
 }
 
 #keyboard::-webkit-scrollbar {

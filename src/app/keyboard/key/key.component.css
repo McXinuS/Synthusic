@@ -67,7 +67,7 @@
   transition      : color .75s, bottom .5s, transform .5s;
   font-family     : 'VT323', 'Courier New', monospace;
   position        : absolute;
-  bottom          : 10px;
+  bottom          : 0;
 }
 
 .key-white p {
@@ -144,7 +144,7 @@
 }
 
 .mini .key-white p {
-  bottom : 0
+  bottom : -5px;
 }
 
 .mini .key-black p {

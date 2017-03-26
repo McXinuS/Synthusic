@@ -7,65 +7,77 @@
   justify-content : center;
   height          : 0;
   position        : relative;
-  top             : -18px;
   z-index         : 5;
 }
 
-.buttons {
-  height : 64px;
+.group {
+  height           : 84px;
+  background-color : rgba(240, 248, 255, 0.39);
+  padding          : 10px;
+  position         : relative;
+  top              : -84px;
+  opacity          : 1;
+  box-shadow       : -1px 3px 10px 1px #333;
+  transition       : all .2s, top .3s;
+}
+
+.group.collapsed {
+  top     : -40px;
+  opacity : .7;
 }
 
 .btn-seq-foot {
-  position      : relative;
-  border-radius : 50%;
-  display       : inline-block;
-  border        : 1px solid #333;
-  box-shadow    : 0px 3px 4px 0px rgba(68, 45, 33, 0.5);
-  cursor        : pointer;
+  position         : relative;
+  border-radius    : 50%;
+  display          : inline-block;
+  border           : 1px solid #333;
+  cursor           : pointer;
+  background-color : #fcfdff;
+  box-shadow       : 0px 3px 4px 0px rgba(68, 45, 33, 0.5);
 }
 
-.btn-seq-foot:focus {
-  box-shadow : 0px 3px 7px 1px rgba(68, 45, 33, 0.5);
+.btn-seq-foot:not(.inactive):hover {
+  background-color : hsla(210, 96%, 99%, 1);
+  box-shadow       : 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  top              : 2px;
 }
 
-.btn-seq-foot.large {
+.large {
   width     : 64px;
   height    : 64px;
   padding   : 13px 16px;
   font-size : 32px;
 }
 
-.btn-seq-foot.medium {
+.medium {
   width     : 48px;
   height    : 48px;
   padding   : 11px 13px;
   font-size : 22px;
 }
 
-.btn-seq-foot.small {
-  width     : 32px;
-  height    : 32px;
-  font-size : 10px;
+.small {
+  width      : 32px;
+  height     : 32px;
+  padding    : 7px 8px;
+  font-size  : 14px;
+  box-shadow : 0px 2px 2px 0px rgba(68, 45, 33, 0.26);
 }
 
-.btn-staff-page {
-  background-color: hsl(44, 49%, 75%);
-}
-
-.btn-staff-page.inactive {
-  background-color : #e0e0e0;
-  background-color : hsla(35, 18%, 58%, 1);
-  box-shadow       : 0px 3px 2px 0px rgba(0, 0, 0, 0.5);
-}
-
-.btn-play {
-  background-color : hsl(55, 44%, 91%);
-}
-
-.btn-pause, .btn-stop {
-  background-color: hsl(46, 47%, 86%);
+.btn-seq-foot.inactive {
+  background-color : hsl(204, 19%, 81%);
 }
 
 span.glyphicon.glyphicon-stop, span.glyphicon.glyphicon-step-forward {
   left : -2px;
+}
+
+.btn-staff-collapse {
+  position : absolute;
+  top      : 3px;
+  right    : 3px;
+}
+
+.btn-seq-foot.btn-staff-collapse:hover {
+  top : 4px;
 }

@@ -33,7 +33,7 @@ export class SequencerService {
 
   readonly BarCount = 20;
   readonly BarsOnScreen = 4;
-  readonly LastPageIndex = Math.floor(this.BarCount / this.BarsOnScreen) - 1;
+  readonly PageCount = Math.floor(this.BarCount / this.BarsOnScreen);
   currentPage = 0;
   canGoPrevPage: boolean = false;
   canGoNextPage: boolean = true;
@@ -133,11 +133,11 @@ export class SequencerService {
   }
 
   goNextStaffPage() {
-    if (this.currentPage >= this.LastPageIndex) return;
+    if (this.currentPage >= this.PageCount - 1) return;
 
     this.currentPage++;
-    if (this.currentPage > this.LastPageIndex) {
-      this.currentPage = this.LastPageIndex;
+    if (this.currentPage > this.PageCount - 1) {
+      this.currentPage = this.PageCount - 1;
     }
 
     this.onPageChanged();
@@ -145,7 +145,7 @@ export class SequencerService {
 
   private onPageChanged() {
     this.canGoPrevPage = this.currentPage > 0;
-    this.canGoNextPage = this.currentPage < this.LastPageIndex;
+    this.canGoNextPage = this.currentPage < this.PageCount - 1;
     this.renderNotation();
   }
 

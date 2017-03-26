@@ -5,6 +5,7 @@
 }
 
 .content {
+  display    : flex;
   margin-top : 45px;
   flex       : 1 1 auto;
   overflow   : auto;

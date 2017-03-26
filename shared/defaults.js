@@ -49,7 +49,7 @@ module.exports = {
   ],
   // DEBUG
   notes: [
-    {"id":139810000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":0.5,"dotted":false,"triplet":false},"position":{"bar":1,"offset":0}},
-    {"id":139860000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":0.5,"dotted":false,"triplet":false},"position":{"bar":1,"offset":16}}
+    {"id":139810000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":0}},
+    {"id":139860000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":1}}
   ]
 };

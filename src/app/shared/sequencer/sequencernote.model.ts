@@ -31,7 +31,7 @@ export class NoteDuration {
   getHash(): number {
     if (this.baseDuration == NoteDurationEnum.Infinite) return InfiniteNoteHash;
 
-    let res = -Math.log2(this.baseDuration);
+    let res = Math.log2(this.baseDuration);
     if (this.dotted) res |= DottedShift;
     if (this.triplet) res |= TripletShift;
     return res;
@@ -41,11 +41,11 @@ export class NoteDuration {
 export enum NoteDurationEnum {
   Infinite = -1,
   Whole = 1,
-  Half = Whole / 2,
-  Quarter = Half / 2,
-  Eighth = Quarter / 2,
-  Sixteenth = Eighth / 2,
-  ThirtySecond = Sixteenth / 2
+  Half = Whole * 2,
+  Quarter = Half * 2,
+  Eighth = Quarter * 2,
+  Sixteenth = Eighth * 2,
+  ThirtySecond = Sixteenth * 2
 }
 
 const BarMax = 1000;

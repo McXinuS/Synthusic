@@ -1,6 +1,7 @@
 <div class="instrument" [class.collapsed]="collapsed[instrument.id]">
+
   <div *ngIf="!collapsed[instrument.id]">
-    <div>{{instrument.name}}</div>
+    <h4 class="name">{{instrument.name}}</h4>
     <div class="btn-square glyphicon-rotating" (click)="openSettings()">
       <span class="glyphicon glyphicon-cog"></span>
     </div>
@@ -12,4 +13,5 @@
   <div *ngIf="collapsed[instrument.id]" class="expand">
     <div class="center-hor" (click)="toggleCollapse()">Expand</div>
   </div>
+
 </div>

@@ -1,0 +1,71 @@
+.glyphicon {
+  top : 0;
+}
+
+.wrapper {
+  display         : flex;
+  justify-content : center;
+  height          : 0;
+  position        : relative;
+  top             : -18px;
+  z-index         : 5;
+}
+
+.buttons {
+  height : 64px;
+}
+
+.btn-seq-foot {
+  position      : relative;
+  border-radius : 50%;
+  display       : inline-block;
+  border        : 1px solid #333;
+  box-shadow    : 0px 3px 4px 0px rgba(68, 45, 33, 0.5);
+  cursor        : pointer;
+}
+
+.btn-seq-foot:focus {
+  box-shadow : 0px 3px 7px 1px rgba(68, 45, 33, 0.5);
+}
+
+.btn-seq-foot.large {
+  width     : 64px;
+  height    : 64px;
+  padding   : 13px 16px;
+  font-size : 32px;
+}
+
+.btn-seq-foot.medium {
+  width     : 48px;
+  height    : 48px;
+  padding   : 11px 13px;
+  font-size : 22px;
+}
+
+.btn-seq-foot.small {
+  width     : 32px;
+  height    : 32px;
+  font-size : 10px;
+}
+
+.btn-staff-page {
+  background-color: hsl(44, 49%, 75%);
+}
+
+.btn-staff-page.inactive {
+  background-color : #e0e0e0;
+  background-color : hsla(35, 18%, 58%, 1);
+  box-shadow       : 0px 3px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+.btn-play {
+  background-color : hsl(55, 44%, 91%);
+}
+
+.btn-pause, .btn-stop {
+  background-color: hsl(46, 47%, 86%);
+}
+
+span.glyphicon.glyphicon-stop, span.glyphicon.glyphicon-step-forward {
+  left : -2px;
+}

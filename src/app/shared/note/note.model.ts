@@ -6,6 +6,7 @@ export class BaseNote {
   readonly id: number;
   readonly index: number;
   readonly name: string;
+  readonly pitchNameLower: string;
   readonly octave: number;
   readonly fullname: string;
   readonly isAccidental: boolean;
@@ -16,6 +17,7 @@ export class BaseNote {
     this.id = id;
     this.index = index;
     this.name = name;
+    this.pitchNameLower = name[0].toLowerCase();
     this.octave = octave;
     this.fullname = fullname;
     this.isAccidental = isAccidental;

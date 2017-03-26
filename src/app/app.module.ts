@@ -27,8 +27,7 @@ import { PannerSettingsComponent } from './popup/instrument-settings/panner-sett
 import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-settings/envelope-settings.component';
 import { SequencerInstrumentCreateComponent } from './sequencer/sequencer-instrument-create/sequencer-instrument-create.component';
 import { SequencerFooterComponent } from './sequencer/sequencer-footer/sequencer-footer.component';
-import { SequencerBarComponent } from './sequencer/sequencer-bar/sequencer-bar.component';
-import { SequencerNoteComponent } from './sequencer/sequencer-bar/sequencer-note/sequencer-note.component';
+import {SafePipe} from "./shared/utils/pipes/safe.pipe";
 
 @NgModule({
   declarations: [
@@ -41,15 +40,14 @@ import { SequencerNoteComponent } from './sequencer/sequencer-bar/sequencer-note
     PopupComponent,
     OscillatorSettingsComponent,
     TitleCase,
+    SafePipe,
     SequencerComponent,
     RoomComponent,
     SequencerInstrumentComponent,
     PannerSettingsComponent,
     EnvelopeSettingsComponent,
     SequencerInstrumentCreateComponent,
-    SequencerFooterComponent,
-    SequencerBarComponent,
-    SequencerNoteComponent
+    SequencerFooterComponent
   ],
   imports: [
     BrowserModule,

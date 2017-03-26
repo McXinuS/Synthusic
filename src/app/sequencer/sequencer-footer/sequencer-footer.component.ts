@@ -1,15 +1,36 @@
 import { Component, OnInit } from '@angular/core';
+import {SequencerService} from "../../shared/sequencer/sequencer.service";
 
 @Component({
-  selector: 'app-sequencer-footer',
+  selector: 'div[app-sequencer-footer]',
   templateUrl: './sequencer-footer.component.html',
   styleUrls: ['./sequencer-footer.component.css']
 })
 export class SequencerFooterComponent implements OnInit {
 
-  constructor() { }
+  constructor(private sequencerService: SequencerService) { }
 
   ngOnInit() {
+  }
+
+  play() {
+
+  }
+
+  pause() {
+
+  }
+
+  stop() {
+
+  }
+
+  goPrevPage() {
+    this.sequencerService.goPrevStaffPage();
+  }
+
+  goNextPage() {
+    this.sequencerService.goNextStaffPage();
   }
 
 }

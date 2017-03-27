@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerService} from "../shared/sequencer/sequencer.service";
 import {Instrument} from "../shared/instrument/instrument.model";
@@ -9,7 +9,9 @@ import {Observable} from "rxjs";
   templateUrl: './sequencer.component.html',
   styleUrls: ['./sequencer.component.css']
 })
-export class SequencerComponent implements OnInit {
+export class SequencerComponent implements OnInit, AfterViewInit {
+
+  @ViewChild('staff') private staffContainer: ElementRef;
 
   collapsed: boolean[] = [];
 
@@ -28,7 +30,13 @@ export class SequencerComponent implements OnInit {
     });
   }
 
-  onResize(event) {
-    this.sequencerService.onStaffResize(event.target.innerWidth);
+  ngAfterViewInit() {
+    this.onResize();
+  }
+
+  onResize() {
+    if (this.staffContainer) {
+      this.sequencerService.onStaffResize(this.staffContainer.nativeElement.clientWidth);
+    }
   }
 }

@@ -8,7 +8,7 @@
     <div app-sequencer-instrument-create></div>
   </div>
 
-  <div class="staff" (window:resize)="onResize($event)">
+  <div #staff class="staff" (window:resize)="onResize()">
     <div *ngFor="let instrument of instruments$ | async"
          class="staff-instrument"
          [class.collapsed]="collapsed[instrument.id]">

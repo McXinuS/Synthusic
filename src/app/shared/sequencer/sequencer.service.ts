@@ -36,7 +36,7 @@ export class SequencerService {
   readonly BarCount = 20;
   readonly EstimatedBarWidth = 210;
   staffViewWidth: number;
-  barsOnScreen: number;
+  barsOnScreen: number = 0;
   pageCount: number;
   estimatedStaffWidth: number;
   currentPage: number = 0;
@@ -48,7 +48,6 @@ export class SequencerService {
               private sequencerNoteService: SequencerNoteService,
               private soundService: SoundService,
               private webSocketService: WebSocketService) {
-    this.onStaffResize(10000);
     this.notation$ = this.notationSource.asObservable();
     this.baseNotes = this.noteService.notes;
     this.instrumentService.instruments$.subscribe(instruments => {
@@ -123,6 +122,8 @@ export class SequencerService {
   }
 
   onStaffResize(staffViewWidth: number) {
+    if (!staffViewWidth || staffViewWidth < 320) return;
+
     this.currentPage = 0;
     this.staffViewWidth = staffViewWidth;
     this.barsOnScreen = Math.round(staffViewWidth / this.EstimatedBarWidth);
@@ -162,7 +163,7 @@ export class SequencerService {
 
   renderNotation() {
 
-    if (!this.instruments) return;
+    if (!this.instruments && this.barsOnScreen == 0) return;
 
     let note: SequencerNote,
       baseNote: BaseNote,

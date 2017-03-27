@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewChecked, Component, OnInit} from '@angular/core';
 import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerService} from "../shared/sequencer/sequencer.service";
 import {Instrument} from "../shared/instrument/instrument.model";
@@ -14,15 +14,18 @@ export class SequencerComponent implements OnInit {
   collapsed: boolean[] = [];
 
   instruments$: Observable<Array<Instrument>>;
-  notationSVG: Array<string>;
+  notationSVG$: Observable<Array<string>>;
 
   constructor(private instrumentService: InstrumentService,
               private sequencerService: SequencerService) {
   }
 
   ngOnInit() {
-    this.notationSVG = this.sequencerService.notation;
+    this.notationSVG$ = this.sequencerService.notation$;
     this.instruments$ = this.instrumentService.instruments$;
+    this.notationSVG$.subscribe(notation => {
+
+    });
   }
 
   onResize(event) {

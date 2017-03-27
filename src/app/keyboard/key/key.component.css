@@ -59,6 +59,18 @@
   }
 }
 
+@media (min-width : 1920px) {
+  .key-white {
+    /*25 white keys on the screen*/
+    width : 4%;
+  }
+
+  .key-black {
+    width  : 2.5%;
+    margin : 0 -1.25%;
+  }
+}
+
 .key p {
   display         : flex;
   width           : 100%;

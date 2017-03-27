@@ -4,23 +4,32 @@
 }
 
 .sequencer {
-  transition : height .3s, background-color .5s, visibility .3s, opacity .3s linear;
-  height     : 100%;
-  width      : 100%;
+  transition  : height .3s, background-color .5s, visibility .3s, opacity .3s linear;
+  height      : 100%;
+  width       : 100%;
+  white-space : nowrap;
 }
 
 .instruments {
+  display    : inline-block;
   float      : left;
   transition : inherit;
 }
 
 .staff {
-  position    : relative;
-  min-height  : 100%;
-  margin-left : 240px;
-  overflow-x  : visible;
-  overflow-y  : auto;
-  transition  : inherit;
+  display    : inline-block;
+  position   : relative;
+  min-height : 100%;
+  overflow-x : visible;
+  overflow-y : auto;
+  transition : inherit;
+}
+
+@media (min-width : 992px) {
+  .staff {
+    display     : block;
+    margin-left : 240px;
+  }
 }
 
 .staff-instrument {

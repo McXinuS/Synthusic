@@ -1,3 +1,7 @@
+h1 {
+  font-size : calc(.5vw + 10px);
+}
+
 li {
   list-style : none;
   padding    : 4px 0;

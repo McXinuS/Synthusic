@@ -4,7 +4,7 @@ import {SequencerNoteService} from './sequencernote.service';
 import {SoundService} from '../sound/sound.service';
 import {WebSocketService} from '../websocket/websocket.service';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
-import {Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 import {InstrumentService} from "../instrument/instrument.service";
 import {Instrument} from "../instrument/instrument.model";
 import {NoteService} from "../note/note.service";
@@ -28,23 +28,28 @@ export class SequencerService {
 
   vrvToolkit = new verovio.toolkit();
   notation: Array<string> = []; // SVGs for every instrument
+  private notationSource: Subject<Array<string>> = new BehaviorSubject(this.notation);
+  notation$: Observable<Array<string>>;
   instruments: Instrument[];
   baseNotes: BaseNote[];
 
   readonly BarCount = 20;
-  readonly BarsOnScreen = 4;
-  readonly PageCount = Math.floor(this.BarCount / this.BarsOnScreen);
-  currentPage = 0;
+  readonly EstimatedBarWidth = 210;
+  staffViewWidth: number;
+  barsOnScreen: number;
+  pageCount: number;
+  estimatedStaffWidth: number;
+  currentPage: number = 0;
   canGoPrevPage: boolean = false;
   canGoNextPage: boolean = true;
-
-  staffWidth: number = 1000;
 
   constructor(private instrumentService: InstrumentService,
               private noteService: NoteService,
               private sequencerNoteService: SequencerNoteService,
               private soundService: SoundService,
               private webSocketService: WebSocketService) {
+    this.onStaffResize(10000);
+    this.notation$ = this.notationSource.asObservable();
     this.baseNotes = this.noteService.notes;
     this.instrumentService.instruments$.subscribe(instruments => {
       this.instruments = instruments;
@@ -117,8 +122,14 @@ export class SequencerService {
     return this._playing.indexOf(note.id) >= 0;
   }
 
-  onStaffResize(staffWidth: number) {
-    this.staffWidth = staffWidth;
+  onStaffResize(staffViewWidth: number) {
+    this.currentPage = 0;
+    this.staffViewWidth = staffViewWidth;
+    this.barsOnScreen = Math.round(staffViewWidth / this.EstimatedBarWidth);
+    this.pageCount = Math.ceil(this.BarCount / this.barsOnScreen);
+    this.estimatedStaffWidth = this.EstimatedBarWidth * this.barsOnScreen;
+    this.onPageChanged();
+    this.renderNotation();
   }
 
   goPrevStaffPage() {
@@ -133,11 +144,11 @@ export class SequencerService {
   }
 
   goNextStaffPage() {
-    if (this.currentPage >= this.PageCount - 1) return;
+    if (this.currentPage >= this.pageCount - 1) return;
 
     this.currentPage++;
-    if (this.currentPage > this.PageCount - 1) {
-      this.currentPage = this.PageCount - 1;
+    if (this.currentPage > this.pageCount - 1) {
+      this.currentPage = this.pageCount - 1;
     }
 
     this.onPageChanged();
@@ -145,7 +156,7 @@ export class SequencerService {
 
   private onPageChanged() {
     this.canGoPrevPage = this.currentPage > 0;
-    this.canGoNextPage = this.currentPage < this.PageCount - 1;
+    this.canGoNextPage = this.currentPage < this.pageCount - 1 && this.pageCount - 1 > 0;
     this.renderNotation();
   }
 
@@ -157,15 +168,17 @@ export class SequencerService {
       baseNote: BaseNote,
       noteXml,
       restXml,
+      restMeasureXml,
       trebleNotesXml: Array<Array<string>>,
       bassNotesXml: Array<Array<string>>,
+      options,
       notationXML;
 
     for (let instrument of this.instruments) {
 
       trebleNotesXml = [];
       bassNotesXml = [];
-      for (let i = 0; i < this.BarsOnScreen; i++) {
+      for (let i = 0; i < this.barsOnScreen; i++) {
         trebleNotesXml[i] = [];
         bassNotesXml[i] = [];
       }
@@ -175,23 +188,23 @@ export class SequencerService {
         note = this._notes[i];
 
         if (note.instrumentId !== instrument.id) continue;
-        if (note.position.bar < this.currentPage * this.BarsOnScreen
-          || note.position.bar >= (this.currentPage + 1) * this.BarsOnScreen
+        if (note.position.bar < this.currentPage * this.barsOnScreen
+          || note.position.bar >= (this.currentPage + 1) * this.barsOnScreen
           || note.position.bar < 0
           || note.position.bar >= this.BarCount) continue;
 
         baseNote = this.baseNotes[note.baseNoteId];
 
         noteXml = `<note xml:id="${note.id}" dur="${note.duration.baseDuration}" oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}" ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' } />`;
-        restXml = `<rest xml:id="rest-${note.id}" dur="${note.duration.baseDuration}" oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}" ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' }/>`;
+        // restXml = `<rest xml:id="rest-${note.id}" dur="${note.duration.baseDuration}" oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}" ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' }/>`;
 
         if (baseNote.octave > 3) {
-          trebleNotesXml[note.position.bar][note.position.offset] = noteXml;
-          bassNotesXml[note.position.bar][note.position.offset] = restXml;
+          trebleNotesXml[note.position.bar].push(noteXml);
+          // bassNotesXml[note.position.bar][note.position.offset] = restXml;
         }
         else {
-          trebleNotesXml[note.position.bar][note.position.offset] = restXml;
-          bassNotesXml[note.position.bar][note.position.offset] = noteXml;
+          // trebleNotesXml[note.position.bar][note.position.offset] = restXml;
+          bassNotesXml[note.position.bar].push(noteXml);
         }
       }
 
@@ -212,17 +225,18 @@ export class SequencerService {
                       </scoreDef>
                       <section>`;
 
-      for (let i = 0; (i < this.BarsOnScreen) && (this.currentPage * this.BarsOnScreen + i < this.BarCount); i++) {
+      for (let i = 0,
+             p = this.currentPage * this.barsOnScreen; (i < this.barsOnScreen) && (p < this.BarCount); i++, p++) {
         if (trebleNotesXml[i].length == 0) {
-          let restMeasureXml = `<rest xml:id="rest-${instrument.id}-${i}" dur="1" oct="4" pname="G"/>`;
+          restMeasureXml = `<rest xml:id="rest-${instrument.id}-${p}" dur="1" oct="4" pname="G"/>`;
           trebleNotesXml[i].push(restMeasureXml);
         }
         if (bassNotesXml[i].length == 0) {
-          let restMeasureXml = `<rest xml:id="rest-${instrument.id}-${i}" dur="1" oct="2" pname="F"/>`;
+          restMeasureXml = `<rest xml:id="rest-${instrument.id}-${p}" dur="1" oct="2" pname="F"/>`;
           bassNotesXml[i].push(restMeasureXml);
         }
         notationXML += `
-                            <measure n="${i + 1}">
+                            <measure n="${p + 1}">
                               <staff n="1">
                                   <layer n="1" xml:id="layer-treple">
                                         ${ trebleNotesXml[i].join("") }
@@ -244,15 +258,17 @@ export class SequencerService {
       </music>
     </mei>`;
 
-      let options = {
-        pageWidth: this.staffWidth,
+      options = {
         border: 25,
         scale: 50,
-        adjustPageHeight: 1
+        adjustPageHeight: 1,
+        ignoreLayout: true
       };
 
       this.notation[instrument.id] = this.vrvToolkit.renderData(notationXML, options);
 
     }
+
+    this.notationSource.next(this.notation);
   }
 }

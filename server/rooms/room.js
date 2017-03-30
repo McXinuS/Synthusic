@@ -2,11 +2,10 @@
 
 let User = require('./../models/user.js');
 let Instrument = require('./../models/instrument.js');
-let Defaults = require('./../defaults/defaults');
 
 let Room = function (id) {
   this.id = id;
-  this.name = 'Room #'+(id+1);
+  this.name = 'Room #' + (id + 1);
   this.users = [];
 
   let defaults = require('./../../shared/defaults');
@@ -19,12 +18,12 @@ let Room = function (id) {
 
   Object.defineProperties(this, {
     hasUsers: {
-      get: function() {
+      get: function () {
         return self.users.length !== 0;
       }
     },
     usersNumber: {
-      get: function() {
+      get: function () {
         return self.users.length;
       }
     }
@@ -32,12 +31,13 @@ let Room = function (id) {
 };
 
 Room.prototype = {
-  getState: function() {
+  getState: function (id) {
     return {
       bpm: this.bpm,
       instruments: this.instruments,
       notes: this.notes,
-      room: this.getRoomInfo()
+      room: this.getRoomInfo(),
+      currentUser: this.getUser(id)
     }
   },
 
@@ -56,14 +56,30 @@ Room.prototype = {
   },
 
   addUser: function (id) {
-    this.users.push(new User(id));
+    let user = require('./../defaults/defaults').user;
+    user.id = id;
+    this.users.push(user);
+    return user;
   },
-  removeUser: function(id) {
+  getUser: function (id) {
+    return this.users.find(user => user.id === id);
+  },
+  getUsers: function () {
+    return this.users.slice();
+  },
+  updateUser: function (user) {
+    let index = this.users.findIndex(user => user.id === id);
+    if (index >= 0) {
+      let u = this.users;
+      u.name = user.name;
+    }
+  },
+  removeUser: function (id) {
     let index = this.users.findIndex(user => user.id === id);
     if (index >= 0) this.users.splice(index, 1);
   },
-  hasUser: function(id) {
-    return this.users.findIndex(user => user.id === id)  >= 0;
+  hasUser: function (id) {
+    return this.users.findIndex(user => user.id === id) >= 0;
   },
 
   addNote: function (note) {
@@ -76,18 +92,18 @@ Room.prototype = {
   },
 
   createInstrument: function () {
-    let instrument = Object.assign({}, Defaults.instrument);
+    let instrument = Object.assign({}, require('./../defaults/defaults').instrument);
     instrument.id = ++this.lastInstrumentId;
     this.instruments.push(instrument);
     return instrument;
   },
   updateInstrument: function (instrument) {
     let index = this.instruments.findIndex(ins => ins.id === instrument.id);
-    if (index  >= 0) this.instruments[index] = instrument;
+    if (index >= 0) this.instruments[index] = instrument;
   },
   deleteInstrument: function (id) {
     let index = this.instruments.findIndex(ins => ins.id === id);
-    if (index  >= 0) this.instruments.splice(index, 1);
+    if (index >= 0) this.instruments.splice(index, 1);
   }
 };
 

@@ -30,7 +30,12 @@ function Server(server) {
     });
 
     ws.on('close', function () {
-      notifyRoomUpdate(id);
+      let room = roomService.getRoomInfoByUser(id);
+      room.users.splice(room.users.indexOf(id), 1);
+      broadcastToUserRoom({
+        type: WebSocketMessageType.room_updated,
+        data: room
+      }, id);
       roomService.removeUser(id);
       wsClients.delete(id);
       console.log('Connection closed : id ' + id);
@@ -146,7 +151,6 @@ function Server(server) {
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.instrument_delete:
-        if (typeof message.data != 'number') return false;
         roomService.getRoomByUser(sender).deleteInstrument(message.data);
         broadcastToUserRoom(message, sender);
         return true;
@@ -155,22 +159,12 @@ function Server(server) {
 
       case WebSocketMessageType.room_name_update:
         roomService.getRoomByUser(sender).changeRoomName(message.data);
-        /*
-         message.data = roomService.getRoomByUser(sender).getRoomInfoByUser();
-         broadcastToUserRoom(message, sender);
-         */
         notifyRoomUpdate(sender);
         return true;
-    }
-    return false;
-  }
-
-  function processServiceMessage(message, sender) {
-    switch (message.type) {
-      case WebSocketMessageType.ping:
-        send({type: WebSocketMessageType.pong}, sender);
+      case WebSocketMessageType.user_update:
+        roomService.getRoomByUser(sender).updateUser(message.data);
+        notifyRoomUpdate(sender);
         return true;
-
       case WebSocketMessageType.chat_new_message:
         let str = message.data || '';
         if (str.length > CHAT_MESSAGE_LENGTH_MAX) {
@@ -181,6 +175,15 @@ function Server(server) {
           sender: sender
         };
         broadcastToUserRoom(message, sender, true);
+        return true;
+    }
+    return false;
+  }
+
+  function processServiceMessage(message, sender) {
+    switch (message.type) {
+      case WebSocketMessageType.ping:
+        send({type: WebSocketMessageType.pong}, sender);
         return true;
     }
     return false;
@@ -203,17 +206,9 @@ function Server(server) {
       }
       reject(logMsg);
     }).then(
-      onMessageSuccess,
-      onMessageRejected
+      console.log,
+      console.log
     );
-  }
-
-  function onMessageSuccess(result) {
-    console.log(result);
-  }
-
-  function onMessageRejected(error) {
-    console.log(error);
   }
 
   webSocketServer.on('connection', onConnection);

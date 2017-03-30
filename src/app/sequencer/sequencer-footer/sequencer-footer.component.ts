@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SequencerService} from "../../shared/sequencer/sequencer.service";
 
 @Component({
@@ -10,9 +10,14 @@ export class SequencerFooterComponent implements OnInit {
 
   collapsed: boolean = false;
 
-  constructor(private sequencerService: SequencerService) { }
+  constructor(private sequencerService: SequencerService,
+              private changeDetectionRef : ChangeDetectorRef) { }
 
   ngOnInit() {
+  }
+
+  ngAfterViewInit() : void {
+    this.changeDetectionRef.detectChanges();
   }
 
   toggleCollapsed() {

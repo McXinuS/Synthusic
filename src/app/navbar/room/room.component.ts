@@ -11,8 +11,11 @@ import {Room} from "../../shared/room/room.model";
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  chatMessages: ChatMessage[];
   room: Observable<Room>;
+  userName: string;
+  userNameChanged: boolean = false;
+
+  chatMessages: ChatMessage[];
   isChatEmpty: boolean = true;
   @ViewChild('messages') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
@@ -24,8 +27,16 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.room = this.roomService.room$;
+    this.room.subscribe(room => {
+      if (!this.userNameChanged) {
+        this.userName = room.name;
+      }
+    });
     this.roomService.messages$.subscribe(messages => {
-      this.chatMessages = messages;
+      this.chatMessages = messages.map(msg => new ChatMessage(
+        this.roomService.getUserById(msg.sender as number).name,
+        msg.message
+      ));
       this.isChatEmpty = messages.length === 0;
     });
   }
@@ -47,5 +58,14 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   sendMessage() {
     this.roomService.sendChatMessage(this.myMessage);
+  }
+
+  changeUserName() {
+    this.roomService.changeUserName(this.userName);
+  }
+
+  userNameReset() {
+    this.userName = this.roomService.currentUser.name;
+    this.userNameChanged = false;
   }
 }

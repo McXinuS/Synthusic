@@ -116,7 +116,7 @@ export class LoaderService {
   }
 
   private initRoom(settings: Settings) {
-    this.roomService.init(settings.room);
+    this.roomService.init(settings.room, settings.currentUser);
   }
 
   goOnline() {

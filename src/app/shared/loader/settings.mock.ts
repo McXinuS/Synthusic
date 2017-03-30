@@ -3,9 +3,10 @@ import {INSTRUMENTS} from "../instrument/instrument.mock";
 import {CONSTANTS} from "./config.constants";
 
 let SETTINGS_OFFLINE: Settings = Object.assign({}, CONSTANTS, {
+  currentUser: {id: 0, name: 'Offline  user'},
   room: {
     name: 'Offline room',
-    users: [{id: 0}]
+    users: [this.currentUser]
   },
   notes: [],
   instruments: INSTRUMENTS,

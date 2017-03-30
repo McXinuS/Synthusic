@@ -1,1 +1,2 @@
-exports.instrument = require('./../defaults/instrument');
+exports.instrument = require('./instrument');
+exports.user = require('./user');

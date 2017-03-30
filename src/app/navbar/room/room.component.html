@@ -1,38 +1,57 @@
 <div class="wrapper">
-
-  <div class="box-chat">
-    <div #messages class="box-messages" (scroll)="onChatScroll()">
-      <h1 *ngIf="isChatEmpty" class="center">
-        No messages yet. Be the first to chat!
-      </h1>
-      <ul *ngIf="!isChatEmpty">
-        <li *ngFor="let msg of chatMessages">
-          <span class="sender">{{msg.sender}}</span>: {{msg.message}}
+  
+  <div class="row">
+    
+    <div class="box-chat col-sm-10">
+      <div #messages class="box-messages" (scroll)="onChatScroll()">
+        <h1 *ngIf="isChatEmpty" class="center">
+          No messages yet. Be the first to chat!
+        </h1>
+        <ul *ngIf="!isChatEmpty">
+          <li *ngFor="let msg of chatMessages">
+            <span class="sender">{{msg.sender}}</span>: {{msg.message}}
+          </li>
+        </ul>
+      </div>
+      
+      <form (ngSubmit)="sendMessage(); messageForm.reset()" #messageForm="ngForm">
+        <div class="box-send button-group">
+          <label hidden for="messageText">Your message</label>
+          <input type="text" id="messageText" autocomplete="off"
+                 required placeholder="Your message"
+                 [(ngModel)]="myMessage" name="myMessage">
+          <button type="submit" class="btn-square">
+            <span class="glyphicon glyphicon-send"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="box-users col-sm-2">
+      <h4>Users in room: {{(room | async)?.users?.length}}</h4>
+      <ul>
+        <li *ngFor="let user of (room | async)?.users">
+          {{user.id}}
         </li>
       </ul>
+      
+      <form (ngSubmit)="changeUserName()" #messageForm="ngForm">
+        <div class="box-send button-group">
+          <label hidden for="userName">Your username</label>
+          <input type="text" id="userName" autocomplete="off"
+                 required placeholder="Your username"
+                 [(ngModel)]="userNameChanged" name="myNickName">
+          <button *ngIf="userNameChanged" type="submit" class="btn-square">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button *ngIf="userNameChanged" class="btn-square"
+                  (click)="userNameReset()">
+            <span class="glyphicon glyphicon-ok"></span>
+          </button>
+        </div>
+      </form>
     </div>
-
-    <form (ngSubmit)="sendMessage(); messageForm.reset()" #messageForm="ngForm">
-      <div class="box-send button-group">
-        <label hidden for="messageText">Your message</label>
-        <input type="text" id="messageText" autocomplete="off"
-               placeholder="Your message"
-               required
-               [(ngModel)]="myMessage" name="myMessage">
-        <button type="submit" class="btn-square">
-          <span class="glyphicon glyphicon-send"></span>
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div class="box-users">
-    <h4>Users in room: {{(room | async)?.users?.length}}</h4>
-    <ul>
-      <li *ngFor="let user of (room | async)?.users">
-        {{user.id}}
-      </li>
-    </ul>
+  
   </div>
 
 </div>

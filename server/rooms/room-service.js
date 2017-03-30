@@ -36,14 +36,19 @@ let RoomService = function () {
     return freeRoom.id;
   }
 
+  function updateUser(id) {
+    let room = getRoomByUser(id);
+    if (!room) return;
+    room.updateUser(id);
+  }
+
   function removeUser(id) {
     let room = getRoomByUser(id);
     if (!room) return;
-
     room.removeUser(id);
-    if (!room.hasUsers) {
-      //destroyRoom(room.id);
-    }
+    //if (!room.hasUsers) {
+    //  destroyRoom(room.id);
+    //}
   }
 
   function getRoomByUser(userId) {
@@ -56,11 +61,11 @@ let RoomService = function () {
   }
 
   function getRoomUsersByUser(userId) {
-    return getRoomByUser(userId).users.slice();
+    return getRoomByUser(userId).getUsers();
   }
 
   function getRoomStateByUser(userId) {
-    return getRoomByUser(userId).getState();
+    return getRoomByUser(userId).getState(userId);
   }
 
   function getRoomInfoByUser(userId) {
@@ -70,13 +75,17 @@ let RoomService = function () {
   /* API */
 
   this.addUser = addUser;
+  this.updateUser = updateUser;
   this.removeUser = removeUser;
 
   this.getRoomByUser = getRoomByUser;
   this.getRoomUsersByUser = getRoomUsersByUser;
+  /**
+   * Returns all room data.
+   */
   this.getRoomStateByUser = getRoomStateByUser;
   /**
-   * Returns name and users of the room.
+   * Returns room's name and users.
    */
   this.getRoomInfoByUser = getRoomInfoByUser;
 };

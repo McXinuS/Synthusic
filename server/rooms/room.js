@@ -1,7 +1,12 @@
 'use strict';
 
-let User = require('./../models/user.js');
-let Instrument = require('./../models/instrument.js');
+let usr = require('./../models/user.js');
+let names = [
+  'Bolitest', 'Brilliant', 'BWithWonder', 'Cationol', 'Cutieremi', 'Discuua', 'Dressylved', 'Dryadur', 'Encover', 'Flipjava', 'Gigausaler', 'Grindie', 'Haneffe', 'Helsonix', 'Hickyawmet', 'HipurAdvice', 'Horrayerth', 'Imervita', 'LastingMercy', 'Littler', 'Magfull', 'Meresspo', 'Missonolve', 'Mithister', 'Netbanc', 'Omflower', 'Paneryat', 'PassionIcyCooky', 'PrestigeLeventis'
+];
+function getRandomName() {
+  return names[Math.floor(Math.random() * names.length)];
+}
 
 let Room = function (id) {
   this.id = id;
@@ -56,8 +61,10 @@ Room.prototype = {
   },
 
   addUser: function (id) {
-    let user = require('./../defaults/defaults').user;
-    user.id = id;
+    let user = new usr(
+      id,
+      getRandomName()
+    );
     this.users.push(user);
     return user;
   },
@@ -68,9 +75,9 @@ Room.prototype = {
     return this.users.slice();
   },
   updateUser: function (user) {
-    let index = this.users.findIndex(user => user.id === id);
+    let index = this.users.findIndex(u => u.id === user.id);
     if (index >= 0) {
-      let u = this.users;
+      let u = this.users[index];
       u.name = user.name;
     }
   },

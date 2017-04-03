@@ -31,7 +31,7 @@ function Server(server) {
 
     ws.on('close', function () {
       let room = roomService.getRoomInfoByUser(id);
-      room.users.splice(room.users.indexOf(id), 1);
+      room.users = room.users.filter(user => user.id !== id);
       broadcastToUserRoom({
         type: WebSocketMessageType.room_updated,
         data: room

@@ -7,7 +7,9 @@ import {LoaderService} from '../shared/loader/loader.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+
   visible: Map<string, boolean> = new Map();
+  newChatMessages: boolean;
 
   constructor(private loaderService: LoaderService) {
   }
@@ -23,6 +25,17 @@ export class NavbarComponent implements OnInit {
 
   isVisible(tab: string) {
     return this.visible.get(tab);
+  }
+
+  showRoomNav() {
+    this.newChatMessages = false;
+    this.showNav('room');
+  }
+
+  onNewChatMessage() {
+    if (!this.isVisible('room')) {
+      this.newChatMessages = true;
+    }
   }
 
   reloadPage() {

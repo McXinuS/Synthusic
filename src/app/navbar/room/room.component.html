@@ -15,7 +15,7 @@
       </div>
       
       <form (ngSubmit)="sendMessage(); messageForm.reset()" #messageForm="ngForm">
-        <div class="box-send button-group">
+        <div class="box-form button-group">
           <label hidden for="messageText">Your message</label>
           <input type="text" id="messageText" autocomplete="off"
                  required placeholder="Your message"
@@ -31,21 +31,22 @@
       <h4>Users in room: {{(room | async)?.users?.length}}</h4>
       <ul>
         <li *ngFor="let user of (room | async)?.users">
-          {{user.id}}
+          {{user.name}}
         </li>
       </ul>
       
-      <form (ngSubmit)="changeUserName()" #messageForm="ngForm">
-        <div class="box-send button-group">
+      <form (ngSubmit)="changeUserName()" #usernameForm="ngForm">
+        <div class="box-form button-group">
           <label hidden for="userName">Your username</label>
           <input type="text" id="userName" autocomplete="off"
                  required placeholder="Your username"
-                 [(ngModel)]="userNameChanged" name="myNickName">
-          <button *ngIf="userNameChanged" type="submit" class="btn-square">
-            <span class="glyphicon glyphicon-remove"></span>
-          </button>
+                 (input)="userNameChanged=true"
+                 [(ngModel)]="userName" name="myUsername">
           <button *ngIf="userNameChanged" class="btn-square"
                   (click)="userNameReset()">
+            <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button *ngIf="userNameChanged" type="submit" class="btn-square">
             <span class="glyphicon glyphicon-ok"></span>
           </button>
         </div>

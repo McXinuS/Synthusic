@@ -2,11 +2,13 @@ import {Settings} from "./settings.model";
 import {INSTRUMENTS} from "../instrument/instrument.mock";
 import {CONSTANTS} from "./config.constants";
 
+let users = [{id: 0, name: 'Offline  user'}];
+
 let SETTINGS_OFFLINE: Settings = Object.assign({}, CONSTANTS, {
-  currentUser: {id: 0, name: 'Offline  user'},
+  currentUser: users[0],
   room: {
     name: 'Offline room',
-    users: [this.currentUser]
+    users: users
   },
   notes: [],
   instruments: INSTRUMENTS,

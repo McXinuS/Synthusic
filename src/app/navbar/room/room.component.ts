@@ -1,4 +1,4 @@
-import {Component, OnInit, ElementRef, ViewChild, AfterViewChecked} from '@angular/core';
+import {Component, OnInit, ElementRef, ViewChild, AfterViewChecked, Input, Output, EventEmitter} from '@angular/core';
 import {RoomService} from '../../shared/room/room.service';
 import {ChatMessage} from '../../shared/room/chat.model';
 import {Observable} from 'rxjs';
@@ -11,7 +11,10 @@ import {Room} from "../../shared/room/room.model";
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
+  @Output() newChatMessage = new EventEmitter();
+
   room: Observable<Room>;
+  roomName: string;
   userName: string;
   userNameChanged: boolean = false;
 
@@ -28,21 +31,31 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.room = this.roomService.room$;
     this.room.subscribe(room => {
+      this.roomName = room.name;
       if (!this.userNameChanged) {
-        this.userName = room.name;
+        this.userName = this.roomService.currentUser.name;
       }
     });
     this.roomService.messages$.subscribe(messages => {
-      this.chatMessages = messages.map(msg => new ChatMessage(
-        this.roomService.getUserById(msg.sender as number).name,
-        msg.message
-      ));
-      this.isChatEmpty = messages.length === 0;
+      this.onMessagesUpdated(messages);
     });
   }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+  }
+
+  onMessagesUpdated(messages: ChatMessage[]) {
+    if (messages && messages[messages.length-1].sender !== this.roomService.currentUser.id) {
+      this.newChatMessage.emit();
+    }
+
+    this.chatMessages = messages.map(msg => new ChatMessage(
+      this.roomService.getUserById(msg.sender as number).name,
+      msg.message
+    ));
+
+    this.isChatEmpty = messages.length === 0;
   }
 
   scrollToBottom(): void {
@@ -62,6 +75,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   changeUserName() {
     this.roomService.changeUserName(this.userName);
+    this.userNameChanged = false;
   }
 
   userNameReset() {

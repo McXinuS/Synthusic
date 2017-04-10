@@ -1,9 +1,9 @@
 @font-face {
-  font-family: 'VT323';
-  font-style: normal;
-  font-weight: 400;
-  src: local('VT323 Regular'), local('VT323-Regular'), url(https://fonts.gstatic.com/s/vt323/v8/lo_L7yCDHYN9FAxvMCI1vQ.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+  font-family   : 'VT323';
+  font-style    : normal;
+  font-weight   : 400;
+  src           : local('VT323 Regular'), local('VT323-Regular'), url(https://fonts.gstatic.com/s/vt323/v8/lo_L7yCDHYN9FAxvMCI1vQ.woff2) format('woff2');
+  unicode-range : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
 
 html, body {
@@ -12,13 +12,13 @@ html, body {
 }
 
 body {
-  font-family : "Open Sans",sans-serif;
+  font-family : "Open Sans", sans-serif;
   font-weight : 200;
 }
 
-h1,h2,h3 {
-  font-family: Verdana, Geneva, sans-serif;
-  font-weight: 500;
+h1, h2, h3 {
+  font-family : Verdana, Geneva, sans-serif;
+  font-weight : 500;
 }
 
 .center {
@@ -198,6 +198,7 @@ select[disabled] {
   border           : 1px solid #ccc;
   border-radius    : 4px;
   background-color : #fff;
+  cursor           : pointer;
   transition       : background-color .3s;
 }
 

@@ -1,15 +1,67 @@
 <div class="instrument" [class.collapsed]="collapsed[instrument.id]">
-
+  
   <div *ngIf="!collapsed[instrument.id]">
+    
     <h4 class="name">{{instrument.name}}</h4>
-    <div class="btn-square glyphicon-rotating" (click)="openSettings()">
-      <span class="glyphicon glyphicon-cog"></span>
+    
+    <div class="description">
+      
+      <p class="oscillators">
+        <label>Oscillators:</label>
+        <br>
+        <span class="prop">Count:</span>
+        <span class="value">{{instrument.oscillators.length}}</span>
+        <br>
+        <span class="freq">Frequency</span>
+        <span class="gain">Gain</span>
+        <span class="type">Type</span>
+        <ng-container *ngFor="let oscillator of instrument.oscillators">
+          <br>
+          <span class="value freq">{{oscillator.freq}}</span>
+          <span class="value gain">{{oscillator.gain}}</span>
+          <span class="value type">{{oscillator.type}}</span>
+        </ng-container>
+      </p>
+      
+      <p class="envelope">
+        <label>Envelope:</label>
+        <br>
+        <span class="prop">Attack:</span>
+        <span class="value">{{instrument.envelope.attack}}</span>
+        <br>
+        <span class="prop">Decay:</span>
+        <span class="value">{{instrument.envelope.decay}}</span>
+        <br>
+        <span class="prop">Sustain:</span>
+        <span class="value">{{instrument.envelope.sustain}}</span>
+        <br>
+        <span class="prop">Release:</span>
+        <span class="value">{{instrument.envelope.release}}</span>
+      </p>
+      
+      <p class="panner">
+        <label>Panner:</label>
+        <br>
+        <span class="prop">X:</span>
+        <span class="value">{{instrument.panner.x}}</span>
+        <br>
+        <span class="prop">Y:</span>
+        <span class="value">{{instrument.panner.y}}</span>
+      </p>
+    
     </div>
-    <div class="btn-square btn-collapse" (click)="toggleCollapse()">
-      <span class="glyphicon glyphicon-collapse-up"></span>
+    
+    <div class="buttons">
+      <div class="btn-square glyphicon-rotating" (click)="openSettings()">
+        <span class="glyphicon glyphicon-cog"></span>
+      </div>
+      <div class="btn-square" (click)="toggleCollapse()">
+        <span class="glyphicon glyphicon-collapse-up"></span>
+      </div>
     </div>
+  
   </div>
-
+  
   <div *ngIf="collapsed[instrument.id]" class="expand">
     <div class="center-hor" (click)="toggleCollapse()">Expand</div>
   </div>

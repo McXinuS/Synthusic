@@ -26,11 +26,10 @@
   padding-right : 35px;
 }
 
-.btn-collapse {
+.buttons {
   position : absolute;
   top      : 8px;
   right    : 10px;
-  cursor   : pointer;
 }
 
 .btn-collapse span {
@@ -39,4 +38,51 @@
 
 .expand {
   cursor : pointer;
+}
+
+/* Description of an instrument */
+
+.description {
+  overflow : auto;
+  height   : 200px;
+}
+
+.prop {
+  font-weight : 600;
+}
+
+.oscillators .prop {
+  color : #86a27c;
+}
+
+.oscillators .value {
+  color : #91b086;
+}
+
+.oscillators .freq {
+  color : #a27b6f;
+}
+
+.oscillators .gain {
+  color : #866aa2;
+}
+
+.oscillators .type {
+  color : #5fa2a2;
+}
+
+.envelope .prop {
+  color : #608490;
+}
+
+.envelope .value {
+  color : #6d87bf;
+}
+
+.panner .prop {
+  color : #907c49;
+}
+
+.panner .value {
+  color : #bfa460;
 }

@@ -3,6 +3,7 @@ import {InstrumentService} from '../shared/instrument/instrument.service';
 import {SequencerService} from "../shared/sequencer/sequencer.service";
 import {Instrument} from "../shared/instrument/instrument.model";
 import {Observable} from "rxjs";
+import {StaffService} from "../shared/sequencer/staff.service";
 
 @Component({
   selector: 'div[app-sequencer]',
@@ -19,15 +20,13 @@ export class SequencerComponent implements OnInit, AfterViewInit {
   notationSVG$: Observable<Array<string>>;
 
   constructor(private instrumentService: InstrumentService,
+              private staffService: StaffService,
               private sequencerService: SequencerService) {
   }
 
   ngOnInit() {
-    this.notationSVG$ = this.sequencerService.notation$;
+    this.notationSVG$ = this.staffService.notation$;
     this.instruments$ = this.instrumentService.instruments$;
-    this.notationSVG$.subscribe(notation => {
-
-    });
   }
 
   ngAfterViewInit() {
@@ -36,7 +35,7 @@ export class SequencerComponent implements OnInit, AfterViewInit {
 
   onResize() {
     if (this.staffContainer) {
-      this.sequencerService.onStaffResize(this.staffContainer.nativeElement.clientWidth);
+      this.staffService.onResize(this.staffContainer.nativeElement.clientWidth);
     }
   }
 }

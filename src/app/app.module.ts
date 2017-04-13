@@ -28,6 +28,7 @@ import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-
 import { SequencerInstrumentCreateComponent } from './sequencer/sequencer-instrument-create/sequencer-instrument-create.component';
 import { SequencerFooterComponent } from './sequencer/sequencer-footer/sequencer-footer.component';
 import {SafePipe} from "./shared/utils/pipes/safe.pipe";
+import {StaffService} from "./shared/sequencer/staff.service";
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import {SafePipe} from "./shared/utils/pipes/safe.pipe";
     InstrumentService,
     NoteService,
     SequencerService,
+    StaffService,
     SequencerNoteService,
     SoundService,
     PopupService,

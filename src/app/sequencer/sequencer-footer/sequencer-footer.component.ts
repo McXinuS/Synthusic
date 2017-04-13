@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SequencerService} from "../../shared/sequencer/sequencer.service";
+import {StaffService} from "../../shared/sequencer/staff.service";
 
 @Component({
   selector: 'div[app-sequencer-footer]',
@@ -11,6 +12,7 @@ export class SequencerFooterComponent implements OnInit {
   collapsed: boolean = false;
 
   constructor(private sequencerService: SequencerService,
+              private staffService: StaffService,
               private changeDetectionRef : ChangeDetectorRef) { }
 
   ngOnInit() {
@@ -37,11 +39,11 @@ export class SequencerFooterComponent implements OnInit {
   }
 
   goPrevPage() {
-    this.sequencerService.goPrevStaffPage();
+    this.staffService.goPrevPage();
   }
 
   goNextPage() {
-    this.sequencerService.goNextStaffPage();
+    this.staffService.goNextPage();
   }
 
 }

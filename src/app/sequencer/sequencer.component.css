@@ -46,3 +46,18 @@
   visibility : hidden;
   height     : 30px;
 }
+
+/* /deep/ force style down through the child component tree. */
+/deep/ g.rest,
+/deep/ g.note {
+  transition : fill 0.2s;
+  cursor     : pointer;
+}
+
+/deep/ g.note:hover {
+  fill : #564dff;
+}
+
+/deep/ g.rest:hover {
+  fill : #16de5c;
+}

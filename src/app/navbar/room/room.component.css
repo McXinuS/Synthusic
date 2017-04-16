@@ -12,11 +12,6 @@ li {
   background : hsla(0, 0%, 32%, 0.7);
 }
 
-.box-chat {
-  padding-right : 0;
-  border-right  : 1px solid hsla(0, 0%, 50%, 1);
-}
-
 .box-messages {
   height     : 340px;
   overflow-y : auto;
@@ -36,16 +31,12 @@ li .sender {
 .box-form {
   position : relative;
   width    : 100%;
-  padding  : 10px 4px;
 }
 
 .box-form .btn-square {
   position         : relative;
-  top              : -5px;
-  background-color : transparent;
+  background-color : rgba(0, 0, 0, 0.1);
   border           : none;
-  border-left      : 1px solid #999;
-  border-radius    : 0;
 }
 
 .box-form .btn-square:hover {
@@ -53,7 +44,7 @@ li .sender {
 }
 
 .box-form .btn-square:focus {
-  background-color : rgba(51, 51, 51, 0.2);
+  background-color : rgb(123, 123, 123);
 }
 
 .box-form .btn-square span {
@@ -61,12 +52,14 @@ li .sender {
   left : -1px;
 }
 
-.box-form label {
-  margin : auto 5px;
+.box-users {
+  display         : flex;
+  flex-direction  : column;
+  justify-content : space-between;
 }
 
-.box-users {
-  padding-left : 0;
+.box-users .box-from {
+  padding : 10px 4px;
 }
 
 .box-users h4:first-of-type {
@@ -74,7 +67,60 @@ li .sender {
 }
 
 .box-users ul {
-  padding       : 0 15px;
-  font-size     : 1.2em;
-  margin-bottom : 0;
+  padding   : 0;
+  margin    : 5px auto;
+  font-size : 1.2em;
+}
+
+.box-users .btn-square {
+  opacity    : 0;
+  visibility : hidden;
+  animation  : slideOutDown .2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.box-users .btn-square.btn-shown {
+  opacity    : 1;
+  visibility : visible;
+  animation  : slideInDown .2s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.wrapper .row .animation-delay-0 {
+  animation-delay : 0ms;
+}
+
+.wrapper .row .animation-delay-1 {
+  animation-delay : 75ms;
+}
+
+@media (min-width : 768px) {
+  .wrapper .row {
+    display : flex;
+  }
+
+  .box-chat {
+    padding-right : 0;
+    border-right  : 1px solid hsla(0, 0%, 50%, 1);
+  }
+
+  .box-users {
+    padding-left : 0;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    top : -20px;
+  }
+  to {
+    top : 0;
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    top : 0;
+  }
+  to {
+    top : 20px;
+  }
 }

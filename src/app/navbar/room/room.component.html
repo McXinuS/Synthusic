@@ -1,7 +1,7 @@
 <div class="wrapper">
-  
+
   <div class="row">
-    
+
     <div class="box-chat col-sm-10">
       <div #messages class="box-messages" (scroll)="onChatScroll()">
         <h1 *ngIf="isChatEmpty" class="center">
@@ -13,46 +13,51 @@
           </li>
         </ul>
       </div>
-      
+
       <form (ngSubmit)="sendMessage(); messageForm.reset()" #messageForm="ngForm">
         <div class="box-form button-group">
           <label hidden for="messageText">Your message</label>
           <input type="text" id="messageText" autocomplete="off"
                  required placeholder="Your message"
                  [(ngModel)]="myMessage" name="myMessage">
-          <button type="submit" class="btn-square">
-            <span class="glyphicon glyphicon-send"></span>
-          </button>
+          <div class="buttons">
+            <button type="submit" class="btn-square">
+              <span class="glyphicon glyphicon-send"></span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
-    
+
     <div class="box-users col-sm-2">
-      <h4>Users in room: {{(room | async)?.users?.length}}</h4>
+      <h4>Users in room: {{(room | async)?.users?.length}} / 2</h4>
       <ul>
         <li *ngFor="let user of (room | async)?.users">
           {{user.name}}
         </li>
       </ul>
-      
+
       <form (ngSubmit)="changeUserName()" #usernameForm="ngForm">
+        <label for="userName">Your username</label>
         <div class="box-form button-group">
-          <label hidden for="userName">Your username</label>
           <input type="text" id="userName" autocomplete="off"
                  required placeholder="Your username"
                  (input)="userNameChanged=true"
                  [(ngModel)]="userName" name="myUsername">
-          <button *ngIf="userNameChanged" class="btn-square"
-                  (click)="userNameReset()">
-            <span class="glyphicon glyphicon-remove"></span>
-          </button>
-          <button *ngIf="userNameChanged" type="submit" class="btn-square">
-            <span class="glyphicon glyphicon-ok"></span>
-          </button>
+          <div class="buttons">
+            <button class="btn-square animation-delay-0" [class.btn-shown]="userNameChanged"
+                    (click)="userNameReset()">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button type="submit"
+                    class="btn-square animation-delay-1" [class.btn-shown]="userNameChanged">
+              <span class="glyphicon glyphicon-ok"></span>
+            </button>
+          </div>
         </div>
       </form>
     </div>
-  
+
   </div>
 
 </div>

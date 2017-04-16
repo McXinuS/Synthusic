@@ -93,6 +93,7 @@ li a.selected {
 }
 
 .nav-collapse {
+  margin-top : -10000px;
   opacity    : 0;
   visibility : hidden;
 }

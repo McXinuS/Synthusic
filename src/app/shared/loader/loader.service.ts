@@ -127,7 +127,7 @@ export class LoaderService {
   goOffline() {
     this.offlineMode = true;
     this.popupService.showMessage(
-      'Unable to connect',
+      'We lost connection to server',
       'The remote server is not responding, going offline mode.\n' +
       'In offline mode you are unable to share your creativity with other people.' +
       ' Also, all your data will be lost when the page is closed.\n' +

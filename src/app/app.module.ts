@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AppComponent} from './app.component';
@@ -28,6 +28,7 @@ import { EnvelopeSettingsComponent } from './popup/instrument-settings/envelope-
 import { SequencerInstrumentCreateComponent } from './sequencer/sequencer-instrument-create/sequencer-instrument-create.component';
 import { SequencerFooterComponent } from './sequencer/sequencer-footer/sequencer-footer.component';
 import {SafePipe} from "./shared/utils/pipes/safe.pipe";
+import {MyErrorHandler} from "./ErrorHandler";
 import {StaffService} from "./shared/sequencer/staff.service";
 
 @NgModule({
@@ -56,6 +57,7 @@ import {StaffService} from "./shared/sequencer/staff.service";
     HttpModule
   ],
   providers: [
+    {provide: ErrorHandler, useClass: MyErrorHandler},
     LoaderService,
     InstrumentService,
     NoteService,

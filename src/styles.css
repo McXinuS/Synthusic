@@ -190,8 +190,15 @@ select[disabled] {
   display : inline-flex;
 }
 
+.button-group .buttons {
+  display  : flex;
+  position : absolute;
+  right    : 0;
+}
+
 .btn-square {
   display          : inline-block;
+  top              : 0;
   width            : 30px;
   height           : 30px;
   padding          : 0;
@@ -199,7 +206,7 @@ select[disabled] {
   border-radius    : 4px;
   background-color : #fff;
   cursor           : pointer;
-  transition       : background-color .3s;
+  transition       : .2s;
 }
 
 .btn-square span {
@@ -247,9 +254,9 @@ input:focus[type=text] {
   color         : #fff;
 }
 
-select + .btn-square, input + .btn-square {
+select + .btn-square, select + .buttons .btn-square,
+input + .btn-square, input + .buttons .btn-square {
   border-radius : 0 4px 4px 0;
-  margin-left   : -30px;
 }
 
 @keyframes startOverlayAnimation {

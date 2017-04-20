@@ -13,7 +13,7 @@ export class WebSocketClient {
 
   private readonly SEND_WAIT_TIME = 1000; // interval between attempts to send data in wrong socket state
   // private readonly RECONNECT_TIME = 10000; // time between attempts to reconnect when disconnected
-  private readonly PingInterval = 30000; // interval of ping of server to keep web socket connection alive
+  private readonly PingInterval = 20000; // interval of ping of server to keep web socket connection alive
 
   constructor(private onMessage: (msg: WebSocketMessage) => any) {
   }

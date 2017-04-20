@@ -8,7 +8,7 @@ import {PopupService} from '../shared/popup/popup.service';
 })
 export class PopupComponent implements OnInit {
 
-  constructor(private popupService: PopupService) { }
+  constructor(public popupService: PopupService) { }
 
   ngOnInit() {
   }

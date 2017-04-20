@@ -11,8 +11,8 @@ export class SequencerFooterComponent implements OnInit {
 
   collapsed: boolean = false;
 
-  constructor(private sequencerService: SequencerService,
-              private staffService: StaffService,
+  constructor(public staffService: StaffService,
+              private sequencerService: SequencerService,
               private changeDetectionRef : ChangeDetectorRef) { }
 
   ngOnInit() {

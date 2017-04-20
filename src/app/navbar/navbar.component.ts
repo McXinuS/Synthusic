@@ -11,7 +11,7 @@ export class NavbarComponent implements OnInit {
   visible: Map<string, boolean> = new Map();
   newChatMessages: boolean;
 
-  constructor(private loaderService: LoaderService) {
+  constructor(public loaderService: LoaderService) {
   }
 
   ngOnInit() {

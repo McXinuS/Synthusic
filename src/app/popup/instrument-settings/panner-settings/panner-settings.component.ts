@@ -114,14 +114,14 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
     this.onMouseMove(e);
   }
 
-  onMouseUp(e) {
-    this.isMouseDown = false;
-  }
-
   onMouseMove(e) {
     if (this.isMouseDown) {
       this.updatePanner(this.canvasToPannerCoordinates(this.getMouseCoordinates(e)));
     }
+  }
+
+  onMouseUp() {
+    this.isMouseDown = false;
   }
 
   onMouseLeave() {

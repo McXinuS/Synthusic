@@ -6,48 +6,61 @@
     
     <div class="description">
       
-      <p class="oscillators">
+      
+      <div class="oscillators">
         <label>Oscillators:</label>
         <br>
         <span class="prop">Count:</span>
         <span class="value">{{instrument.oscillators.length}}</span>
-        <br>
-        <span class="freq">Frequency</span>
-        <span class="gain">Gain</span>
-        <span class="type">Type</span>
-        <ng-container *ngFor="let oscillator of instrument.oscillators">
-          <br>
-          <span class="value freq">{{oscillator.freq}}</span>
-          <span class="value gain">{{oscillator.gain}}</span>
-          <span class="value type">{{oscillator.type}}</span>
-        </ng-container>
-      </p>
+        <table>
+          <tr>
+            <th>Frequency</th>
+            <th>Gain</th>
+            <th>Type</th>
+          </tr>
+          <tr *ngFor="let oscillator of instrument.oscillators">
+            <td class="value freq">{{oscillator.freq | number: '1.2-2'}}</td>
+            <td class="value gain">{{oscillator.gain | number: '1.2-2'}}</td>
+            <td class="value type">{{oscillator.type}}</td>
+          </tr>
+        </table>
+      </div>
       
-      <p class="envelope">
+      <div class="envelope">
         <label>Envelope:</label>
-        <br>
-        <span class="prop">Attack:</span>
-        <span class="value">{{instrument.envelope.attack}}</span>
-        <br>
-        <span class="prop">Decay:</span>
-        <span class="value">{{instrument.envelope.decay}}</span>
-        <br>
-        <span class="prop">Sustain:</span>
-        <span class="value">{{instrument.envelope.sustain}}</span>
-        <br>
-        <span class="prop">Release:</span>
-        <span class="value">{{instrument.envelope.release}}</span>
-      </p>
+        <table>
+          <tr>
+            <td class="prop">Attack:</td>
+            <td class="value">{{instrument.envelope.attack | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td class="prop">Decay:</td>
+            <td class="value">{{instrument.envelope.decay | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td class="prop">Sustain:</td>
+            <td class="value">{{instrument.envelope.sustain | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td class="prop">Release:</td>
+            <td class="value">{{instrument.envelope.release | number: '1.2-2'}}</td>
+          </tr>
+        </table>
+      </div>
       
-      <p class="panner">
+      <div class="panner">
         <label>Panner:</label>
-        <br>
-        <span class="prop">X:</span>
-        <span class="value">{{instrument.panner.x}}</span>
-        <br>
-        <span class="prop">Y:</span>
-        <span class="value">{{instrument.panner.y}}</span>
-      </p>
+        <table>
+          <tr>
+            <td class="prop">X:</td>
+            <td class="value">{{instrument.panner.x | number: '1.2-2'}}</td>
+          </tr>
+          <tr>
+            <td class="prop">Y:</td>
+            <td class="value">{{instrument.panner.y | number: '1.2-2'}}</td>
+          </tr>
+        </table>
+      </div>
     
     </div>
     

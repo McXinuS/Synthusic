@@ -9,7 +9,7 @@ const WebSocketMessageType = require('./../shared/web-socket-message-types').Web
 const CHAT_MESSAGE_LENGTH_MAX = 340;
 
 function Server(server) {
-  let webSocketServer = ws.Server({
+  let webSocketServer = new ws.Server({
     server: server
   });
 

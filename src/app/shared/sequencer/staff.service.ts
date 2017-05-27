@@ -49,7 +49,7 @@ export class StaffService {
   }
 
   onResize(width: number) {
-    if (!width || width < 320) return;
+    if (!width || width < 320 || width == this.staffViewWidth) return;
 
     this.currentPage = 0;
     this.staffViewWidth = width;

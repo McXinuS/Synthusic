@@ -23,7 +23,7 @@
   text-align    : center;
   overflow      : hidden;
   text-overflow : ellipsis;
-  padding-right : 35px;
+  padding-right : 70px;
 }
 
 .buttons {
@@ -47,8 +47,20 @@
   height   : 200px;
 }
 
+.description > div {
+  margin-bottom: 5px;
+}
+
+td {
+  padding: 0 10px 0 0;
+}
+
 .prop {
   font-weight : 600;
+}
+
+.oscillators table {
+  width        : 100%;
 }
 
 .oscillators .prop {

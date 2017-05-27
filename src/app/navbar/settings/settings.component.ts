@@ -12,7 +12,7 @@ export class SettingsComponent implements OnInit {
   masterGainBeforeMute: number = 0;
 
   constructor(private sequencerService: SequencerService,
-              private soundService: SoundService) {
+              public soundService: SoundService) {
   }
 
   ngOnInit() {

@@ -21,15 +21,14 @@ export class NavbarComponent implements OnInit {
     let curState = this.visible.get(tab);
     this.visible.clear();
     this.visible.set(tab, !curState);
+
+    if (tab === 'room') {
+      this.newChatMessages = false;
+    }
   }
 
   isVisible(tab: string) {
     return this.visible.get(tab);
-  }
-
-  showRoomNav() {
-    this.newChatMessages = false;
-    this.showNav('room');
   }
 
   onNewChatMessage() {

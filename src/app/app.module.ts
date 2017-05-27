@@ -30,6 +30,8 @@ import { SequencerFooterComponent } from './sequencer/sequencer-footer/sequencer
 import {SafePipe} from "./shared/utils/pipes/safe.pipe";
 import {MyErrorHandler} from "./ErrorHandler";
 import {StaffService} from "./shared/sequencer/staff.service";
+import { AboutComponent } from './navbar/about/about.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import {StaffService} from "./shared/sequencer/staff.service";
     PannerSettingsComponent,
     EnvelopeSettingsComponent,
     SequencerInstrumentCreateComponent,
-    SequencerFooterComponent
+    SequencerFooterComponent,
+    AboutComponent,
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,13 @@
 <div id="topnav">
   <ul class="navbar">
     <li>
-      <a id="logo-holder">
+      <a id="logo-holder" [class.selected]="isVisible('about')" (click)="showNav('about')">
         <img src="assets/img/favicon_lowres.png" width="32px" height="32px"/>
       </a>
     </li>
     <li>
       <a [class.selected]="isVisible('room')" [class.new-message]="newChatMessages"
-         (click)="showRoomNav()">
+         (click)="showNav('room')">
         <span class="glyphicon glyphicon-user"></span> Room</a>
     </li>
     <li>

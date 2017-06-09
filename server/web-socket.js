@@ -7,6 +7,7 @@ let rs = require('./rooms/room-service').RoomService,
 
 const WebSocketMessageType = require('./../shared/web-socket-message-types').WebSocketMessageType;
 const CHAT_MESSAGE_LENGTH_MAX = 340;
+const CHAT_USER_NAME_LENGTH_MAX = 20;
 
 function Server(server) {
   let webSocketServer = new ws.Server({
@@ -116,7 +117,7 @@ function Server(server) {
     broadcastToUserRoom({
       type: WebSocketMessageType.room_updated,
       data: roomService.getRoomInfoByUser(userId)
-    }, userId);
+    }, userId, true);
   }
 
   function processStateMessage(message, sender) {
@@ -162,16 +163,15 @@ function Server(server) {
         notifyRoomUpdate(sender);
         return true;
       case WebSocketMessageType.user_update:
+        message.data.name = message.data.name.substring(0, CHAT_USER_NAME_LENGTH_MAX);
         roomService.getRoomByUser(sender).updateUser(message.data);
         notifyRoomUpdate(sender);
         return true;
       case WebSocketMessageType.chat_new_message:
-        let str = message.data || '';
-        if (str.length > CHAT_MESSAGE_LENGTH_MAX) {
-          str = str.substring(0, CHAT_MESSAGE_LENGTH_MAX);
-        }
+        let userMessage = message.data || '';
+        userMessage = userMessage.substring(0, CHAT_MESSAGE_LENGTH_MAX);
         message.data = {
-          message: str,
+          message: userMessage,
           sender: sender
         };
         broadcastToUserRoom(message, sender, true);

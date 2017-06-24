@@ -3,27 +3,48 @@
 }
 
 .wrapper {
-  display         : flex;
-  justify-content : center;
-  height          : 0;
-  position        : relative;
-  z-index         : 5;
+  height   : 0;
+  position : relative;
+  z-index  : 5;
 }
 
 .group {
-  height           : 84px;
-  background-color : rgba(240, 248, 255, 0.39);
-  padding          : 10px;
+  display          : inline-block;
   position         : relative;
+  height           : 84px;
+  padding          : 10px;
   top              : -84px;
+  left             : 50%;
   opacity          : 1;
+  background-color : rgba(240, 248, 255, 0.39);
   box-shadow       : -1px 3px 10px 1px #333;
+  transform        : translateX(-50%);
   transition       : all .2s, top .3s;
 }
 
-.group.collapsed {
+.collapsed .group {
   top     : -40px;
   opacity : .7;
+}
+
+@media (max-width : 991px ) {
+  .collapsed .group {
+    position  : absolute;
+    top       : -50px;
+    left      : 100%;
+    transform : translateX(-100%);
+  }
+
+  .collapsed .btn-staff-collapse {
+    position : relative;
+    top      : 0;
+    right    : 0;
+  }
+
+
+  .collapsed .btn-staff-collapse:hover {
+    top: 0;
+  }
 }
 
 .btn-seq-foot {

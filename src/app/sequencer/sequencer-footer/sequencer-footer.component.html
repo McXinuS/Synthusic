@@ -1,29 +1,41 @@
-<div class="wrapper">
-
-  <div (click)="$event.preventDefault()" class="group" [class.collapsed]="collapsed">
-    <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoPrevPage"
-         (click)="goPrevPage()">
-      <span class="glyphicon glyphicon-step-backward"></span>
+<div class="wrapper" [class.collapsed]="collapsed">
+  
+  <div (click)="$event.preventDefault()" class="group">
+    
+    <div [class.hidden]="collapsed">
+  
+      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoPrevPage"
+           (click)="goPrevPage()">
+        <span class="glyphicon glyphicon-step-backward"></span>
+      </div>
+  
+      <div class="btn-seq-foot medium btn-pause" (click)="pause()">
+        <span class="glyphicon glyphicon-pause"></span>
+      </div>
+  
+      <div class="btn-seq-foot large btn-play" (click)="play()">
+        <span class="glyphicon glyphicon-play"></span>
+      </div>
+  
+      <div class="btn-seq-foot medium btn-stop" (click)="stop()">
+        <span class="glyphicon glyphicon-stop"></span>
+      </div>
+  
+      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoNextPage"
+           (click)="goNextPage()">
+        <span class="glyphicon glyphicon-step-forward"></span>
+      </div>
+  
+      <span>Page {{staffService.currentPage+1}} of {{staffService.pageCount}}</span>
+      
     </div>
-    <div class="btn-seq-foot medium btn-pause" (click)="pause()">
-      <span class="glyphicon glyphicon-pause"></span>
-    </div>
-    <div class="btn-seq-foot large btn-play" (click)="play()">
-      <span class="glyphicon glyphicon-play"></span>
-    </div>
-    <div class="btn-seq-foot medium btn-stop" (click)="stop()">
-      <span class="glyphicon glyphicon-stop"></span>
-    </div>
-    <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoNextPage"
-         (click)="goNextPage()">
-      <span class="glyphicon glyphicon-step-forward"></span>
-    </div>
-    <span>Page {{staffService.currentPage+1}} of {{staffService.pageCount}}</span>
+    
     <div class="btn-seq-foot small btn-staff-collapse" (click)="toggleCollapsed()">
       <span class="glyphicon"
             [class.glyphicon-menu-up]="collapsed"
             [class.glyphicon-menu-down]="!collapsed"></span>
     </div>
+  
   </div>
 
 </div>

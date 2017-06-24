@@ -84,6 +84,14 @@ li .sender {
   animation  : slideInDown .2s cubic-bezier(0, 0, 0.2, 1);
 }
 
+.box-users form label {
+  display: block;
+}
+
+.box-users input {
+  padding-right: 65px;
+}
+
 .wrapper .row .animation-delay-0 {
   animation-delay : 0ms;
 }

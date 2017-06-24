@@ -2,7 +2,7 @@
   
   <div (click)="$event.preventDefault()" class="group">
     
-    <div [class.hidden]="collapsed">
+    <div class="buttons">
   
       <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoPrevPage"
            (click)="goPrevPage()">

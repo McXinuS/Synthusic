@@ -41,9 +41,12 @@
     right    : 0;
   }
 
-
   .collapsed .btn-staff-collapse:hover {
     top: 0;
+  }
+
+  .collapsed .buttons {
+    display: none;
   }
 }
 

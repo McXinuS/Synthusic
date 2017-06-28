@@ -29,10 +29,14 @@
       </div>
     </div>
 
-    <div #keyboardKeys id="keyboard-keys">
+    <div #keyboardKeys id="keyboard-keys"
+         (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"
+         (touchend)="onTouchEnd($event)" (touchcancel)="onTouchCancel($event)">
       <app-keyboard-key *ngFor="let note of notes"
+                        [attr.data-note-id]="note.id"
                         [note]="note"
                         [highlighted]="highlights[note.id]"
+                        [selected]="selections[note.id]"
                         (keyStateUpdated)="onKeyStateUpdated($event)"></app-keyboard-key>
     </div>
 

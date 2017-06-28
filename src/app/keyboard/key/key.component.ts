@@ -11,10 +11,14 @@ import {KeyChangeMode} from './keychangemode.enum';
 export class KeyComponent {
   @Input() note: BaseNote;
   @Input() highlighted: boolean;
-  selected: boolean = false;
+  @Input() selected: boolean = false;
   @Output() keyStateUpdated = new EventEmitter();
 
-  onMouseDown(e) {
+  onContextMenu() {
+    return false;
+  }
+
+  onMouseDown(e: MouseEvent) {
     if (e.which == 3) {
       this.selected = true;
       this.playNote();
@@ -28,26 +32,19 @@ export class KeyComponent {
     }
   }
 
-  onMouseEnter(e) {
-    if (e.which == 0) return;
-
+  onMouseEnter(e: MouseEvent) {
     if (e.which == 3) this.selected = true;
     if (e.which == 1 || e.which == 3) this.playNote();
   }
 
-  onMouseLeave(e) {
-    if (e.which == 0) return;
-
+  onMouseLeave(e: MouseEvent) {
     if (e.which == 1 || e.which == 3) this.stopNote();
   }
 
-  onMouseUp(e) {
+  onMouseUp(e: MouseEvent) {
     if (e.which == 3) this.stopNote();
   }
 
-  onContextMenu() {
-    return false;
-  }
 
   playNote() {
     this.keyStateUpdated.emit({mode: KeyChangeMode.play, note: this.note});

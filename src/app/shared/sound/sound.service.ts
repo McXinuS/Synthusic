@@ -4,9 +4,9 @@ import {Enveloper} from './enveloper';
 import {EnvelopeConfig, Instrument, Oscillator, PannerConfig} from '../instrument/instrument.model';
 import {SequencerNoteService} from '../sequencer/sequencernote.service';
 import {BehaviorSubject, Subject, Observable} from 'rxjs';
-import {InstrumentService} from "../instrument/instrument.service";
 import {NoteService} from "../note/note.service";
 import {Panner} from "./panner";
+import {Analyser} from "./analyser";
 
 class GainedOscillatorNode extends OscillatorNode {
   gainNode: GainNode;
@@ -26,21 +26,24 @@ class InstrumentModifiers {
 export class SoundService {
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
   private audioContext: AudioContext;
+
   /**
-   * The note will be stopped in enveloper's onFinished callback.
-   * We need to remember currently fading note to stop it
-   * if some note will be played before enveloper released.
+   * We need to remember currently fading note to stop it if some note will be played before enveloper released.
    */
   private notesToStop: Map<number, SequencerNote> = new Map();
 
   private masterGainNode: GainNode;
+
+  private analyser: Analyser;
+
   /**
-   * Contains InstrumentModifiers for every instrument.
+   * Contains InstrumentModifiers for each instrument.
    */
   private modifiers: Map<number, InstrumentModifiers> = new Map();
 
   private _playingNotes = [];
   private playingNotesSource: Subject<Array<SequencerNote>> = new BehaviorSubject(this._playingNotes);
+
   /**
    * Array of notes, playing in the sound module.
    */
@@ -51,11 +54,15 @@ export class SoundService {
 
   get masterGain() {
     return this.masterGainNode.gain.value;
-  };
+  }
 
   set masterGain(gain) {
     this.masterGainNode.gain.value = gain;
-  };
+  }
+
+  get audioFreqBuffer() {
+    return this.analyser.getByteFrequencyData();
+  }
 
   /**
    * Prevents click effect when changing one note to another.
@@ -66,11 +73,13 @@ export class SoundService {
   constructor(private sequencerNoteService: SequencerNoteService,
               private noteService: NoteService) {
     this.audioContext = new AudioContext();
+
+    this.analyser = new Analyser(this.audioContext);
+
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
 
     this.playingNotes$ = this.playingNotesSource.asObservable();
-
   }
 
   init(masterGain: number) {
@@ -108,7 +117,7 @@ export class SoundService {
     }
 
     return oscillators;
-  };
+  }
 
   playNote(note: SequencerNote) {
     let noteToStop = this.notesToStop.get(note.instrumentId);
@@ -125,7 +134,7 @@ export class SoundService {
     }
 
     this.getEnveloper(note.instrumentId).start();
-  };
+  }
 
   /**
    * @param note
@@ -144,7 +153,7 @@ export class SoundService {
       this.setGain(note, 0, true);
       setTimeout(() => this.stopNoteImmediately(note), this.RAMP_STOP_TIME);
     }
-  };
+  }
 
   private stopNoteImmediately(note: SequencerNote) {
     if (this.hasOscillator(note)) {
@@ -163,7 +172,7 @@ export class SoundService {
         this.playingNotesSource.next(this._playingNotes);
       }
     }
-  };
+  }
 
   stop(instrumentId?: number) {
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
@@ -188,14 +197,14 @@ export class SoundService {
       this._playingNotes.splice(0, this._playingNotes.length);
     }
     this.playingNotesSource.next(this._playingNotes);
-  };
+  }
 
 
   getGain(note: SequencerNote) {
     if (!this.hasOscillator(note)) return 0;
     let baseGain = this.getInstrument(note.instrumentId).oscillators[0].gain;
     return this.oscillators.get(note.id)[0].gainNode.gain.value / baseGain;
-  };
+  }
 
   /**
    If ramp is set to false, set the note's gain immediately
@@ -217,7 +226,7 @@ export class SoundService {
         oscArr[j].gainNode.gain.value = gain;
       }
     }
-  };
+  }
 
   onInstrumentUpdate(instrumentId: number) {
     let instrument = this.instruments[instrumentId];
@@ -275,6 +284,10 @@ export class SoundService {
     });
   }
 
+  getAudioFreqBuffer() {
+    return this.analyser.getByteFrequencyData();
+  }
+
   private hasOscillator(note: SequencerNote): boolean {
     return this.oscillators.has(note.id);
   }
@@ -300,16 +313,16 @@ export class SoundService {
   private createPanner(instrument: Instrument, destination: AudioNode): Panner {
     return new Panner(
       this.audioContext,
-      destination,
-      instrument.panner
+      instrument.panner,
+      destination
     );
   }
 
   private createEnveloper(instrument: Instrument, destination: AudioNode): Enveloper {
     return new Enveloper(
       this.audioContext,
-      destination,
       instrument.envelope,
+      destination,
       function () {
         this.stop(instrument.id);
       }.bind(this));

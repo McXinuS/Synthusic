@@ -1,4 +1,5 @@
 import {EnvelopeConfig} from '../instrument/instrument.model';
+import {ISoundModifier} from "./isoundmodifier";
 
 enum EnveloperState {
   STATE_STARTED,
@@ -8,18 +9,18 @@ enum EnveloperState {
   STATE_FINISHED
 }
 
-export class Enveloper {
+export class Enveloper implements ISoundModifier {
 
-  audioCtx: AudioContext;
-  gainNode: GainNode;
-  envelope: EnvelopeConfig;
-  state: EnveloperState = EnveloperState.STATE_FINISHED;
-  funcTimeoutId: number = -1;
-  onFinished: () => void;
+  private audioCtx: AudioContext;
+  private gainNode: GainNode;
+  private envelope: EnvelopeConfig;
+  private state: EnveloperState = EnveloperState.STATE_FINISHED;
+  private funcTimeoutId: number = -1;
+  private onFinished: () => void;
 
   constructor(audioCtx: AudioContext,
-              destination: AudioNode,
               envelope: EnvelopeConfig,
+              destination?: AudioNode,
               onFinished?: () => any) {
     this.audioCtx = audioCtx;
     this.gainNode = audioCtx.createGain();
@@ -27,7 +28,21 @@ export class Enveloper {
     this.envelope = envelope;
     this.onFinished = onFinished;
 
+    if (destination) {
+      this.connect(destination);
+    }
+  }
+
+  connect(destination: AudioNode): void {
     this.gainNode.connect(destination);
+  }
+
+  disconnect(): void {
+    this.gainNode.disconnect();
+  }
+
+  getAudioNode(): AudioNode {
+    return this.gainNode;
   }
 
   updateState(type) {
@@ -83,10 +98,6 @@ export class Enveloper {
       this.gainNode.gain.value = this.envelope.sustain;
     }
   }
-
-  getAudioNode() {
-    return this.gainNode;
-  };
 
 // converts time from millis to seconds and adds it to the current time
   private getRampTime(time) {

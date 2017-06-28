@@ -32,6 +32,7 @@ import {MyErrorHandler} from "./ErrorHandler";
 import {StaffService} from "./shared/sequencer/staff.service";
 import { AboutComponent } from './navbar/about/about.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import {OscilloscopeComponent} from "./popup/instrument-settings/oscilloscope/oscilloscope.component";
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     SequencerInstrumentCreateComponent,
     SequencerFooterComponent,
     AboutComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    OscilloscopeComponent
   ],
   imports: [
     BrowserModule,

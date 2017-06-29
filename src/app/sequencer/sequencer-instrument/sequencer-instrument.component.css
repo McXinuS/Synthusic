@@ -21,9 +21,10 @@
 
 .name {
   text-align    : center;
-  overflow      : hidden;
+  overflow-x    : hidden;
   text-overflow : ellipsis;
   padding-right : 70px;
+  height        : 20px; /* If not specified, y-overflow will be hidden */
 }
 
 .buttons {

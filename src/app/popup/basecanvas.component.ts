@@ -1,9 +1,5 @@
 import {ElementRef, ViewChild, Input, AfterViewInit} from "@angular/core";
-
-export class Point {
-  x: number;
-  y: number;
-}
+import {Point} from "../shared/utils/point.model";
 
 export abstract class BaseCanvasComponent implements AfterViewInit{
   @Input() popupScrollTop: number;

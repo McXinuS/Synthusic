@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import {Instrument, Oscillator, OscillatorType} from '../../../shared/instrument/instrument.model';
 import {InstrumentService} from '../../../shared/instrument/instrument.service';
-import {BaseCanvasComponent, Point} from "../../basecanvas.component";
+import {BaseCanvasComponent} from "../../basecanvas.component";
+import {Point} from "../../../shared/utils/point.model";
 
 @Component({
   selector: 'app-oscillator-settings',

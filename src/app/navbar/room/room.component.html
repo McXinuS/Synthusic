@@ -3,6 +3,7 @@
   <div class="row">
 
     <div class="box-chat col-sm-10">
+
       <div #messages class="box-messages" (scroll)="onChatScroll()">
         <h1 *ngIf="isChatEmpty" class="center">
           No messages yet. Be the first to chat!
@@ -14,22 +15,40 @@
         </ul>
       </div>
 
-      <form (ngSubmit)="sendMessage(); messageForm.reset()" #messageForm="ngForm">
+      <form (ngSubmit)="sendMessage()">
+
         <div class="box-form button-group">
+
           <label hidden for="messageText">Your message</label>
-          <input type="text" id="messageText" autocomplete="off"
-                 required placeholder="Your message"
-                 [(ngModel)]="myMessage" name="myMessage">
-          <div class="buttons">
-            <button type="submit" class="btn-square">
+
+          <input-semitransparent
+            id="messageText"
+            [type]="'text'"
+            [autocomplete]="'off'"
+            required
+            placeholder="Your message"
+            [name]="myMessage"
+            [(ngModel)]="myMessage"
+            [ngModelOptions]="{standalone: true}">
+          </input-semitransparent>
+
+          <div class="buttons" [class.btn-shown]="!!myMessage">
+            <button type="submit" class="btn-square animation-delay-0">
               <span class="glyphicon glyphicon-send"></span>
             </button>
+            <button class="btn-square animation-delay-1" (click)="clearMessage()">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
           </div>
+
         </div>
+
       </form>
+
     </div>
 
     <div class="box-users col-sm-2">
+
       <h4>Users in room: {{(room | async)?.users?.length}} / 2</h4>
       <ul>
         <li *ngFor="let user of (room | async)?.users">
@@ -37,25 +56,37 @@
         </li>
       </ul>
 
-      <form (ngSubmit)="changeUserName()" #usernameForm="ngForm">
+      <form (ngSubmit)="changeUserName()">
+
         <label for="userName" class="center-hor">Your username</label>
+
         <div class="box-form button-group">
-          <input type="text" id="userName" autocomplete="off"
-                 required placeholder="Your username"
-                 (input)="userNameChanged=true"
-                 [(ngModel)]="userName" name="myUsername">
-          <div class="buttons">
-            <button class="btn-square animation-delay-0" [class.btn-shown]="userNameChanged"
-                    (click)="userNameReset()">
-              <span class="glyphicon glyphicon-remove"></span>
-            </button>
-            <button type="submit"
-                    class="btn-square animation-delay-1" [class.btn-shown]="userNameChanged">
+
+          <input-semitransparent
+            id="userName"
+            [type]="'text'"
+            [autocomplete]="'off'"
+            required
+            placeholder="Your username"
+            [name]="'myUsername'"
+            [(ngModel)]="userName"
+            (ngModelChange)="userNameChanged=true"
+            [ngModelOptions]="{standalone: true}">
+          </input-semitransparent>
+
+          <div class="buttons" [class.btn-shown]="userNameChanged">
+            <button type="submit" class="btn-square animation-delay-0">
               <span class="glyphicon glyphicon-ok"></span>
             </button>
+            <button class="btn-square animation-delay-1" (click)="resetUsername()">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
           </div>
+
         </div>
+
       </form>
+
     </div>
 
   </div>

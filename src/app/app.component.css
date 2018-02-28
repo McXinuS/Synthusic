@@ -6,13 +6,13 @@
   height         : 100%;
 }
 
-.content {
+main {
   display    : flex;
   flex       : 1 1 auto;
   overflow   : auto;
   min-height : 200px;
 }
 
-.footer {
+footer {
   flex : 0 0 auto;
 }

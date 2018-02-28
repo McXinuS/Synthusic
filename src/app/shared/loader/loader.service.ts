@@ -112,7 +112,7 @@ export class LoaderService {
   }
 
   private initSequencer(settings: Settings) {
-    this.sequencerService.init(settings.notes);
+    this.sequencerService.init(settings);
   }
 
   private initRoom(settings: Settings) {

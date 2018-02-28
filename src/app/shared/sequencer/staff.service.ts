@@ -6,6 +6,8 @@ import {Injectable} from "@angular/core";
 import {NoteService} from "../note/note.service";
 import {InstrumentService} from "../instrument/instrument.service";
 import {SequencerService} from "./sequencer.service";
+import {SoundPlayer} from "./soundplayer";
+import {SoundService} from "../sound/sound.service";
 
 declare var verovio: any;
 
@@ -32,9 +34,16 @@ export class StaffService {
   private notationSource: Subject<Array<string>> = new BehaviorSubject([]);
   notation$: Observable<Array<string>> = this.notationSource.asObservable();
 
+  soundPlayer: SoundPlayer;
+
   constructor(private instrumentService: InstrumentService,
               private noteService: NoteService,
+              private soundService: SoundService,
               private sequencerService: SequencerService) {
+
+    this.soundPlayer = new SoundPlayer(sequencerService, soundService);
+    //this.soundPlayer.onMeasureChanged = this.setPage.bind(this); // TODO
+
     this.baseNotes = this.noteService.notes;
 
     this.instrumentService.instruments$.subscribe(instruments => {
@@ -56,36 +65,39 @@ export class StaffService {
     this.barsOnScreen = Math.round(width / this.EstimatedBarWidth);
     this.pageCount = Math.ceil(this.BarCount / this.barsOnScreen);
     this.estimatedStaffWidth = this.EstimatedBarWidth * this.barsOnScreen;
-    this.onPageChanged();
+
+    this.canGoPrevPage = this.currentPage > 0;
+    this.canGoNextPage = this.currentPage < this.pageCount - 1 && this.pageCount > 1;
     this.render();
   }
 
   goPrevPage() {
-    if (this.currentPage <= 0) return;
-
-    this.currentPage--;
-    if (this.currentPage < 0) {
-      this.currentPage = 0;
-    }
-
-    this.onPageChanged();
+    this.setPage(this.currentPage - 1);
   }
 
   goNextPage() {
-    if (this.currentPage >= this.pageCount - 1) return;
-
-    this.currentPage++;
-    if (this.currentPage > this.pageCount - 1) {
-      this.currentPage = this.pageCount - 1;
-    }
-
-    this.onPageChanged();
+    this.setPage(this.currentPage + 1);
   }
 
-  private onPageChanged() {
+  private setPage(page: number) {
+    if (page < 0 || page === this.currentPage || page > this.pageCount - 1) return;
+
+    this.currentPage = page;
     this.canGoPrevPage = this.currentPage > 0;
-    this.canGoNextPage = this.currentPage < this.pageCount - 1 && this.pageCount - 1 > 0;
+    this.canGoNextPage = this.currentPage < this.pageCount - 1 && this.pageCount > 1;
     this.render();
+  }
+
+  play() {
+    this.soundPlayer.play();
+  }
+
+  pause() {
+    this.soundPlayer.pause();
+  }
+
+  stop() {
+    this.soundPlayer.stop();
   }
 
   /**

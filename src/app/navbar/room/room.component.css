@@ -28,6 +28,10 @@ li .sender {
   font-weight : 400;
 }
 
+#userName {
+  border-top: 1px solid hsla(0, 0%, 37%, 1);
+}
+
 .box-form {
   position : relative;
   width    : 100%;
@@ -72,13 +76,13 @@ li .sender {
   font-size : 1.2em;
 }
 
-.box-users .btn-square {
+.buttons > .btn-square {
   opacity    : 0;
   visibility : hidden;
   animation  : slideOutDown .2s cubic-bezier(0, 0, 0.2, 1);
 }
 
-.box-users .btn-square.btn-shown {
+.buttons.btn-shown > .btn-square {
   opacity    : 1;
   visibility : visible;
   animation  : slideInDown .2s cubic-bezier(0, 0, 0.2, 1);

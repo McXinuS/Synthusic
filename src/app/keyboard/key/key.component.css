@@ -12,6 +12,7 @@
   width            : 15%;
   background-color : #fff;
   height           : 100%;
+  margin-right     : -1px;
   z-index          : 1;
 }
 

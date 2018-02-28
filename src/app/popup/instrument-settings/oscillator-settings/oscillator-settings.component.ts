@@ -10,6 +10,8 @@ import {Point} from "../../../shared/utils/point.model";
   styleUrls: ['./oscillator-settings.component.css']
 })
 
+// TODO move all the logic to OscillatorSettingsService
+
 export class OscillatorSettingsComponent extends BaseCanvasComponent {
   @Input() instrument: Instrument;
 
@@ -190,10 +192,10 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
       if (newFreq > 8) newFreq = 8;
 
       if (oscillators[this.closestIndex].gain !== newGain) {
-        this.updateProperty('gain', newGain, true);
+        this.updateProperty('gain', newGain);
       }
       if (oscillators[this.closestIndex].freq !== newFreq) {
-        this.updateProperty('freq', newFreq, true);
+        this.updateProperty('freq', newFreq);
       }
     }
 
@@ -210,22 +212,13 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
   onDoubleClick(e) {
     if (e.which == 1 && this.selectedIndex != -1) {
       let newTypeIndex = (OscillatorType.indexOf(this.selectedOscillator.type) + 1) % OscillatorType.length;
-      this.updateProperty('type', OscillatorType[newTypeIndex], true);
+      this.updateProperty('type', OscillatorType[newTypeIndex]);
       this.render();
     }
   }
 
   onMouseLeave() {
     this.onMouseUp();
-    this.render();
-  }
-
-  updateProperty(type: string,
-                 value: number | string,
-                 broadcast: boolean = false,
-                 oscillator: Oscillator = this.selectedOscillator) {
-    if (type != 'type' && typeof value == 'string') value = parseFloat(value);
-    this.instrumentService.updateOscillator(this.instrument.id, oscillator, type, value);
     this.render();
   }
 
@@ -290,5 +283,15 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent {
     for (let osc of removed) {
       this.instrumentService.deleteOscillator(this.instrument.id, osc);
     }
+  }
+
+  updateProperty(type: string,
+                 value: number | string,
+                 oscillator: Oscillator = this.selectedOscillator) {
+    if (type != 'type' && typeof value == 'string') {
+      value = parseFloat(value);
+    }
+    this.instrumentService.updateOscillator(this.instrument.id, oscillator, type, value);
+    this.render();
   }
 }

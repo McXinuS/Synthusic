@@ -1,0 +1,24 @@
+<div>
+  <span #label [attr.id]="labelId" class="label-desc">{{description}}</span>
+
+  <input-semitransparent [type]="'number'"
+                         [isDisabled]="isDisabled"
+                         class="label-value"
+                         [min]="min"
+                         [max]="max"
+                         [step]="step"
+                         [labelId]="labelId"
+                         [(ngModel)]="value">
+  </input-semitransparent>
+</div>
+
+<input type="range"
+       [attr.disabled]="isDisabled"
+       [attr.min]="min"
+       [attr.max]="max"
+       [attr.step]="step"
+       [attr.aria-labelledby]="labelId"
+       [ngModel]="value"
+       (input)="onRangeInput($event.target.value)"
+       (change)="onRangeChange($event.target.value)"
+       (blur)="onBlur()"/>

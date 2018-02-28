@@ -3,30 +3,30 @@ import {SequencerNote} from './sequencernote.model';
 import {SoundService} from '../sound/sound.service';
 import {WebSocketService} from '../websocket/websocket.service';
 import {WebSocketMessageType} from '../../../../shared/web-socket-message-types';
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
+import {Settings} from "../loader/settings.model";
 
 @Injectable()
 export class SequencerService {
+
   /**
    * Array of all notes in sequencer.
    */
   private _notes: SequencerNote[] = [];
   notes$: Subject<SequencerNote[]> = new BehaviorSubject([]);
 
-  /**
-   * Array of notes that playing at the moment.
-   */
-  private _playing: number[] = [];
-  playing$: Subject<number[]>;
+  bpm$: Subject<number> = new BehaviorSubject(60);
 
-  constructor(private soundService: SoundService,
-              private webSocketService: WebSocketService) {
+  constructor(private webSocketService: WebSocketService) {
+
     this.webSocketService.registerHandler(WebSocketMessageType.note_add, this.onNoteReceived.bind(this, 'add'));
-    this.webSocketService.registerHandler(WebSocketMessageType.note_remove, this.onNoteReceived.bind(this, 'remove'));
+    this.webSocketService.registerHandler(WebSocketMessageType.note_delete, this.onNoteReceived.bind(this, 'remove'));
+    this.webSocketService.registerHandler(WebSocketMessageType.bpm_changed, this.onBpmChanged.bind(this));
+
   }
 
   /**
-   * Called when a note is received by Web Socket
+   * Called when a new note is received from a server.
    */
   private onNoteReceived(type: string, note: SequencerNote) {
     if (type === 'add') {
@@ -36,53 +36,51 @@ export class SequencerService {
     }
   }
 
-  init(notes: SequencerNote[]) {
+  private onBpmChanged(bpm: number) {
+    this.bpm$.next(bpm);
+  }
+
+  init(settings: Settings) {
+    let notes = settings.notes;
     for (let note of notes) {
       this.addNote(note, false);
     }
+
+    this.onBpmChanged(settings.bpm);
   }
 
   addNote(note: SequencerNote, broadcast = true) {
-    if (this.hasNote(note)) return;
+    if (note == null || this.hasNote(note)) return;
+
     this._notes.push(note);
     this.notes$.next(this._notes);
+
     if (broadcast) {
       this.webSocketService.send(WebSocketMessageType.note_add, note);
     }
   }
 
   removeNote(note: SequencerNote, broadcast = true) {
-    if (!this.hasNote(note)) return;
+    if (note == null || !this.hasNote(note)) return;
+
     let nsInd = this._notes.findIndex(ns => ns.id === note.id);
     if (nsInd != -1) {
       this._notes.splice(nsInd, 1);
       this.notes$.next(this._notes);
     }
+
     if (broadcast) {
-      this.webSocketService.send(WebSocketMessageType.note_remove, note);
+      this.webSocketService.send(WebSocketMessageType.note_delete, note);
     }
   }
 
   hasNote(note: SequencerNote) {
+    if (note == null) return false;
     return this._notes.findIndex(n => note.id == n.id) >= 0;
   }
 
-  playNote(note: SequencerNote) {
-    if (this.isPlaying(note)) return;
-    this._playing.push(note.id);
-    this.soundService.playNote(note);
-  }
-
-  stopNote(note: SequencerNote) {
-    if (!this.isPlaying(note)) return;
-    let nsInd = this._playing.indexOf(note.id);
-    if (nsInd != -1) {
-      this._playing.splice(nsInd, 1);
-    }
-    this.soundService.stopNote(note);
-  }
-
-  isPlaying(note: SequencerNote) {
-    return this._playing.indexOf(note.id) >= 0;
+  setBpm(bpm: number) {
+    this.onBpmChanged(bpm);
+    this.webSocketService.send(WebSocketMessageType.bpm_changed, bpm);
   }
 }

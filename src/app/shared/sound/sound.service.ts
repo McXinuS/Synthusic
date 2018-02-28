@@ -235,6 +235,7 @@ export class SoundService {
     this.onPannerUpdate(instrument.id, instrument.panner);
   }
 
+  // TODO: doesn't update when select component of settings changes
   onOscillatorsUpdate(instrumentId: number, oscillator?: Oscillator, oldOscillator?: Oscillator) {
     let freqEqual, gainEqual;
     for (let note of this._playingNotes) {

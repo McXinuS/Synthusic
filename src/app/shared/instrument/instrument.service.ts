@@ -12,25 +12,70 @@ export class InstrumentService {
   private instrumentsSource: Subject<Array<Instrument>> = new BehaviorSubject(this._instruments);
   instruments$: Observable<Array<Instrument>>;
 
+  getInstrument(id): Instrument {
+    return this._instruments.find(ins => ins.id === id);
+  }
+
+  private getInstrumentIndex(id: number): number {
+    return this._instruments.findIndex(ins => {
+      return ins.id == id;
+    });
+  }
+
+  private findOscillatorIndex(instrument: Instrument, osc: Oscillator) {
+    return instrument.oscillators.findIndex(cur => {
+      return cur.freq === osc.freq && cur.gain === osc.gain && cur.type === osc.type;
+    });
+  }
+
   constructor(private webSocketService: WebSocketService,
               private soundService: SoundService,
               private popupService: PopupService) {
     this.instruments$ = this.instrumentsSource.asObservable();
     this.soundService.setInstrumentObservable(this.instruments$);
-    this.webSocketService.registerHandler(WebSocketMessageType.instrument_add, this.addInstrument.bind(this));
-    this.webSocketService.registerHandler(WebSocketMessageType.instrument_update, this.updateInstrument.bind(this));
+    this.webSocketService.registerHandler(WebSocketMessageType.instrument_add, this.onInstrumentAdded.bind(this));
+    this.webSocketService.registerHandler(WebSocketMessageType.instrument_update, this.onInstrumentUpdated.bind(this));
     this.webSocketService.registerHandler(WebSocketMessageType.instrument_delete, this.deleteInstrument.bind(this));
-  }
-
-  getInstrument(id): Instrument {
-    return this._instruments.find(ins => {
-      return ins.id == id;
-    });
   }
 
   init(settings: Instrument[]) {
     this._instruments = settings;
     this.instrumentsSource.next(this._instruments);
+  }
+
+  private onInstrumentAdded(instrument: Instrument) {
+    this._instruments.push(instrument);
+    this.instrumentsSource.next(this._instruments);
+  }
+
+  /**
+   * Callback for web socket. No need to use it inside of this application
+   * due to high CPU usage when resetting instrument
+   */
+  private onInstrumentUpdated(instrument: Instrument) {
+    let index = this.getInstrumentIndex(instrument.id);
+    if (index >= 0) {
+      // copy into existing object to not break references
+      Object.assign(this._instruments[index], instrument);
+      this.instrumentsSource.next(this._instruments);
+      this.soundService.onInstrumentUpdate(instrument.id);
+      this.popupService.updateInstrument(this._instruments[index]);
+    } else {
+      this.onInstrumentAdded(instrument);
+    }
+  }
+
+  private onInstrumentDeleted(id: number) {
+    let index = this.getInstrumentIndex(id);
+    if (index >= 0) {
+      this.soundService.stop(id);
+      this._instruments.splice(index, 1);
+      this.instrumentsSource.next(this._instruments);
+    }
+  }
+
+  private notifyInstrumentUpdated(id: number) {
+    this.webSocketService.send(WebSocketMessageType.instrument_update, this.getInstrument(id));
   }
 
   /**
@@ -49,35 +94,13 @@ export class InstrumentService {
     });
   }
 
-  private addInstrument(instrument: Instrument) {
-    this._instruments.push(instrument);
-    this.instrumentsSource.next(this._instruments);
-  }
-
-  /**
-   * Callback for web socket. No need to use it inside of this
-   * application due to high load on services and components when resetting instrument
-   */
-  private updateInstrument(instrument: Instrument) {
-    let index = this.getInstrumentIndex(instrument.id);
-    if (index >= 0) {
-      // copy into existing object to not break references
-      Object.assign(this._instruments[index], instrument);
-      this.instrumentsSource.next(this._instruments);
-      this.soundService.onInstrumentUpdate(instrument.id);
-      this.popupService.updateInstrument(this._instruments[index]);
-    }
-  }
-
+  // TODO: use it
   deleteInstrument(id: number) {
-    let index = this.getInstrumentIndex(id);
-    if (index >= 0) {
-      this.soundService.stop(id);
-      this._instruments.splice(index, 1);
-      this.instrumentsSource.next(this._instruments);
-      this.webSocketService.send(WebSocketMessageType.instrument_delete, id);
-    }
+    this.webSocketService.send(WebSocketMessageType.instrument_delete, id);
+    this.onInstrumentDeleted(id);
   }
+
+  // TODO: move change notification to another function to let DOM-events handle it
 
   updateEnvelope(id: number, type: string, value: number) {
     this.getInstrument(id).envelope[type] = value;
@@ -115,21 +138,5 @@ export class InstrumentService {
     }
     this.soundService.onOscillatorsUpdate(id);
     this.notifyInstrumentUpdated(id);
-  }
-
-  private getInstrumentIndex(id: number): number {
-    return this._instruments.findIndex(ins => {
-      return ins.id == id;
-    });
-  }
-
-  private findOscillatorIndex(instrument: Instrument, osc: Oscillator) {
-    return instrument.oscillators.findIndex(cur => {
-      return cur.freq === osc.freq && cur.gain === osc.gain && cur.type === osc.type;
-    });
-  }
-
-  private notifyInstrumentUpdated(id: number) {
-    this.webSocketService.send(WebSocketMessageType.instrument_update, this.getInstrument(id));
   }
 }

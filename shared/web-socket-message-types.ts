@@ -1,6 +1,7 @@
 export enum WebSocketMessageType {
   note_add = 1,
-  note_remove,
+  note_update,
+  note_delete,
 
   instrument_add = 10,
   instrument_update,
@@ -9,6 +10,7 @@ export enum WebSocketMessageType {
   room_updated = 20,
   room_name_update,
   user_update,
+  bpm_changed,
 
   chat_new_message = 30,
   get_state = 90,

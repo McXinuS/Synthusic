@@ -28,6 +28,10 @@ export class NoteDuration {
     this.triplet = triplet || false;
   }
 
+  isInfinite(): boolean {
+    return this.baseDuration === NoteDurationEnum.Infinite;
+  }
+
   getHash(): number {
     if (this.baseDuration == NoteDurationEnum.Infinite) return InfiniteNoteHash;
 

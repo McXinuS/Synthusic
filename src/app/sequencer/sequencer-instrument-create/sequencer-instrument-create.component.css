@@ -1,6 +1,7 @@
 .wrapper {
   background-color : #a4c798;
   transition       : inderit;
+  cursor           : pointer;
 }
 
 .wrapper:hover {

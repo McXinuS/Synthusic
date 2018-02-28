@@ -1,7 +1,21 @@
 <h2 class="center-hor">Instrument Settings</h2>
 
-<label for="name">Name</label>
-<input id="name" type="text" [(ngModel)]="instrument.name">
+<label id="instr-name-label">Name</label>
+<input-semitransparent
+  [type]="'text'"
+  [(ngModel)]="instrument.name"
+  [labelId]="'instr-name-label'"
+  [placeholder]="'Enter instrument name'"
+  [styles]="{
+    'font-family'   : 'Courier New, monospace',
+    'font-size'     : '1.5em',
+    'padding-rigth' : '16px',
+    'padding-left'  : '16px',
+    'margin-bottom' : '25px',
+    'height'        : '45px',
+    'border-radius' : '10px',
+    'border'        : '1px solid #dbeeff'
+  }"></input-semitransparent>
 
 <div class="row">
 
@@ -9,7 +23,7 @@
 
     <label>Oscillators</label>
     <div class="description">
-      <p>Create, update and remove oscillators.</p>
+      <p>Create and change oscillators.</p>
       <p> - mouse left: select oscillator</p>
       <p> - mouse right: remove selected oscillator or add new one if no selection</p>
       <p> - mouse move: change frequency scale and gain of selected oscillator</p>

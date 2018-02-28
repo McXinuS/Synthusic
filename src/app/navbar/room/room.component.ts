@@ -33,7 +33,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     this.room.subscribe(room => {
       this.roomName = room.name;
       if (!this.userNameChanged) {
-        this.userName = this.roomService.currentUser.name;
+        let cr = this.roomService.currentUser;
+        this.userName = cr && cr.name;
       }
     });
     this.roomService.messages$.subscribe(messages => {
@@ -71,6 +72,11 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   sendMessage() {
     this.roomService.sendChatMessage(this.myMessage);
+    this.clearMessage();
+  }
+
+  clearMessage() {
+    this.myMessage = '';
   }
 
   changeUserName() {
@@ -78,7 +84,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     this.userNameChanged = false;
   }
 
-  userNameReset() {
+  resetUsername() {
     this.userName = this.roomService.currentUser.name;
     this.userNameChanged = false;
   }

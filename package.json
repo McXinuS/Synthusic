@@ -1,6 +1,6 @@
 {
   "name": "simple-synthesizer",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
   "angular-cli": {},
   "engines": {
@@ -39,7 +39,8 @@
     "rxjs": "^5.3.0",
     "ts-helpers": "^1.1.1",
     "tslint": "^4.5.1",
-    "typescript": "~2.2.2",
+    "typescript": "^2.2.2",
+    "typings": "^2.1.1",
     "ws": "^2.3.1",
     "zone.js": "^0.8.5"
   },

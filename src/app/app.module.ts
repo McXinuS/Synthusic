@@ -33,6 +33,9 @@ import {StaffService} from "./shared/sequencer/staff.service";
 import { AboutComponent } from './navbar/about/about.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import {OscilloscopeComponent} from "./popup/instrument-settings/oscilloscope/oscilloscope.component";
+import { InputSliderComponent } from './shared/components/input-slider/input-slider.component';
+import { InputSemitransparentComponent } from './shared/components/input-semitransparent/input-semitransparent.component';
+import { NumberpipefixPipe } from './shared/utils/pipes/numberpipefix.pipe';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,10 @@ import {OscilloscopeComponent} from "./popup/instrument-settings/oscilloscope/os
     SequencerFooterComponent,
     AboutComponent,
     SpinnerComponent,
-    OscilloscopeComponent
+    OscilloscopeComponent,
+    InputSliderComponent,
+    InputSemitransparentComponent,
+    NumberpipefixPipe,
   ],
   imports: [
     BrowserModule,

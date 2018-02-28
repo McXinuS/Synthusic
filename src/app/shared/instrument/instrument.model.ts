@@ -16,7 +16,7 @@ export class EnvelopeConfig {
 export class Oscillator {
   freq: number;
   gain: number;
-  type: string;
+  type: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'custom';
 }
 
 export const OscillatorType = ['sine', 'square', 'sawtooth', 'triangle'];

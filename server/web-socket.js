@@ -41,6 +41,8 @@ function Server(server) {
       wsClients.delete(id);
       console.log('Connection closed : id ' + id);
     });
+
+    ws.on('error', error => console.log(error));
   }
 
 

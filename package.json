@@ -1,10 +1,10 @@
 {
   "name": "simple-synthesizer",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "angular-cli": {},
   "engines": {
-    "node": "8.1.x"
+    "node": "8.9.x"
   },
   "scripts": {
     "postinstall": "npm run build:prod",

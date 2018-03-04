@@ -98,27 +98,6 @@ li a.selected {
   visibility : hidden;
 }
 
-/* TODO: remove deep selector (try to update Angular to 4.3 and use '::ng-deep' or smth) */
-
->>> input-semitransparent {
-  width  : 100%;
-  height : 30px;
-}
-
->>> input-semitransparent input[type="text"] {
-  padding-left  : 8px;
-  padding-right : 68px;
-}
-
->>> input-semitransparent input[type="text"]:hover {
-  background-color : rgba(0, 0, 0, 0.05);
-}
-
->>> input-semitransparent input[type="text"]:focus {
-  background-color : rgba(0, 0, 0, 0.2);
-  color            : inherit;
-}
-
 @keyframes newMessage {
   0% {
     background-color : transparent;

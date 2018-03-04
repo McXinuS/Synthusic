@@ -1,0 +1,22 @@
+:host(.navbar-theme),
+:host-context(.navbar-theme) {
+  width  : 100%;
+  height : 30px;
+}
+
+:host(.navbar-theme) input[type="text"],
+:host-context(.navbar-theme) input[type="text"] {
+  padding-left  : 8px;
+  padding-right : 68px;
+}
+
+:host(.navbar-theme) input[type="text"]:hover,
+:host-context(.navbar-theme) input[type="text"]:hover {
+  background-color : rgba(0, 0, 0, 0.05);
+}
+
+:host(.navbar-theme) input[type="text"]:focus,
+:host-context(.navbar-theme) input[type="text"]:focus {
+  background-color : rgba(0, 0, 0, 0.2);
+  color            : inherit;
+}

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
-import {CreateId} from "../../utils/id-generator";
+import {IdGenerator} from "@shared/utilities";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
@@ -33,7 +33,7 @@ export class InputSliderComponent implements ControlValueAccessor{
 
   constructor() {
     // initialize ID of the description label
-    this.labelId = 'label-' + CreateId();
+    this.labelId = 'label-' + IdGenerator.CreateId();
   }
 
   private parseNewValue(newValue): number {

@@ -8,7 +8,7 @@ import {Instrument} from '@core/models';
   templateUrl: './sequencer.component.html',
   styleUrls: ['./sequencer.component.css']
 })
-export class SequencerComponent implements OnInit, AfterViewInit {
+export class SequencerComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   @ViewChild('staff') private staffContainer: ElementRef;
 
@@ -30,12 +30,12 @@ export class SequencerComponent implements OnInit, AfterViewInit {
     this.instruments$ = this.instrumentService.instruments$;
   }
 
-  ngAfterViewChecked() {
-    this.updateStaffEventListeners();
-  }
-
   ngAfterViewInit() {
     this.onResize();
+  }
+
+  ngAfterViewChecked() {
+    this.updateStaffEventListeners();
   }
 
   onResize() {

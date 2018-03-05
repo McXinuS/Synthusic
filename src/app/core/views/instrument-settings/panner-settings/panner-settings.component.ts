@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
 import {Instrument, PannerConfig, Point, Rectangle} from '@core/models';
 import {InstrumentService} from '@core/services';
 import {BaseCanvasComponent} from '../base-canvas-component';
@@ -8,7 +8,7 @@ import {BaseCanvasComponent} from '../base-canvas-component';
   templateUrl: './panner-settings.component.html',
   styleUrls: ['./panner-settings.component.css']
 })
-export class PannerSettingsComponent extends BaseCanvasComponent implements OnInit {
+export class PannerSettingsComponent extends BaseCanvasComponent implements OnInit, AfterViewInit {
   @Input() instrument: Instrument;
   private selectedInstrument: Instrument;
   private instruments: Instrument[];

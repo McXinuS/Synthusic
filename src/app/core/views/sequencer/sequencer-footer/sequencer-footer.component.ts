@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SequencerService, StaffService} from '@core/services';
 
 @Component({
@@ -6,7 +6,7 @@ import {SequencerService, StaffService} from '@core/services';
   templateUrl: './sequencer-footer.component.html',
   styleUrls: ['./sequencer-footer.component.css']
 })
-export class SequencerFooterComponent implements OnInit {
+export class SequencerFooterComponent implements OnInit, AfterViewInit {
 
   collapsed: boolean = false;
 

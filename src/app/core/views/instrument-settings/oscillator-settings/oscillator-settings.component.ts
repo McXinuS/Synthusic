@@ -11,7 +11,7 @@ import {BaseCanvasComponent} from '../base-canvas-component';
 
 // TODO move all the logic to OscillatorSettingsService
 
-export class OscillatorSettingsComponent extends BaseCanvasComponent {
+export class OscillatorSettingsComponent extends BaseCanvasComponent implements AfterViewInit {
   @Input() instrument: Instrument;
 
   readonly freqScaleMax = 10;

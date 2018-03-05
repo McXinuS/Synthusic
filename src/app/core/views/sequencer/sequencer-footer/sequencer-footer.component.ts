@@ -2,7 +2,7 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 import {SequencerService, StaffService} from '@core/services';
 
 @Component({
-  selector: 'div[app-sequencer-footer]',
+  selector: 'app-sequencer-footer',
   templateUrl: './sequencer-footer.component.html',
   styleUrls: ['./sequencer-footer.component.css']
 })

@@ -1,38 +1,38 @@
 
 <div class="row">
   <div class="col-md-6">
-    <input-slider [min]="0"
-                  [max]="2500"
-                  [step]="10"
-                  [description]="'Attack'"
-                  [ngModel]="instrument.envelope.attack"
-                  (ngModelChange)="updateEnvelopeConfig('attack', $event)"></input-slider>
+    <app-input-slider [min]="0"
+                      [max]="2500"
+                      [step]="10"
+                      [description]="'Attack'"
+                      [ngModel]="instrument.envelope.attack"
+                      (ngModelChange)="updateEnvelopeConfig('attack', $event)"></app-input-slider>
   </div>
   <div class="col-md-6">
-    <input-slider [min]="0"
-                  [max]="2500"
-                  [step]="10"
-                  [description]="'Decay'"
-                  [ngModel]="instrument.envelope.decay"
-                  (ngModelChange)="updateEnvelopeConfig('decay', $event)"></input-slider>
+    <app-input-slider [min]="0"
+                      [max]="2500"
+                      [step]="10"
+                      [description]="'Decay'"
+                      [ngModel]="instrument.envelope.decay"
+                      (ngModelChange)="updateEnvelopeConfig('decay', $event)"></app-input-slider>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-6">
-    <input-slider [min]="0"
-                  [max]="1"
-                  [step]="0.01"
-                  [description]="'Sustain'"
-                  [ngModel]="instrument.envelope.sustain"
-                  (ngModelChange)="updateEnvelopeConfig('sustain', $event)"></input-slider>
+    <app-input-slider [min]="0"
+                      [max]="1"
+                      [step]="0.01"
+                      [description]="'Sustain'"
+                      [ngModel]="instrument.envelope.sustain"
+                      (ngModelChange)="updateEnvelopeConfig('sustain', $event)"></app-input-slider>
   </div>
   <div class="col-md-6">
-    <input-slider [min]="0"
-                  [max]="2500"
-                  [step]="10"
-                  [description]="'Release'"
-                  [ngModel]="instrument.envelope.release"
-                  (ngModelChange)="updateEnvelopeConfig('release', $event)"></input-slider>
+    <app-input-slider [min]="0"
+                      [max]="2500"
+                      [step]="10"
+                      [description]="'Release'"
+                      [ngModel]="instrument.envelope.release"
+                      (ngModelChange)="updateEnvelopeConfig('release', $event)"></app-input-slider>
   </div>
 </div>

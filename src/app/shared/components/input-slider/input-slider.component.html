@@ -1,15 +1,15 @@
 <div>
   <span #label [attr.id]="labelId" class="label-desc">{{description}}</span>
 
-  <input-semitransparent [type]="'number'"
-                         [isDisabled]="isDisabled"
-                         class="label-value"
-                         [min]="min"
-                         [max]="max"
-                         [step]="step"
-                         [labelId]="labelId"
-                         [(ngModel)]="value">
-  </input-semitransparent>
+  <app-input-semitransparent [type]="'number'"
+                             [isDisabled]="isDisabled"
+                             class="label-value"
+                             [min]="min"
+                             [max]="max"
+                             [step]="step"
+                             [labelId]="labelId"
+                             [(ngModel)]="value">
+  </app-input-semitransparent>
 </div>
 
 <input type="range"

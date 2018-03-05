@@ -21,7 +21,7 @@
 
           <label hidden for="messageText">Your message</label>
 
-          <input-semitransparent
+          <app-input-semitransparent
             id="messageText"
             [type]="'text'"
             [autocomplete]="'off'"
@@ -30,7 +30,7 @@
             [name]="myMessage"
             [(ngModel)]="myMessage"
             [ngModelOptions]="{standalone: true}">
-          </input-semitransparent>
+          </app-input-semitransparent>
 
           <div class="buttons" [class.btn-shown]="!!myMessage">
             <button type="submit" class="btn-square animation-delay-0">
@@ -62,7 +62,7 @@
 
         <div class="box-form button-group">
 
-          <input-semitransparent
+          <app-input-semitransparent
             id="userName"
             [type]="'text'"
             [autocomplete]="'off'"
@@ -72,7 +72,7 @@
             [(ngModel)]="userName"
             (ngModelChange)="userNameChanged=true"
             [ngModelOptions]="{standalone: true}">
-          </input-semitransparent>
+          </app-input-semitransparent>
 
           <div class="buttons" [class.btn-shown]="userNameChanged">
             <button type="submit" class="btn-square animation-delay-0">

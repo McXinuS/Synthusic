@@ -3,7 +3,7 @@ import {IdGenerator} from '@shared/utilities';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
-  selector: 'input-slider',
+  selector: 'app-input-slider',
   templateUrl: './input-slider.component.html',
   styleUrls: ['./input-slider.component.css'],
   providers: [{
@@ -30,6 +30,25 @@ export class InputSliderComponent implements ControlValueAccessor {
   set _isDisabled(dis: boolean) {
     this.setDisabledState(dis);
   }
+
+  // ngModel value
+  _value: string | number;
+  get value(): any {
+    return this._value;
+  };
+
+  set value(value: any) {
+    if (value !== this._value) {
+      this._value = value;
+      this.onChangeCallback(value);
+    }
+  }
+
+  // Placeholders for the callbacks which are later provided by the Control Value Accessor
+  private onTouchedCallback: () => void = () => {
+  };
+  private onChangeCallback: (_: any) => void = () => {
+  };
 
   constructor() {
     // initialize ID of the description label
@@ -72,24 +91,6 @@ export class InputSliderComponent implements ControlValueAccessor {
   }
 
   /*** ControlValueAccessor implementation ***/
-
- // Placeholders for the callbacks which are later provided by the Control Value Accessor
-  private onTouchedCallback: () => void = () => {
-  };
-  private onChangeCallback: (_: any) => void = () => {
-  };
-
-  _value: string | number;
-  get value(): any {
-    return this._value;
-  };
-
-  set value(value: any) {
-    if (value !== this._value) {
-      this._value = value;
-      this.onChangeCallback(value);
-    }
-  }
 
   onBlur() {
     this.onTouchedCallback();

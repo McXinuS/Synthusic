@@ -1,7 +1,7 @@
 <div class="center overlay start-overlay" [class.overlay-active]="!loadDone">
   <div>
     <h1 class="text-outline">{{loaderMessage}}</h1>
-    <div app-spinner></div>
+    <app-spinner></app-spinner>
   </div>
 </div>
 
@@ -12,10 +12,10 @@
 </nav>
 
 <main>
-    <div app-sequencer ></div>
+    <app-sequencer></app-sequencer>
 </main>
 
 <footer>
-  <div app-sequencer-footer></div>
+  <app-sequencer-footer></app-sequencer-footer>
   <app-keyboard></app-keyboard>
 </footer>

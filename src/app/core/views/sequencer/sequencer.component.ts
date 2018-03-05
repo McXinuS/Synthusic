@@ -4,7 +4,7 @@ import {InstrumentService, SequencerService, StaffService} from '@core/services'
 import {Instrument} from '@core/models';
 
 @Component({
-  selector: '[app-sequencer]',
+  selector: 'app-sequencer',
   templateUrl: './sequencer.component.html',
   styleUrls: ['./sequencer.component.css']
 })

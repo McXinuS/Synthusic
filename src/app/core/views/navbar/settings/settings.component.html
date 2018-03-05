@@ -5,11 +5,11 @@
     <div class="col-sm-4">
       <div class="well">
 
-        <input-slider [description]="'Gain (master)'"
-                      [min]="0"
-                      [max]="0.5"
-                      [step]="0.01"
-                      [(ngModel)]="soundService.masterGain"></input-slider>
+        <app-input-slider [description]="'Gain (master)'"
+                          [min]="0"
+                          [max]="0.5"
+                          [step]="0.01"
+                          [(ngModel)]="soundService.masterGain"></app-input-slider>
 
         <div *ngIf="soundService.masterGain==0" class="btn" (click)="toggleMute()">
           <span class="glyphicon glyphicon-volume-off"></span> Unmute</div>

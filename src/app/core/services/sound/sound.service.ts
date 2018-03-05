@@ -12,6 +12,10 @@ import {Analyser} from './analyser';
 
 @Injectable()
 export class SoundService {
+
+  // Precision constant used in isFloatEqual function
+  readonly CompareEps = 0.01;
+
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
   private audioContext: AudioContext;
 
@@ -330,8 +334,6 @@ export class SoundService {
     let mod = this.modifiers.get(instrumentId);
     return mod ? mod.panner : null;
   }
-
-  readonly CompareEps = 0.01;
 
   private isFloatEqual(a: number, b: number): boolean {
     return Math.abs(a - b) < this.CompareEps;

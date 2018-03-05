@@ -31,6 +31,6 @@ label {
   border-bottom  : 1px solid #333;
 }
 
-input-semitransparent {
+app-input-semitransparent {
   display : block;
 }

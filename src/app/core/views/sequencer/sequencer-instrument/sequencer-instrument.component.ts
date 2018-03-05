@@ -3,7 +3,7 @@ import {Instrument} from '@core/models';
 import {PopupService} from '@core/services';
 
 @Component({
-  selector: 'div[app-sequencer-instrument]',
+  selector: 'app-sequencer-instrument',
   templateUrl: './sequencer-instrument.component.html',
   styleUrls: ['./sequencer-instrument.component.css']
 })

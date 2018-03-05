@@ -7,6 +7,9 @@ import {SequencerNote} from '@core/models';
 
 export class SoundPlayer {
 
+  private readonly ReferenceBpm = 60;
+  private readonly BpmDurationConstant = this.ReferenceBpm * 4 * 1000;
+
   private _playing: SequencerNote[] = [];
   /**
    * Array of notes that playing at the moment.
@@ -80,9 +83,6 @@ export class SoundPlayer {
 
     if (typeof this.onMeasurePlayed == 'function') this.onMeasurePlayed(measure);
   }
-
-  private readonly ReferenceBpm = 60;
-  private readonly BpmDurationConstant = this.ReferenceBpm * 4 * 1000;
 
   private noteDurationToMillis(note: SequencerNote): number {
     // ignore triplet and dot as long as they not implemented in UI

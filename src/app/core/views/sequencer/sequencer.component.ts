@@ -1,7 +1,7 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 import {InstrumentService, SequencerService, StaffService} from '@core/services';
-import {Instrument} from "@core/models";
+import {Instrument} from '@core/models';
 
 @Component({
   selector: '[app-sequencer]',

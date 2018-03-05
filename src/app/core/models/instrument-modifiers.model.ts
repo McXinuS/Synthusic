@@ -1,5 +1,5 @@
-import {Enveloper} from "@core/services/sound/enveloper";
-import {Panner} from "@core/services/sound/panner";
+import {Enveloper} from '@core/services/sound/enveloper';
+import {Panner} from '@core/services/sound/panner';
 
 export class InstrumentModifiers {
   enveloper: Enveloper;

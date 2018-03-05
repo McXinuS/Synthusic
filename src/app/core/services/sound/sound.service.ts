@@ -7,8 +7,8 @@ import {BehaviorSubject, Subject, Observable} from 'rxjs';
 import {NoteService} from '../note';
 import {SequencerNoteService} from '../sequencer';
 import {Enveloper} from './enveloper';
-import {Panner} from "./panner";
-import {Analyser} from "./analyser";
+import {Panner} from './panner';
+import {Analyser} from './analyser';
 
 @Injectable()
 export class SoundService {

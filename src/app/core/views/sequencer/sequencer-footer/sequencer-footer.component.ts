@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SequencerService, StaffService} from "@core/services";
+import {SequencerService, StaffService} from '@core/services';
 
 @Component({
   selector: 'div[app-sequencer-footer]',

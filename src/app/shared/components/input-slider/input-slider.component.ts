@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
-import {IdGenerator} from "@shared/utilities";
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {IdGenerator} from '@shared/utilities';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
   selector: 'input-slider',

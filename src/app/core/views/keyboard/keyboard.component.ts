@@ -228,7 +228,7 @@ export class KeyboardComponent implements OnInit {
     let id: number = null;
 
     while ((isNaN(id) || id == null) && target != null) {
-      id = parseInt(target.getAttribute("data-note-id"));
+      id = parseInt(target.getAttribute('data-note-id'));
       target = target.parentElement;
     }
 

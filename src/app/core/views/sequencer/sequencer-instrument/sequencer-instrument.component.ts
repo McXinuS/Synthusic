@@ -1,6 +1,6 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {Instrument} from "@core/models";
-import {PopupService} from "@core/services";
+import {Instrument} from '@core/models';
+import {PopupService} from '@core/services';
 
 @Component({
   selector: 'div[app-sequencer-instrument]',

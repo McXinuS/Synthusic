@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Instrument, Oscillator, PannerConfig} from '@core/models';
 import {Subject, Observable, BehaviorSubject} from 'rxjs';
-import {WebSocketMessageType} from "@shared-global/web-socket-message-types";
+import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
 import {WebSocketService} from '../websocket';
 import {SoundService} from '../sound';
 import {PopupService} from '../popup';
-import {StaffService} from "../sequencer";
+import {StaffService} from '../sequencer';
 
 @Injectable()
 export class InstrumentService {

@@ -1,6 +1,6 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {Instrument} from '@core/models';
-import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 @Injectable()
 export class PopupService {

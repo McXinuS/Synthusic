@@ -1,6 +1,6 @@
 import {SequencerService} from '@core/services';
 import {SoundService, InstrumentService} from '@core/services';
-import {Subject} from "rxjs";
+import {Subject} from 'rxjs';
 import {SequencerNote} from '@core/models';
 
 // TODO

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, Subject} from 'rxjs';
 import {SequencerNote, Settings} from '@core/models';
 import {WebSocketService} from '../websocket';
 import {WebSocketMessageType} from '@shared-global/web-socket-message-types';

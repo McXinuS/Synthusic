@@ -1,6 +1,6 @@
-import {Instrument, BaseNote, SequencerNote} from "@core/models";
-import {BehaviorSubject, Observable, Subject} from "rxjs";
-import {Injectable} from "@angular/core";
+import {Instrument, BaseNote, SequencerNote} from '@core/models';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {Injectable} from '@angular/core';
 import {NoteService} from '../note';
 import {SequencerService} from '../sequencer/sequencer.service';
 //import {SoundService} from '../sound';
@@ -183,12 +183,12 @@ export class StaffService {
                             <measure n="${p + 1}">
                               <staff n="1">
                                   <layer n="1" xml:id="layer-treple">
-                                        ${ trebleNotesXml[i].join("") }
+                                        ${ trebleNotesXml[i].join('') }
                                   </layer>
                               </staff>
                               <staff n="2">
                                   <layer xml:id="layer-bass" n="1">
-                                        ${ bassNotesXml[i].join("") }
+                                        ${ bassNotesXml[i].join('') }
                                   </layer>
                               </staff>
                             </measure>`

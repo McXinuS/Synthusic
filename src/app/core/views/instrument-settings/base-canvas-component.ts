@@ -1,5 +1,5 @@
-import {ElementRef, ViewChild, Input, AfterViewInit} from "@angular/core";
-import {Point} from "@core/models";
+import {ElementRef, ViewChild, Input, AfterViewInit} from '@angular/core';
+import {Point} from '@core/models';
 
 /**
  * Base class for components that use canvas.

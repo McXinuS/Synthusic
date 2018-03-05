@@ -1,13 +1,13 @@
 // SafePipe code provided by Kim Biesbjerg
 // https://forum.ionicframework.com/t/inserting-html-via-angular-2-use-of-domsanitizationservice-bypasssecuritytrusthtml/62562/5
 
-import { Pipe } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeStyle, SafeScript, SafeUrl, SafeResourceUrl } from '@angular/platform-browser';
 
 @Pipe({
   name: 'safe'
 })
-export class SafePipe {
+export class SafePipe implements PipeTransform {
 
   constructor(protected _sanitizer: DomSanitizer) {
   }

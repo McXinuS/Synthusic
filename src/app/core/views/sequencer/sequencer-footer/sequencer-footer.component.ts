@@ -12,12 +12,12 @@ export class SequencerFooterComponent implements OnInit {
 
   constructor(public staffService: StaffService,
               private sequencerService: SequencerService,
-              private changeDetectionRef : ChangeDetectorRef) { }
+              private changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
 
-  ngAfterViewInit() : void {
+  ngAfterViewInit(): void {
     this.changeDetectionRef.detectChanges();
   }
 

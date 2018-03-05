@@ -3,7 +3,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {NoteService} from '../note';
 import {SequencerService} from '../sequencer/sequencer.service';
-//import {SoundService} from '../sound';
+// import {SoundService} from '../sound';
 import {SoundPlayer} from './soundplayer'
 
 // Library that converts generated MEI file to SVG score
@@ -36,11 +36,12 @@ export class StaffService {
   soundPlayer: SoundPlayer;
 
   constructor(private noteService: NoteService,
-              //private soundService: SoundService,
+              // private soundService: SoundService,
               private sequencerService: SequencerService) {
 
-    //this.soundPlayer = new SoundPlayer(sequencerService, soundService); // TODO
-    //this.soundPlayer.onMeasureChanged = this.setPage.bind(this); // TODO
+    // TODO: play from staff service
+    // this.soundPlayer = new SoundPlayer(sequencerService, soundService);
+    // this.soundPlayer.onMeasureChanged = this.setPage.bind(this);
 
     this.baseNotes = this.noteService.notes;
 
@@ -100,6 +101,19 @@ export class StaffService {
     this.soundPlayer.stop();
   }
 
+  private createMeiNote(note: SequencerNote, baseNote: BaseNote) {
+
+    let accidental = '';
+    if (baseNote.isAccidental)
+      accidental = 'accid="' + baseNote.name[1] + '"';
+
+    return '<note xml:id="' + note.id
+                 + '" dur="' + note.duration.baseDuration
+                 + '" oct="' + baseNote.octave
+                 + '" pname="' + baseNote.pitchNameLower
+                 + '"' + accidental + '/>';
+  }
+
   /**
    * Returns SVG elements for every instrument
    */
@@ -130,6 +144,7 @@ export class StaffService {
       for (let i = 0; i < this.notes.length; i++) {
 
         note = this.notes[i];
+        baseNote = this.baseNotes[note.baseNoteId];
 
         if (note.instrumentId !== instrument.id) continue;
         if (note.position.bar < this.currentPage * this.barsOnScreen
@@ -137,16 +152,15 @@ export class StaffService {
           || note.position.bar < 0
           || note.position.bar >= this.BarCount) continue;
 
-        baseNote = this.baseNotes[note.baseNoteId];
-
-        noteXml = `<note xml:id="${note.id}" dur="${note.duration.baseDuration}" oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}" ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' } />`;
-        // restXml = `<rest xml:id="rest-${note.id}" dur="${note.duration.baseDuration}" oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}" ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' }/>`;
+        noteXml = this.createMeiNote(note, baseNote);
+        // restXml = `<rest xml:id="rest-${note.id}" dur="${note.duration.baseDuration}"
+        // |  oct="${baseNote.octave}" pname="${baseNote.pitchNameLower}"
+        // |  ${baseNote.isAccidental ? 'accid="' + baseNote.name[1] + '"' : '' }/>`;
 
         if (baseNote.octave > 3) {
           trebleNotesXml[note.position.bar].push(noteXml);
           // bassNotesXml[note.position.bar][note.position.offset] = restXml;
-        }
-        else {
+        } else {
           // trebleNotesXml[note.position.bar][note.position.offset] = restXml;
           bassNotesXml[note.position.bar].push(noteXml);
         }

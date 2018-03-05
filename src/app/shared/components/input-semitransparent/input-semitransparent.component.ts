@@ -62,8 +62,7 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
 
   /*** ControlValueAccessor implementation ***/
 
-  //Placeholders for the callbacks which are later provided
-  //by the Control Value Accessor
+  // Placeholders for the callbacks which are later provided by the Control Value Accessor
   private onTouchedCallback: () => void = () => {
   };
   private onChangeCallback: (_: any) => void = () => {

@@ -12,7 +12,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
     multi: true
   }]
 })
-export class InputSliderComponent implements ControlValueAccessor{
+export class InputSliderComponent implements ControlValueAccessor {
 
   @Input() description: string = '';
   @Input() min: number = 0;
@@ -40,14 +40,17 @@ export class InputSliderComponent implements ControlValueAccessor{
     let newValueType = typeof newValue;
 
     if (newValueType === 'string') {
-      // remove commas to make number parsable for some locales: '1,234.56' to '1234.56
+
+      // remove commas to make number parsable for some locales: ex. '1,234.56' to '1234.56
       newValue = parseFloat(newValue.replace(/,/g, ''));
+
       if (isNaN(newValue)) {
         throw new Error(`Cannot convert string '${newValue}' to a number`);
       }
-    }
-    else if (newValueType !== 'number')
+
+    } else if (newValueType !== 'number') {
       throw new Error(`Wrong type of argument: expected number or string, got ${newValueType}`);
+    }
 
     return newValue;
   }
@@ -70,8 +73,7 @@ export class InputSliderComponent implements ControlValueAccessor{
 
   /*** ControlValueAccessor implementation ***/
 
-    //Placeholders for the callbacks which are later provided
-    //by the Control Value Accessor
+ // Placeholders for the callbacks which are later provided by the Control Value Accessor
   private onTouchedCallback: () => void = () => {
   };
   private onChangeCallback: (_: any) => void = () => {

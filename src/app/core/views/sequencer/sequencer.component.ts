@@ -57,7 +57,7 @@ export class SequencerComponent implements OnInit, AfterViewInit {
   }
 
   onRestClicked(id: string) {
-    //this.sequencerService.addNote()
+    // this.sequencerService.addNote()
   }
 
   setNoteEventListeners(notes) {

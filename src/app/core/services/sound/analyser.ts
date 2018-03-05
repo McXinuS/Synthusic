@@ -12,7 +12,7 @@ export class Analyser implements SoundModifier {
     this.analyserNode = audioCtx.createAnalyser();
     this.analyserNode.fftSize = this.FftSize;
 
-    if (destination){
+    if (destination) {
       this.connect(destination);
     }
   }
@@ -21,11 +21,11 @@ export class Analyser implements SoundModifier {
     this.analyserNode.connect(destination);
   }
 
-  disconnect(){
+  disconnect() {
     this.analyserNode.disconnect();
   }
 
-  getAudioNode(): AudioNode{
+  getAudioNode(): AudioNode {
     return this.analyserNode;
   }
 

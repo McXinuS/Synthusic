@@ -3,6 +3,8 @@ import {RoomService} from '@core/services';
 import {ChatMessage, Room} from '@core/models';
 import {Observable} from 'rxjs';
 
+// TODO split into room-chat and room-users
+
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
@@ -46,7 +48,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   onMessagesUpdated(messages: ChatMessage[]) {
-    if (messages && messages[messages.length-1].sender !== this.roomService.currentUser.id) {
+    let lastMsgSender = messages && messages[messages.length - 1].sender;
+    if (lastMsgSender !== this.roomService.currentUser.id) {
       this.newChatMessage.emit();
     }
 
@@ -65,8 +68,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   onChatScroll() {
-    this.chatStickToBottom = this.chatContainer.nativeElement.scrollTop
-      >= this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
+    let curPos = this.chatContainer.nativeElement.scrollTop;
+    let topPos = this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
+    this.chatStickToBottom = curPos >= topPos;
   }
 
   sendMessage() {

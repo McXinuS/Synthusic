@@ -1,6 +1,6 @@
 import {PannerConfig, SoundModifier} from '@core/models';
 
-export class Panner implements SoundModifier{
+export class Panner implements SoundModifier {
 
   private pannerNode: PannerNode;
 
@@ -15,7 +15,7 @@ export class Panner implements SoundModifier{
     this.pannerNode.setOrientation(0, 0, -1);
     this.changePosition(panner);
 
-    if (destination){
+    if (destination) {
       this.connect(destination);
     }
   }
@@ -24,7 +24,7 @@ export class Panner implements SoundModifier{
     this.pannerNode.connect(destination);
   }
 
-  disconnect(){
+  disconnect() {
     this.pannerNode.disconnect();
   }
 

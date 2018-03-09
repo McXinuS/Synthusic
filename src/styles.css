@@ -59,6 +59,18 @@ div.start-overlay {
   animation       : startOverlayAnimation 15s ease infinite;
 }
 
+@keyframes startOverlayAnimation {
+  0% {
+    background-position : 0 20%
+  }
+  50% {
+    background-position : 100% 80%
+  }
+  100% {
+    background-position : 0 20%
+  }
+}
+
 .start-overlay > div {
   background-color : rgba(240, 248, 255, 0.31);
   padding          : 30px;
@@ -220,18 +232,6 @@ select {
 select + .btn-square, select + .buttons .btn-square,
 input + .btn-square, input + .buttons .btn-square {
   border-radius : 0 4px 4px 0;
-}
-
-@keyframes startOverlayAnimation {
-  0% {
-    background-position : 0 20%
-  }
-  50% {
-    background-position : 100% 80%
-  }
-  100% {
-    background-position : 0 20%
-  }
 }
 
 

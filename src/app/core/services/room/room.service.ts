@@ -3,12 +3,17 @@ import {Subject, Observable} from 'rxjs';
 import {ChatMessage, Room, User} from '@core/models';
 import {WebSocketService} from '../websocket';
 import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class RoomService {
   private _room: Room;
   private roomSource: Subject<Room> = new Subject();
   room$: Observable<Room> = this.roomSource.asObservable();
+
+  private _users: User[];
+  private usersSource: Subject<User[]> = new BehaviorSubject([]);
+  users$: Observable<User[]> = this.usersSource.asObservable();
 
   private _currentUser: User;
   private currentUserSource: Subject<User> = new Subject();
@@ -36,6 +41,9 @@ export class RoomService {
       let cu = room.users.find(user => user.id == this._currentUser.id);
       this.setCurrentUser(cu);
     }
+
+    this._users = room.users;
+    this.usersSource.next(this._users);
   }
 
   private setCurrentUser(currentUser: User) {

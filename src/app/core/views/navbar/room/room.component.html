@@ -50,9 +50,9 @@
 
     <div class="box-users col-sm-2">
 
-      <h4>Users in room: {{(room | async)?.users?.length}} / 2</h4>
+      <h4>Users in room: {{(roomUsers$ | async)?.length}} / 2</h4>
       <ul>
-        <li *ngFor="let user of (room | async)?.users">
+        <li *ngFor="let user of (roomUsers$ | async)">
           {{user.name}}
         </li>
       </ul>

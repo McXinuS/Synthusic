@@ -15,6 +15,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   roomName: string;
 
+  roomUsers$: Observable<User[]>;
+
   currentUser: User;
   userName: string;
   userNameChanged: boolean = false;
@@ -44,6 +46,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     this.roomService.messages$.subscribe(messages => {
       this.onMessagesUpdated(messages);
     });
+
+    this.roomUsers$ = this.roomService.users$;
   }
 
   ngAfterViewChecked() {

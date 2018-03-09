@@ -48,7 +48,7 @@ export class WebSocketService {
     return new Promise<T>((resolve, reject) => {
       this.registerHandlerOnce(
         type,
-        data => resolve(data)
+        d => resolve(d)
       );
       this.send(type, data);
       setTimeout(

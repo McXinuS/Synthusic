@@ -2,10 +2,10 @@ import {
   ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnInit, Output,
   ViewEncapsulation
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 
 @Component({
-  selector: 'input-semitransparent',
+  selector: 'app-input-semitransparent',
   templateUrl: './input-semitransparent.component.html',
   styleUrls: ['./input-semitransparent.component.css'],
   providers: [{
@@ -46,6 +46,25 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
   @Input() name: string;
   @Input() labelId: string;   // to be used with input-slider component
 
+  // ngModel value
+  _value: string | number;
+  get value(): any {
+    return this._value;
+  };
+
+  set value(value: any) {
+    if (value !== this._value) {
+      this._value = value;
+      this.onChangeCallback(value);
+    }
+  }
+
+  // Placeholders for the callbacks which are later provided by the Control Value Accessor
+  private onTouchedCallback: () => void = () => {
+  };
+  private onChangeCallback: (_: any) => void = () => {
+  };
+
   constructor() {
   }
 
@@ -61,25 +80,6 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
   }
 
   /*** ControlValueAccessor implementation ***/
-
-  //Placeholders for the callbacks which are later provided
-  //by the Control Value Accessor
-  private onTouchedCallback: () => void = () => {
-  };
-  private onChangeCallback: (_: any) => void = () => {
-  };
-
-  _value: string | number;
-  get value(): any {
-    return this._value;
-  };
-
-  set value(value: any) {
-    if (value !== this._value) {
-      this._value = value;
-      this.onChangeCallback(value);
-    }
-  }
 
   onBlur() {
     this.onTouchedCallback();

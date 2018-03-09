@@ -1,14 +1,14 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 import {InstrumentService, SequencerService, StaffService} from '@core/services';
-import {Instrument} from "@core/models";
+import {Instrument} from '@core/models';
 
 @Component({
-  selector: '[app-sequencer]',
+  selector: 'app-sequencer',
   templateUrl: './sequencer.component.html',
   styleUrls: ['./sequencer.component.css']
 })
-export class SequencerComponent implements OnInit, AfterViewInit {
+export class SequencerComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   @ViewChild('staff') private staffContainer: ElementRef;
 
@@ -30,12 +30,12 @@ export class SequencerComponent implements OnInit, AfterViewInit {
     this.instruments$ = this.instrumentService.instruments$;
   }
 
-  ngAfterViewChecked() {
-    this.updateStaffEventListeners();
-  }
-
   ngAfterViewInit() {
     this.onResize();
+  }
+
+  ngAfterViewChecked() {
+    this.updateStaffEventListeners();
   }
 
   onResize() {
@@ -57,7 +57,7 @@ export class SequencerComponent implements OnInit, AfterViewInit {
   }
 
   onRestClicked(id: string) {
-    //this.sequencerService.addNote()
+    // this.sequencerService.addNote()
   }
 
   setNoteEventListeners(notes) {

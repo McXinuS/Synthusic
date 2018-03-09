@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
+import {FormsModule} from '@angular/forms';
+import {HttpModule} from '@angular/http';
 import { UTILITIES } from './utilities'
 import { SHARED_COMPONENTS } from './components'
 

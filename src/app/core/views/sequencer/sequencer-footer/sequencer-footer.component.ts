@@ -1,23 +1,23 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {SequencerService, StaffService} from "@core/services";
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {SequencerService, StaffService} from '@core/services';
 
 @Component({
-  selector: 'div[app-sequencer-footer]',
+  selector: 'app-sequencer-footer',
   templateUrl: './sequencer-footer.component.html',
   styleUrls: ['./sequencer-footer.component.css']
 })
-export class SequencerFooterComponent implements OnInit {
+export class SequencerFooterComponent implements OnInit, AfterViewInit {
 
   collapsed: boolean = false;
 
   constructor(public staffService: StaffService,
               private sequencerService: SequencerService,
-              private changeDetectionRef : ChangeDetectorRef) { }
+              private changeDetectionRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
 
-  ngAfterViewInit() : void {
+  ngAfterViewInit(): void {
     this.changeDetectionRef.detectChanges();
   }
 

@@ -1,11 +1,14 @@
 import {SequencerService} from '@core/services';
 import {SoundService, InstrumentService} from '@core/services';
-import {Subject} from "rxjs";
+import {Subject} from 'rxjs';
 import {SequencerNote} from '@core/models';
 
 // TODO
 
 export class SoundPlayer {
+
+  private readonly ReferenceBpm = 60;
+  private readonly BpmDurationConstant = this.ReferenceBpm * 4 * 1000;
 
   private _playing: SequencerNote[] = [];
   /**
@@ -80,9 +83,6 @@ export class SoundPlayer {
 
     if (typeof this.onMeasurePlayed == 'function') this.onMeasurePlayed(measure);
   }
-
-  private readonly ReferenceBpm = 60;
-  private readonly BpmDurationConstant = this.ReferenceBpm * 4 * 1000;
 
   private noteDurationToMillis(note: SequencerNote): number {
     // ignore triplet and dot as long as they not implemented in UI

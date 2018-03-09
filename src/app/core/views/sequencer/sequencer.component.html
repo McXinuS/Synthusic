@@ -1,11 +1,11 @@
 <div class="sequencer">
 
   <div class="instruments">
-    <div app-sequencer-instrument *ngFor="let instrument of instruments$ | async"
+    <app-sequencer-instrument *ngFor="let instrument of instruments$ | async"
          [class.collapsed]="collapsed[instrument.id]"
          [instrument]="instrument"
-         [collapsed]="collapsed"></div>
-    <div app-sequencer-instrument-create></div>
+         [collapsed]="collapsed"></app-sequencer-instrument>
+    <app-sequencer-instrument-create></app-sequencer-instrument-create>
   </div>
 
   <div #staff class="staff" (window:resize)="onResize()">

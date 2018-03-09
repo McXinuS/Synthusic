@@ -1,14 +1,14 @@
-import {Component, OnInit, Input} from '@angular/core';
-import {Instrument, PannerConfig, Point, Rectangle} from "@core/models";
-import {InstrumentService} from "@core/services";
-import {BaseCanvasComponent} from "../base-canvas-component";
+import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
+import {Instrument, PannerConfig, Point, Rectangle} from '@core/models';
+import {InstrumentService} from '@core/services';
+import {BaseCanvasComponent} from '../base-canvas-component';
 
 @Component({
   selector: 'app-panner-settings',
   templateUrl: './panner-settings.component.html',
   styleUrls: ['./panner-settings.component.css']
 })
-export class PannerSettingsComponent extends BaseCanvasComponent implements OnInit {
+export class PannerSettingsComponent extends BaseCanvasComponent implements OnInit, AfterViewInit {
   @Input() instrument: Instrument;
   private selectedInstrument: Instrument;
   private instruments: Instrument[];
@@ -52,7 +52,7 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
 
     this.center = {x: this.width / 2, y: this.height * this.CanvasHeightScale}; // TODO: put into on resize
 
-    this.ctx.font = "12px Arial";
+    this.ctx.font = '12px Arial';
     this.background = this.ctx.createRadialGradient(this.center.x, this.center.y, 5,
       this.center.x, this.center.y, this.height);
     this.background.addColorStop(0, this.CanvasGradientColorMin);
@@ -80,7 +80,7 @@ export class PannerSettingsComponent extends BaseCanvasComponent implements OnIn
       this.ctx.save();
       this.ctx.translate(box.x0, box.y0);
       this.ctx.drawImage(icon, 0, 0);
-      this.ctx.textAlign = "center";
+      this.ctx.textAlign = 'center';
       this.ctx.fillStyle = isMainInstrument
         ? this.CanvasTextColorSelected
         : this.CanvasTextColorDefault;

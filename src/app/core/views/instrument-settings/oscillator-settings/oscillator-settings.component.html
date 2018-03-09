@@ -13,7 +13,7 @@
   <div class="row">
 
     <div class="col-md-4 col-lg-4">
-      <input-slider
+      <app-input-slider
         [description]="'Frequency scale'"
         [min]="0.25"
         [max]="8"
@@ -21,11 +21,11 @@
         [isDisabled]="!selectedOscillator"
         [ngModel]="selectedOscillator && selectedOscillator.freq"
         (ngModelChange)="updateProperty('freq', $event)">
-      </input-slider>
+      </app-input-slider>
     </div>
 
     <div class="col-md-4 col-lg-4">
-      <input-slider
+      <app-input-slider
         [description]="'Gain scale'"
         [min]="0"
         [max]="1"
@@ -33,7 +33,7 @@
         [isDisabled]="!selectedOscillator"
         [ngModel]="selectedOscillator && selectedOscillator.gain"
         (ngModelChange)="updateProperty('gain', $event)">
-      </input-slider>
+      </app-input-slider>
     </div>
 
     <div class="col-md-4 col-lg-4">

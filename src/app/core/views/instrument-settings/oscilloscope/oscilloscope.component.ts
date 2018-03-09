@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseCanvasComponent} from "../base-canvas-component";
-import {SoundService} from "@core/services";
+import {BaseCanvasComponent} from '../base-canvas-component';
+import {SoundService} from '@core/services';
 
 @Component({
   selector: 'app-oscilloscope',

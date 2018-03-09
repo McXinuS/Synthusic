@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable} from '@angular/core';
 import {SequencerNote, NoteDuration, NotePosition, NoteDurationEnum} from '@core/models';
 
 @Injectable()

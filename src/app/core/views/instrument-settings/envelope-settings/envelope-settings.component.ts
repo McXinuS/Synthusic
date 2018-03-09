@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
-import {InstrumentService} from "@core/services";
-import {Instrument} from "@core/models";
+import {InstrumentService} from '@core/services';
+import {Instrument} from '@core/models';
 
 // TODO: visualize envelope
 

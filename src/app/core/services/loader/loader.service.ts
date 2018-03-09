@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Settings} from '@core/models';
 import {SETTINGS_OFFLINE} from '@shared-global/mock/settings.mock';
 import {CONSTANTS} from './config.constants';
-import {WebSocketMessageType} from "@shared-global/web-socket-message-types";
+import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
 
 import {NoteService} from '../note';
 import {InstrumentService} from '../instrument';

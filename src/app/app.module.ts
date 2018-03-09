@@ -1,27 +1,20 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
+import {SharedModule} from '@shared/index';
+import {CoreModule} from '@core/index';
 import {AppComponent} from './app.component';
-import { MyErrorHandler } from "@core/utilities";
-import {SharedModule} from "@shared/index";
-import {CoreModule} from "@core/index";
+import {ErrorHandler, NgModule} from '@angular/core';
+import { MyErrorHandler } from '@core/utilities';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     SharedModule,
-    CoreModule
+    CoreModule,
   ],
   declarations: [
     AppComponent,
-    /*
-    KeyboardComponent,
-    KeyComponent,
-    PopupComponent,
-    SequencerComponent,
-    SequencerInstrumentComponent,
-    SequencerInstrumentCreateComponent,
-    SequencerFooterComponent,
-    */
   ],
   providers: [
     {provide: ErrorHandler, useClass: MyErrorHandler}

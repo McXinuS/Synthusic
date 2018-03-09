@@ -1,0 +1,12 @@
+<div class="nav-content">
+  <div class="navmenu"
+       *ngIf="isVisible('room')"
+       [@fadeIn]>
+    <app-room></app-room>
+  </div>
+  <div class="navmenu"
+       *ngIf="isVisible('settings')"
+       [@fadeIn]>
+    <app-settings></app-settings>
+  </div>
+</div>

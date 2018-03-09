@@ -1,8 +1,10 @@
 <div id="topnav">
   <ul class="navbar">
+
     <li>
       <a id="logo-holder" [class.selected]="isVisible('about')" (click)="showNav('about')">
-        <img src="assets/img/favicon_lowres.png" width="32px" height="32px"/>
+        <img src="assets/img/icon/main-32.png" width="32px" height="32px"/>
+        <span> Synthusic</span>
       </a>
     </li>
     <li>
@@ -15,18 +17,11 @@
         <span class="glyphicon glyphicon-wrench"></span> Settings</a>
     </li>
 
-    <li *ngIf="loaderService.offlineMode" class="right offline-mode glyphicon-rotating">
+    <li *ngIf="isOffline$ | async" class="right offline-mode glyphicon-rotating">
       <a (click)="reloadPage()">
         <span class="glyphicon glyphicon-refresh"></span> Offline mode</a>
     </li>
   </ul>
 
-  <div class="nav-content">
-    <div class="navmenu" [class.nav-collapse]="!isVisible('room')">
-      <app-room (newChatMessage)="onNewChatMessage()"></app-room>
-    </div>
-    <div class="navmenu" [class.nav-collapse]="!isVisible('settings')">
-      <app-settings></app-settings>
-    </div>
-  </div>
+  <app-navbar-content-holder></app-navbar-content-holder>
 </div>

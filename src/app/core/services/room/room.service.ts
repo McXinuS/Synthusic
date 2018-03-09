@@ -8,34 +8,39 @@ import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
 export class RoomService {
   private _room: Room;
   private roomSource: Subject<Room> = new Subject();
-  room$: Observable<Room>;
+  room$: Observable<Room> = this.roomSource.asObservable();
 
-  currentUser: User;
+  private _currentUser: User;
+  private currentUserSource: Subject<User> = new Subject();
+  currentUser$: Observable<User> = this.currentUserSource.asObservable();
 
   private readonly MaxMessagesInChat = 100;
   private _messages: ChatMessage[] = [];
   private messagesSource: Subject<ChatMessage[]> = new Subject();
-  messages$: Observable<ChatMessage[]>;
+  messages$: Observable<ChatMessage[]> = this.messagesSource.asObservable();
 
   constructor(private webSocketService: WebSocketService) {
-    this.room$ = this.roomSource.asObservable();
     this.webSocketService.registerHandler(WebSocketMessageType.room_updated, this.updateRoom.bind(this));
-
-    this.messages$ = this.messagesSource.asObservable();
     this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.insertChatMessage.bind(this));
   }
 
   init(room: Room, currentUser: User) {
-    this.currentUser = currentUser;
     this.updateRoom(room);
+    this.setCurrentUser(currentUser);
   }
 
   private updateRoom(room: Room) {
-    if (this.currentUser){
-      this.currentUser = room.users.find(user => user.id == this.currentUser.id);
-    }
     this._room = room;
     this.roomSource.next(room);
+    if (this._currentUser) {
+      let cu = room.users.find(user => user.id == this._currentUser.id);
+      this.setCurrentUser(cu);
+    }
+  }
+
+  private setCurrentUser(currentUser: User) {
+    this._currentUser = currentUser;
+    this.currentUserSource.next(this._currentUser);
   }
 
   changeRoomName(name: string) {
@@ -43,8 +48,9 @@ export class RoomService {
   }
 
   changeUserName(name: string) {
-    this.currentUser.name = name;
-    this.webSocketService.send(WebSocketMessageType.user_update, this.currentUser);
+    // TODO: weird construction, may be 'Object.assign({}, this._currentUser, {name})' is better?
+    this._currentUser.name = name;
+    this.webSocketService.send(WebSocketMessageType.user_update, this._currentUser);
   }
 
   getUserById(id: number): User {

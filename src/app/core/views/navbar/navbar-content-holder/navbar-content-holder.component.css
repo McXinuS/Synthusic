@@ -1,0 +1,16 @@
+.nav-content {
+  position   : relative;
+  width      : 100%;
+}
+
+.navmenu {
+  position   : absolute;
+  width      : 100%;
+  /* max-height : calc(100vh - 45px); */
+  overflow-y : auto;
+  overflow-x : hidden;
+  z-index    : 10;
+  background : rgba(60, 60, 60, .9);
+  color      : #ddd;
+  padding    : 24px 48px;
+}

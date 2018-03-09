@@ -11,6 +11,8 @@ import {WebSocketService} from '../websocket';
 import {PopupService} from '../popup';
 import {SequencerService} from '../sequencer';
 import {RoomService} from '../room';
+import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
 
 // TODO: refactor constants
 
@@ -18,7 +20,8 @@ import {RoomService} from '../room';
 export class LoaderService {
   readonly WebSocketTimeout = 10000;
 
-  offlineMode: boolean;
+  private isOffline: Subject<boolean> = new Subject<boolean>();
+  isOffline$: Observable<boolean> = this.isOffline.asObservable();
 
   constructor(private sequencerService: SequencerService,
               private wsService: WebSocketService,
@@ -123,12 +126,11 @@ export class LoaderService {
   }
 
   goOnline() {
-    this.offlineMode = false;
     window.onbeforeunload = null;
   }
 
   goOffline() {
-    this.offlineMode = true;
+    this.isOffline.next(true);
     this.popupService.showMessage(
       'We lost connection to server',
       'The remote server is not responding, going offline mode.\n' +

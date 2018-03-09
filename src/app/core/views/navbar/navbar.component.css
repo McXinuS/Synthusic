@@ -42,8 +42,9 @@
   cursor          : pointer;
   text-decoration : none;
   display         : block;
-  padding         : 10px 15px 11px 15px;
+  padding         : 14px 15px;
   letter-spacing  : 1px;
+  line-height     : 1;
   transition      : background .3s, color .4s;
 }
 
@@ -57,7 +58,12 @@ li a.selected {
 }
 
 #logo-holder {
-  padding : 6.5px 20px !important;
+  padding : 7px 15px;
+}
+
+#logo-holder span {
+  position : relative;
+  top      : 3px;
 }
 
 .navbar li.right {
@@ -67,35 +73,6 @@ li a.selected {
 .new-message {
   background-color : rgba(65, 195, 126, 0.57);
   animation        : newMessage 1s linear 2;
-}
-
-.offline-mode {
-  animation : alertBackground 2s linear 5;
-}
-
-.nav-content {
-  position : relative;
-  width    : 100%;
-}
-
-.navmenu {
-  position   : absolute;
-  width      : 100%;
-  /* max-height : calc(100vh - 45px); */
-  overflow-y : auto;
-  transition : visibility .3s, opacity .3s;
-  z-index    : 10;
-  opacity    : 1;
-  visibility : visible;
-  background : rgba(60, 60, 60, .9);
-  color      : #ddd;
-  padding    : 24px 48px;
-}
-
-.nav-collapse {
-  margin-top : -10000px;
-  opacity    : 0;
-  visibility : hidden;
 }
 
 @keyframes newMessage {
@@ -108,6 +85,10 @@ li a.selected {
   100% {
     background-color : transparent;
   }
+}
+
+.offline-mode {
+  animation : alertBackground 2s linear 5;
 }
 
 @keyframes alertBackground {

@@ -1,42 +1,56 @@
 import {Component, OnInit} from '@angular/core';
-import {LoaderService} from '@core/services';
-
-// TODO animations + ngIf instead of opacity
+import {NavbarService} from '@core/services';
+import {ChatMessage} from '@core/models';
+import {Observable} from 'rxjs/Observable';
+import {User} from '@shared-global/models';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
 
-  visible: Map<string, boolean> = new Map();
   newChatMessages: boolean;
 
-  constructor(public loaderService: LoaderService) {
+  isOffline$: Observable<boolean>;
+  currentUser: User;
+  anyTabVisible$: Observable<boolean>;
+
+  constructor(private navbarService: NavbarService) {
+    this.isOffline$ = this.navbarService.isOffline$;
+    this.anyTabVisible$ = this.navbarService.anyTabVisible$;
+
+    this.navbarService.currentUser$.subscribe(cu => this.currentUser = cu);
+    this.navbarService.messages$.subscribe(messages => {
+      this.onMessagesUpdated(messages);
+    });
   }
 
   ngOnInit() {
   }
 
   showNav(tab: string) {
-    let curState = this.visible.get(tab);
-    this.visible.clear();
-    this.visible.set(tab, !curState);
-
+    this.navbarService.showNav(tab);
     if (tab === 'room') {
       this.newChatMessages = false;
     }
   }
 
   isVisible(tab: string) {
-    return this.visible.get(tab);
+    return this.navbarService.isVisible(tab);
   }
 
-  onNewChatMessage() {
-    if (!this.isVisible('room')) {
+  /**
+   * Show the user new chat message indicator if the last message wasn't sent by him.
+   */
+  onMessagesUpdated(messages: ChatMessage[]) {
+    let lastMsgSender = messages && messages[messages.length - 1].sender;
+    if (lastMsgSender !== this.currentUser.id
+        && !this.isVisible('room')) {
       this.newChatMessages = true;
     }
+
   }
 
   reloadPage() {

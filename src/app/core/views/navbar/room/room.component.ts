@@ -2,6 +2,9 @@ import {Component, OnInit, ElementRef, ViewChild, AfterViewChecked, Output, Even
 import {RoomService} from '@core/services';
 import {ChatMessage, Room} from '@core/models';
 import {Observable} from 'rxjs';
+import {User} from '@shared-global/models';
+
+// TODO split into room-chat and room-users
 
 @Component({
   selector: 'app-room',
@@ -10,10 +13,9 @@ import {Observable} from 'rxjs';
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  @Output() newChatMessage = new EventEmitter();
-
-  room: Observable<Room>;
   roomName: string;
+
+  currentUser: User;
   userName: string;
   userNameChanged: boolean = false;
 
@@ -28,14 +30,17 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.room = this.roomService.room$;
-    this.room.subscribe(room => {
+    this.roomService.room$.subscribe(room => {
       this.roomName = room.name;
+    });
+
+    this.roomService.currentUser$.subscribe(cu => {
+      this.currentUser = cu;
       if (!this.userNameChanged) {
-        let cr = this.roomService.currentUser;
-        this.userName = cr && cr.name;
+        this.userName = this.currentUser && this.currentUser.name;
       }
     });
+
     this.roomService.messages$.subscribe(messages => {
       this.onMessagesUpdated(messages);
     });
@@ -46,10 +51,6 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   onMessagesUpdated(messages: ChatMessage[]) {
-    if (messages && messages[messages.length-1].sender !== this.roomService.currentUser.id) {
-      this.newChatMessage.emit();
-    }
-
     this.chatMessages = messages.map(msg => new ChatMessage(
       this.roomService.getUserById(msg.sender as number).name,
       msg.message
@@ -65,8 +66,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   onChatScroll() {
-    this.chatStickToBottom = this.chatContainer.nativeElement.scrollTop
-      >= this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
+    let curPos = this.chatContainer.nativeElement.scrollTop;
+    let topPos = this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
+    this.chatStickToBottom = curPos >= topPos;
   }
 
   sendMessage() {
@@ -84,7 +86,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   }
 
   resetUsername() {
-    this.userName = this.roomService.currentUser.name;
+    this.userName = this.currentUser.name;
     this.userNameChanged = false;
   }
 }

@@ -9,7 +9,7 @@ import { SHARED_COMPONENTS } from './components'
   imports: [
     CommonModule,
     FormsModule,
-    HttpModule
+    HttpModule,
   ],
   declarations: [
     ...UTILITIES,

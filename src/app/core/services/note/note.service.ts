@@ -1,6 +1,17 @@
 import {Injectable} from '@angular/core';
 import {BaseNote, Scale, Settings} from '@core/models';
 
+class NoteInfo {
+  public name: string;
+  public octave: number;
+
+  constructor(name: string,
+              octave: number) {
+    this.name = name;
+    this.octave = octave;
+  }
+}
+
 @Injectable()
 export class NoteService {
   private _notes: BaseNote[] = [];
@@ -29,25 +40,21 @@ export class NoteService {
       endName = settings.lastNote.name,
       endOctave = settings.lastNote.octave;
     this._scale = settings.scale;
-    let scale = this._scale.scale,
+    let scale = this._scale.notes,
       scaleLength = scale.length,
       accidentalPlaceholder = this._scale.accidentalPlaceholder,
       accidentalSign = this._scale.accidentalSign;
 
     this.noteCount = (endOctave - startOctave) * scaleLength - scale.indexOf(startName) + scale.indexOf(endName) + 1;
-    let index = 0,
-      octave,
-      name,
-      fullname,
-      isAccidental,
-      freq;
+    let index = 0;
+
     for (let i = 0; i < this.noteCount; i++) {
-      octave = startOctave + Math.floor((i + scale.indexOf(startName)) / scaleLength);
-      name = scale[(scale.indexOf(startName) + i) % scaleLength];
-      fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
-      isAccidental = !!name[1];
+      let octave = startOctave + Math.floor((i + scale.indexOf(startName)) / scaleLength);
+      let name = scale[(scale.indexOf(startName) + i) % scaleLength];
+      let fullname = (name + octave).replace(accidentalPlaceholder, accidentalSign);
+      let isAccidental = !!name[1];
       if (!isAccidental) index++;
-      freq = this.getFrequency(name, octave);
+      let freq = this.getFrequency(name, octave);
       this._notes[i] = new BaseNote(i, index, name, octave, fullname, isAccidental, freq);
     }
     this._firstNote = this.notes[0];
@@ -60,44 +67,62 @@ export class NoteService {
       return this._notes[indexOrFullname];
     }
     if (typeof indexOrFullname == 'string') {
-      let no = this.parseFullName(indexOrFullname.toUpperCase());
-      let index = this.getIndex(no[0], no[1]);
+      let targetNote = this.parseFullName(indexOrFullname.toUpperCase());
+      let index = this.getIndex(targetNote);
       return this._notes[index];
     }
     return null;
   }
 
-  private getIndex(targetName: string, targetOctave: number) {
-    return (targetOctave - this._firstNote.octave) * this._scale.scale.length
-      - this._scale.scale.indexOf(this._firstNote.name) + this._scale.scale.indexOf(targetName);
-  }
-
   /**
-   * Split note's full name into name and octave.
+   * Split note's full name into name and octave considering accidental.
    * @returns {string[]} Array with name and octave.
    */
-  private parseFullName(fullname): [string, number] {
-    let res: [string, number] = ['', 0];
+  private parseFullName(fullname): NoteInfo {
+
+    let name: string;
+    let octave: number;
+
+    let octaveStr: string;
+
+    // Parse full note name into name with/without accidental and octave
+    // Check for accidental
     if (fullname.length == 2) {
-      res[0] = fullname[0];
-      res[1] = parseFloat(fullname[1]);
+      // No acc.
+      name = fullname[0];
+      octaveStr = fullname[1];
     } else if (fullname.length == 3) {
-      res[0] = fullname.substr(0, 2);
-      res[1] = parseFloat(fullname[2]);
-    } else {
-      throw new Error('Wrong full name length.');
+      // Has acc.
+      name = fullname.substr(0, 2);
+      octaveStr = fullname[2];
     }
 
-    // step is skipped: function 'includes' is not recognized by IDE
-    if (['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].findIndex(val => val == res[0][0].toLocaleLowerCase()) == -1) {
-      throw new Error(`Wrong note name: ${res[0][0]}.`);
+    // Check if full note name has unknown schema
+    if (fullname.length !==1 && fullname.length !==2) {
+      throw new Error('Wrong full note name schema.');
     }
-    if (res[0].length == 2 && (res[0][1] != this._scale.accidentalPlaceholder))
-      throw new Error(`Wrong accidental: ${res[0][1]}.`);
-    if (isNaN(res[1]))
-      throw new Error(`Octave must be a number: ${res[1]}.`);
 
-    return res;
+    octave = parseInt(octaveStr);
+    if (isNaN(octave)) {
+      throw new Error(`Octave must be a number.`);
+    }
+
+    // Check for note name to be 'a'-'h'
+    let noteName = name[0].toLocaleLowerCase();
+    if (!/[a-h]/.test(noteName)) {
+      throw new Error(`Wrong note name: ${name[0]}.`);
+    }
+
+    return new NoteInfo(name, octave);
+  }
+
+  private getIndex(target: NoteInfo): number {
+    // Number of octaves from the first base note
+    let octave = target.octave - this._firstNote.octave;
+    let scaleLength = this._scale.notes.length;
+    return octave * scaleLength
+      - this._scale.notes.indexOf(this._firstNote.name)
+      + this._scale.notes.indexOf(target.name);
   }
 
   private getFrequency(name, octave) {

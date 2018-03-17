@@ -1,5 +1,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SequencerService, StaffService} from '@core/services';
+import {Observable} from "rxjs/Observable";
+import {ScoreState} from "@core/models";
 
 @Component({
   selector: 'app-sequencer-footer',
@@ -10,9 +12,13 @@ export class SequencerFooterComponent implements OnInit, AfterViewInit {
 
   collapsed: boolean = false;
 
+  scoreState$: Observable<ScoreState>;
+
   constructor(public staffService: StaffService,
               private sequencerService: SequencerService,
-              private changeDetectionRef: ChangeDetectorRef) { }
+              private changeDetectionRef: ChangeDetectorRef) {
+    this.scoreState$ = this.staffService.scoreState$;
+  }
 
   ngOnInit() {
   }

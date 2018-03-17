@@ -4,7 +4,7 @@
     
     <div class="buttons">
   
-      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoPrevPage"
+      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!(scoreState$ | async)?.canGoPrevPage"
            (click)="goPrevPage()">
         <span class="glyphicon glyphicon-step-backward"></span>
       </div>
@@ -21,12 +21,12 @@
         <span class="glyphicon glyphicon-stop"></span>
       </div>
   
-      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!staffService.canGoNextPage"
+      <div class="btn-seq-foot medium btn-staff-page" [class.inactive]="!(scoreState$ | async)?.canGoNextPage"
            (click)="goNextPage()">
         <span class="glyphicon glyphicon-step-forward"></span>
       </div>
   
-      <span>Page {{staffService.currentPage+1}} of {{staffService.pageCount}}</span>
+      <span>Page {{(scoreState$ | async)?.currentPage+1}} of {{(scoreState$ | async)?.pageCount}}</span>
       
     </div>
     

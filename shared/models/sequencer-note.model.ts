@@ -12,11 +12,30 @@ export class SequencerNote {
     this.duration = duration;
     this.position = position;
   }
+
+  getHash(): string {
+    return this.baseNoteId + '-' +
+      this.instrumentId + '-' +
+      this.duration.getHash() + '-' +
+      this.position.getHash();
+  }
 }
 
+export enum NoteDurationEnum {
+  Infinite = -1,
+  Whole = 1,
+  Half = Whole * 2,
+  Quarter = Half * 2,
+  Eighth = Quarter * 2,
+  Sixteenth = Eighth * 2,
+  ThirtySecond = Sixteenth * 2
+}
+
+const BaseDurationMask = 0x00111;
+const DotMask = 0x10000;
+const TripletMask = 0x01000;
 const InfiniteNoteHash = 0x11111;
-const DottedShift = 0x10000;
-const TripletShift = 0x01000;
+
 export class NoteDuration {
   baseDuration: NoteDurationEnum;
   dotted: boolean;
@@ -33,23 +52,24 @@ export class NoteDuration {
   }
 
   getHash(): number {
-    if (this.baseDuration == NoteDurationEnum.Infinite) return InfiniteNoteHash;
+    if (this.baseDuration === NoteDurationEnum.Infinite) return InfiniteNoteHash;
 
     let res = Math.log2(this.baseDuration);
-    if (this.dotted) res |= DottedShift;
-    if (this.triplet) res |= TripletShift;
+    if (this.dotted) res |= DotMask;
+    if (this.triplet) res |= TripletMask;
     return res;
   }
-}
 
-export enum NoteDurationEnum {
-  Infinite = -1,
-  Whole = 1,
-  Half = Whole * 2,
-  Quarter = Half * 2,
-  Eighth = Quarter * 2,
-  Sixteenth = Eighth * 2,
-  ThirtySecond = Sixteenth * 2
+  static fromHash(hash: number): NoteDuration {
+    if (hash === InfiniteNoteHash) {
+      return new NoteDuration(NoteDurationEnum.Infinite, false, false);
+    }
+
+    let duration = (hash & BaseDurationMask)**2,
+      dotted = !!(hash & DotMask),
+      triplet = !!(hash & TripletMask);
+    return new NoteDuration(duration, dotted, triplet);
+  }
 }
 
 const BarMax = 1000;
@@ -64,5 +84,9 @@ export class NotePosition {
 
   getHash(): number {
     return this.offset * BarMax + this.bar;
+  }
+
+  static fromHash(hash: number): NotePosition {
+    return new NotePosition(hash%BarMax, Math.floor(hash/BarMax));
   }
 }

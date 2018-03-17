@@ -11,7 +11,6 @@ import {Instrument} from '@core/models';
 })
 export class EnvelopeSettingsComponent {
   @Input() instrument: Instrument;
-  @Input() popupScrollTop: number;
 
   constructor(private instrumentService: InstrumentService) {
   }

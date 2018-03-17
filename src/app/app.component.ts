@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoaderService} from '@core/services';
+import {LoaderService, PopupService} from '@core/services';
 
 @Component({
   selector: 'app-root',
@@ -7,24 +7,28 @@ import {LoaderService} from '@core/services';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  loaderMessage = 'Loading...';
-  loadDone = false;
-  title = 'Simple synthesizer';
 
-  constructor(private loaderService: LoaderService) {
+  popupHeader = 'Application is loading...';
+  popupId: number;
+
+  constructor(private loaderService: LoaderService,
+              private popupService: PopupService) {
   }
 
   ngOnInit() {
+
+    this.popupId = this.popupService.showLoader(this.popupHeader, 'Please wait');
+
     this.loaderService.init(
       msg => this.onProgressChange(msg),
       () => this.onComponentsLoad());
   }
 
   onProgressChange(message: string) {
-    this.loaderMessage = message;
+    this.popupService.update(this.popupId, this.popupHeader, message);
   }
 
   onComponentsLoad() {
-    this.loadDone = true;
+    this.popupService.close(this.popupId);
   }
 }

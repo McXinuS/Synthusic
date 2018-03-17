@@ -10,5 +10,4 @@ import {Instrument} from '@core/models';
 })
 export class InstrumentSettingsComponent {
   @Input() instrument: Instrument;
-  @Input() popupScrollTop: number;
 }

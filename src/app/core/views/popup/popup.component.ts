@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {PopupService} from '@core/services';
+import {PopupData, PopupType} from '@core/models';
 
 @Component({
   selector: 'app-popup',
@@ -8,12 +9,20 @@ import {PopupService} from '@core/services';
 })
 export class PopupComponent implements OnInit {
 
-  constructor(public popupService: PopupService) { }
+  // Use of observable directly from template
+  // with async pipe doesn't work for some reason.
+  popupData: PopupData[];
+
+  readonly PopupType = PopupType;
+
+  constructor(private popupService: PopupService) {
+    this.popupService.popupData$.subscribe(popupData => this.popupData = popupData);
+  }
 
   ngOnInit() {
   }
 
   close() {
-    this.popupService.close();
+    this.popupService.onDismiss();
   }
 }

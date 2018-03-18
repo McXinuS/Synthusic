@@ -69,7 +69,7 @@ function Server(server) {
    * @param receivers Array of user ids or websockets.
    */
   function broadcast(message, receivers) {
-    if (typeof receivers == 'undefined') return;
+    if (typeof receivers === 'undefined') return;
     if (typeof(message) === 'object') {
       message = JSON.stringify(message);
     }

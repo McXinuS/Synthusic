@@ -1,5 +1,3 @@
-<h2 class="center-hor">Instrument Settings</h2>
-
 <label id="instr-name-label">Name</label>
 <app-input-semitransparent
   [type]="'text'"
@@ -29,16 +27,15 @@
       <p> - mouse move: change frequency scale and gain of selected oscillator</p>
       <p> - mouse double click: change type of selected oscillator</p>
     </div>
-    <app-oscillator-settings [instrument]="instrument"
-                             [popupScrollTop]="popupScrollTop"></app-oscillator-settings>
+    <app-oscillator-settings [instrument]="instrument">
+    </app-oscillator-settings>
 
   </div>
 
   <div class="col-md-4">
 
     <!--
-    <app-oscilloscope
-      [popupScrollTop]="popupScrollTop"></app-oscilloscope>
+    <app-oscilloscope></app-oscilloscope>
     -->
 
     <div class="panner">
@@ -46,14 +43,14 @@
       <div class="description">
         <p>Adjust instrument location on the scene. The darkest part of gradient indicates the observer point.</p>
       </div>
-      <app-panner-settings [instrument]="instrument"
-                           [popupScrollTop]="popupScrollTop"></app-panner-settings>
+      <app-panner-settings [instrument]="instrument">
+      </app-panner-settings>
     </div>
 
     <div class="envelope">
       <label>Envelope</label>
-      <app-envelope-settings [instrument]="instrument"
-                             [popupScrollTop]="popupScrollTop"></app-envelope-settings>
+      <app-envelope-settings [instrument]="instrument">
+      </app-envelope-settings>
     </div>
 
   </div>

@@ -32,7 +32,7 @@ h1, h2, h3 {
   top : 2px;
 }
 
-.overlay {
+.start-overlay {
   z-index        : 999;
   position       : fixed;
   top            : 0;
@@ -41,16 +41,7 @@ h1, h2, h3 {
   right          : 0;
   background     : rgba(0, 0, 0, 0.7);
   overflow-y     : auto;
-  transition     : visibility .3s, opacity .3s;
-  visibility     : hidden;
-  opacity        : 0;
   pointer-events : none;
-}
-
-.overlay-active {
-  visibility     : visible;
-  opacity        : 1;
-  pointer-events : auto;
 }
 
 div.start-overlay {

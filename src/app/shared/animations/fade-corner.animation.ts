@@ -1,13 +1,15 @@
 import {
   animate,
-  state,
   style,
   transition,
   trigger
 } from '@angular/animations';
 
-export const fadeInAnimation = trigger(
-  'fadeIn',
+/**
+ * Fade in from the left top corner; fade out to the right top corner.
+ */
+export const fadeCornerAnimation = trigger(
+  'fadeCornerAnimation',
   [
     transition(
       ':enter', [
@@ -36,30 +38,3 @@ export const fadeInAnimation = trigger(
       ]
     )]
 );
-
-/*
-export const fadeInAnimation = trigger(
-  'fadeIn',
-  [
-    state('void', style({opacity: 0, transform: 'translateY(-20rem)'})),
-    transition(':enter', [
-      animate(
-        '3000ms ease-in',
-        style({
-          opacity: 1,
-          transform: 'translateY(0rem)'
-        })
-      )
-    ]),
-    transition(':leave', [
-      animate(
-        '3000ms ease-out',
-        style({
-          opacity: 0,
-          transform: 'translateY(-20rem)'
-        })
-      )
-    ])
-  ]
-);
-*/

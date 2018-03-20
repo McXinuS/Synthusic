@@ -1,10 +1,12 @@
 <div class="overlay"
-     *ngIf="popupService.isShown">
+     *ngIf="popupService.isShown"
+     [@fadeInOutAnimation]>
 
   <div *ngFor="let data of popupData"
        class="popup-wrapper center"
        [class.text]="data.isText"
-       (click)="close()">
+       (click)="close()"
+       [@slideToBottomAnimation]>
 
     <div class="popup"
          (click)="$event.stopPropagation()">

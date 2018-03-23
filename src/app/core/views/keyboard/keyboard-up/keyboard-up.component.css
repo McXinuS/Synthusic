@@ -1,0 +1,28 @@
+.wrapper {
+  background : url(../../../../../assets/img/piano-up.jpg);
+  height     : 94px;
+  transition : height .5s;
+}
+
+:host-context(.mini) .wrapper {
+  height : 0;
+}
+
+.settings {
+  display  : inline-block;
+  position : absolute;
+}
+
+label {
+  font-size      : 0.8em;
+  text-transform : uppercase;
+  color          : #d6c0b3;
+  display        : block;
+}
+
+select {
+  width              : 200px;
+  -webkit-appearance : none;
+  -moz-appearance    : none;
+  appearance         : none;
+}

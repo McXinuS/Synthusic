@@ -10,24 +10,11 @@
 
   <div id="keyboard" [class.mini]="miniMode">
 
-    <div id="keyboard-up-collapse">
-      <div id="keyboard-up" [style.width.px]="keyboardKeys.scrollWidth">
-        <div class="well settings">
-          <label>Instrument</label>
-          <div class="button-group">
-            <select [(ngModel)]="activeInstrument"
-                    (change)="onInstrumentChange()">
-              <option *ngFor="let instrument of instruments" [ngValue]="instrument">{{instrument.name}}</option>
-            </select>
-            <div class="buttons">
-              <div class="btn-square glyphicon-rotating" (click)="openSettings()">
-                <span class="glyphicon glyphicon-cog"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <app-keyboard-up [activeInstrument]="activeInstrument"
+                     (instrumentChanged)="onInstrumentChange($event)"
+                     [instruments]="instruments"
+                     [keyboardWidth]="keyboardWidth">
+    </app-keyboard-up>
 
     <div #keyboardKeys id="keyboard-keys"
          (touchstart)="onTouchStart($event)" (touchmove)="onTouchMove($event)"

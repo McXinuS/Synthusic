@@ -9,12 +9,11 @@ import {SequencerNoteService} from '../sequencer';
 import {Enveloper} from './enveloper';
 import {Panner} from './panner';
 import {Analyser} from './analyser';
+import {Utils} from "@shared/utilities";
+import {NoteDurationEnum} from "@shared-global/models";
 
 @Injectable()
 export class SoundService {
-
-  // Precision constant used in isFloatEqual function
-  readonly CompareEps = 0.01;
 
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
   private audioContext: AudioContext;
@@ -43,6 +42,7 @@ export class SoundService {
 
   private instruments = [];
   private instruments$: Observable<Array<Instrument>>;
+  private bpm: number;
 
   get masterGain() {
     return this.masterGainNode.gain.value;
@@ -123,9 +123,23 @@ export class SoundService {
       this.setGain(note, 1, true);
       this._playingNotes.push(note);
       this.playingNotesSource.next(this._playingNotes);
+      this.scheduleNoteStop(note);
     }
 
     this.getEnveloper(note.instrumentId).start();
+  }
+
+  private scheduleNoteStop(note: SequencerNote) {
+    if (note.duration.isInfinite()) {
+      return;
+    }
+
+    // Note duration in ms
+    const ReferenceBpm = 60;
+    let relBpm = ReferenceBpm / this.bpm;
+    let duration = relBpm / note.duration.baseDuration * NoteDurationEnum.Quarter;
+
+    setTimeout(this.stopNote.bind(this, note), duration);
   }
 
   /**
@@ -168,7 +182,7 @@ export class SoundService {
 
   stop(instrumentId?: number) {
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id)) {
+      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPrefix(instrumentId, id)) {
         for (let osc of oscArr) {
           osc.stop(0);
           osc.disconnect();
@@ -228,30 +242,60 @@ export class SoundService {
   }
 
   // TODO: doesn't update when select component of settings changes
+  // Update existing oscillator or reset currently playing notes (if no oscillator is provided).
   onOscillatorsUpdate(instrumentId: number, oscillator?: Oscillator, oldOscillator?: Oscillator) {
-    let freqEqual, gainEqual;
+
     for (let note of this._playingNotes) {
+
+      // Update each note with same instrument ID
       if (note.instrumentId === instrumentId) {
+
         if (!oscillator) {
+
+          // If no changed oscillator model is provided, reset all playing notes to
+          // apply changed of oscillators array.
           this.stopNoteImmediately(note);
           this.playNote(note);
+
         } else if (oscillator && oldOscillator) {
+
           for (let osc of this.oscillators.get(note.id)) {
-            freqEqual = this.isFloatEqual(
-              osc.frequency.value,
-              oldOscillator.freq * this.noteService.getNote(note.baseNoteId).freq);
-            gainEqual = this.isFloatEqual(
-              osc.gainNode.gain.value,
-              oldOscillator.gain);
-            if (freqEqual && gainEqual && (osc.type === oldOscillator.type)) {
+
+            // CPU usage optimization: update only changed oscillator.
+
+            // Compare frequency and gain multipliers of existing sound oscillator and multipliers of its model
+            //  to find the changed oscillator.
+
+            // Sound oscillator's frequency value = oscillator model frequency * base note frequency.
+            let soundFreq = osc.frequency.value;
+            // Restore value using base note multiplier.
+            let modelFreq = oldOscillator.freq * this.noteService.getNote(note.baseNoteId).freq;
+            let freqEqual = Utils.isFloatEqual(soundFreq, modelFreq);
+
+            // Model's gain isn't affected by base note nor
+            // instrument settings (may change with sound effects chain implementation).
+            let soundGain = osc.gainNode.gain.value;
+            let freqGain = oldOscillator.gain;
+            let gainEqual = Utils.isFloatEqual(soundGain, freqGain);
+
+            // Compare oscillator wave type.
+            let typeEqual = (osc.type === oldOscillator.type);
+
+            // Update oscillator values
+            if (freqEqual && gainEqual && typeEqual) {
+
               osc.frequency.value = oscillator.freq * this.noteService.getNote(note.baseNoteId).freq;
               osc.gainNode.gain.value = oscillator.gain;
               osc.type = oscillator.type;
+
             }
           }
+
         }
+
       }
     }
+
   }
 
   onEnveloperUpdate(instrumentId: number, enveloper: EnvelopeConfig) {
@@ -261,6 +305,9 @@ export class SoundService {
   onPannerUpdate(instrumentId: number, panner: PannerConfig) {
     this.getPanner(instrumentId).changePosition(panner);
   }
+
+  // Methods to set instrument and bpm observable externally
+  //  as a hack to prevent circular reference
 
   setInstrumentObservable(observable: Observable<Array<Instrument>>) {
     this.instruments$ = observable;
@@ -275,6 +322,10 @@ export class SoundService {
         }
       }
     });
+  }
+
+  setBpmObservable(bpm$: Observable<number>) {
+    bpm$.subscribe(bpm => this.bpm = bpm);
   }
 
   getAudioFreqBuffer() {
@@ -333,9 +384,5 @@ export class SoundService {
   private getPanner(instrumentId: number): Panner {
     let mod = this.modifiers.get(instrumentId);
     return mod ? mod.panner : null;
-  }
-
-  private isFloatEqual(a: number, b: number): boolean {
-    return Math.abs(a - b) < this.CompareEps;
   }
 }

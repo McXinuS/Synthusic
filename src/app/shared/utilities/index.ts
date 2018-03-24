@@ -6,4 +6,4 @@ export const UTILITIES = [
   TitleCase,
 ];
 
-export * from './id-generator'
+export * from './helpers'

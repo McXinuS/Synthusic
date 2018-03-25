@@ -21,7 +21,7 @@ export class RoomService {
 
   private readonly MaxMessagesInChat = 100;
   private _messages: ChatMessage[] = [];
-  private messagesSource: Subject<ChatMessage[]> = new Subject();
+  private messagesSource: Subject<ChatMessage[]> = new BehaviorSubject([]);
   messages$: Observable<ChatMessage[]> = this.messagesSource.asObservable();
 
   constructor(private webSocketService: WebSocketService) {

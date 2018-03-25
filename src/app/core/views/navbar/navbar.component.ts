@@ -45,7 +45,11 @@ export class NavbarComponent implements OnInit {
    * Show the user new chat message indicator if the last message wasn't sent by him.
    */
   onMessagesUpdated(messages: ChatMessage[]) {
-    let lastMsgSender = messages && messages[messages.length - 1].sender;
+    if (!messages || messages.length === 0) return;
+
+    let lastMsgSender = messages[messages.length - 1].sender;
+
+    // Tell user about new message
     if (lastMsgSender !== this.currentUser.id
         && !this.isVisible('room')) {
       this.newChatMessages = true;

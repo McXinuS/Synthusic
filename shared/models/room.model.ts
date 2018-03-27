@@ -1,11 +1,12 @@
 import {User} from "./user.model";
+import {Instrument} from "./instrument.model";
+import {SequencerNote} from "./sequencer-note.model";
 
 export class Room {
-  name: string;
-  users: User[];
-
-  constructor(name: string, users: User[]) {
-    this.name = name;
-    this.users = users;
+  constructor(public bpm: number,
+              public name: string,
+              public users: User[],
+              public instruments: Instrument[],
+              public notes: SequencerNote[]) {
   }
 }

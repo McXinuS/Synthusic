@@ -38,9 +38,6 @@ let Room = function (id) {
 Room.prototype = {
   getState: function (id) {
     return {
-      bpm: this.bpm,
-      instruments: this.instruments,
-      notes: this.notes,
       room: this.getRoomInfo(),
       currentUser: this.getUser(id)
     }
@@ -52,7 +49,11 @@ Room.prototype = {
   getRoomInfo: function () {
     return {
       name: this.name,
-      users: this.users.slice()
+      users: this.users.slice(),
+
+      bpm: this.bpm,
+      instruments: this.instruments,
+      notes: this.notes
     }
   },
 
@@ -68,12 +69,19 @@ Room.prototype = {
     this.users.push(user);
     return user;
   },
+
   getUser: function (id) {
     return this.users.find(user => user.id === id);
   },
+
+  getUserCount: function () {
+    return this.users.length;
+  },
+
   getUsers: function () {
     return this.users.slice();
   },
+
   updateUser: function (user) {
     let index = this.users.findIndex(u => u.id === user.id);
     if (index >= 0) {
@@ -81,10 +89,12 @@ Room.prototype = {
       u.name = user.name;
     }
   },
+
   removeUser: function (id) {
     let index = this.users.findIndex(user => user.id === id);
     if (index >= 0) this.users.splice(index, 1);
   },
+
   hasUser: function (id) {
     return this.users.findIndex(user => user.id === id) >= 0;
   },

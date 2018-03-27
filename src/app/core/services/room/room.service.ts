@@ -37,6 +37,7 @@ export class RoomService {
   private updateRoom(room: Room) {
     this._room = room;
     this.roomSource.next(room);
+
     if (this._currentUser) {
       let cu = room.users.find(user => user.id == this._currentUser.id);
       this.setCurrentUser(cu);

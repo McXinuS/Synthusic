@@ -14,8 +14,6 @@ import {RoomService} from '../room';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
-// TODO: refactor constants
-
 @Injectable()
 export class LoaderService {
   readonly WebSocketTimeout = 10000;
@@ -110,7 +108,7 @@ export class LoaderService {
   }
 
   private initInstruments(settings: Settings) {
-    this.instrumentService.init(settings.instruments);
+    this.instrumentService.init(settings.room.instruments);
   }
 
   private initSoundModule(settings: Settings) {

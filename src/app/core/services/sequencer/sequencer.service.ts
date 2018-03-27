@@ -39,12 +39,12 @@ export class SequencerService {
   }
 
   init(settings: Settings) {
-    let notes = settings.notes;
+    let notes = settings.room.notes;
     for (let note of notes) {
       this.addNote(note, false);
     }
 
-    this.onBpmChanged(settings.bpm);
+    this.onBpmChanged(settings.room.bpm);
   }
 
   addNote(note: SequencerNote, broadcast = true) {

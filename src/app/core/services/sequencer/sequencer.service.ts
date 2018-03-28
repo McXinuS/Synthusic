@@ -3,6 +3,7 @@ import {BehaviorSubject, Subject} from 'rxjs';
 import {SequencerNote, Settings} from '@core/models';
 import {WebSocketService} from '../websocket';
 import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
+import {SequencerNoteService} from './sequencernote.service';
 
 @Injectable()
 export class SequencerService {
@@ -15,7 +16,8 @@ export class SequencerService {
 
   bpm$: Subject<number> = new BehaviorSubject(60);
 
-  constructor(private webSocketService: WebSocketService) {
+  constructor(private webSocketService: WebSocketService,
+              private sequencerNoteService: SequencerNoteService) {
 
     this.webSocketService.registerHandler(WebSocketMessageType.note_add, this.onNoteReceived.bind(this, 'add'));
     this.webSocketService.registerHandler(WebSocketMessageType.note_delete, this.onNoteReceived.bind(this, 'remove'));
@@ -40,8 +42,20 @@ export class SequencerService {
 
   init(settings: Settings) {
     let notes = settings.notes;
+
+    // Apply notes received from server
     for (let note of notes) {
-      this.addNote(note, false);
+
+      // Restore missing methods
+      let populatedNote = this.sequencerNoteService.getSequencerNote(
+        note.baseNoteId,
+        note.instrumentId,
+        note.duration,
+        note.position,
+        note.id
+      );
+
+      this.addNote(populatedNote, false);
     }
 
     this.onBpmChanged(settings.bpm);

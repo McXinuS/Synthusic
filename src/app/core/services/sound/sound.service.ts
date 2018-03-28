@@ -5,7 +5,7 @@ import {
 } from '@core/models';
 import {BehaviorSubject, Subject, Observable} from 'rxjs';
 import {NoteService} from '../note';
-import {SequencerNoteService} from '../sequencer';
+import {SequencerNoteService} from '../sequencer/sequencernote.service';
 import {Enveloper} from './enveloper';
 import {Panner} from './panner';
 import {Analyser} from './analyser';
@@ -33,7 +33,7 @@ export class SoundService {
    */
   private modifiers: Map<number, InstrumentModifiers> = new Map();
 
-  private _playingNotes = [];
+  private _playingNotes: SequencerNote[] = [];
   private playingNotesSource: Subject<Array<SequencerNote>> = new BehaviorSubject(this._playingNotes);
 
   /**
@@ -66,7 +66,12 @@ export class SoundService {
               private noteService: NoteService) {
     this.audioContext = new AudioContext();
 
-    this.analyser = new Analyser(this.audioContext);
+    // Uncomment this and remove masterGainNode initialization if you want to implement some analysis
+    //   (haven't tested it btw)
+    // this.analyser = new Analyser(this.audioContext);
+    //
+    // this.masterGainNode = this.audioContext.createGain();
+    // this.masterGainNode.connect(this.analyser.analyserNode);
 
     this.masterGainNode = this.audioContext.createGain();
     this.masterGainNode.connect(this.audioContext.destination);
@@ -158,7 +163,7 @@ export class SoundService {
     }
 
     if (this.isPlaying(note)) {
-      let ind = this._playingNotes.findIndex(n => note.id == n.id);
+      let ind = this._playingNotes.findIndex(n => n.isEqual(note));
       if (ind != -1) {
         this._playingNotes.splice(ind, 1);
         this.playingNotesSource.next(this._playingNotes);
@@ -168,7 +173,7 @@ export class SoundService {
 
   stop(instrumentId?: number) {
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPreffix(instrumentId, id)) {
+      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPrefix(instrumentId, id)) {
         for (let osc of oscArr) {
           osc.stop(0);
           osc.disconnect();

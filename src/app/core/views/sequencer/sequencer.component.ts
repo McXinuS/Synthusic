@@ -35,7 +35,7 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
   }
 
   ngAfterViewChecked() {
-    this.updateStaffEventListeners();
+    // this.updateStaffEventListeners();
   }
 
   onResize() {

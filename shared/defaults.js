@@ -49,7 +49,10 @@ module.exports = {
   ],
   // DEBUG
   notes: [
-    {"id":139810000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":0}},
-    {"id":139860000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":1}}
+    {"id":139810000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":0,"offset":0}},
+    {"id":139820000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":4,"dotted":false,"triplet":false},"position":{"bar":0,"offset":1}},
+    {"id":139830000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":4,"dotted":false,"triplet":false},"position":{"bar":0,"offset":2}},
+    {"id":139840000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":0}},
+    {"id":139850000045,"baseNoteId":45,"instrumentId":0,"duration":{"baseDuration":2,"dotted":false,"triplet":false},"position":{"bar":1,"offset":1}}
   ]
 };

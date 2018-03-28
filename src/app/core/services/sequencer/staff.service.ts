@@ -2,8 +2,8 @@ import {Instrument, BaseNote, SequencerNote} from '@core/models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {NoteService} from '../note';
-import {SequencerService} from '../sequencer/sequencer.service';
-// import {SoundService} from '../sound';
+import {SequencerService} from './sequencer.service';
+import {SoundService} from '../sound';
 import {SoundPlayer} from './soundplayer'
 
 // Library that converts generated MEI file to SVG score
@@ -36,12 +36,10 @@ export class StaffService {
   soundPlayer: SoundPlayer;
 
   constructor(private noteService: NoteService,
-              // private soundService: SoundService,
+              private soundService: SoundService,
               private sequencerService: SequencerService) {
 
-    // TODO: play from staff service
-    // this.soundPlayer = new SoundPlayer(sequencerService, soundService);
-    // this.soundPlayer.onMeasureChanged = this.setPage.bind(this);
+    this.soundPlayer = new SoundPlayer(sequencerService, soundService);
 
     this.baseNotes = this.noteService.notes;
 

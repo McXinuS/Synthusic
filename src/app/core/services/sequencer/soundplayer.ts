@@ -16,8 +16,8 @@ export class SoundPlayer {
 
   private bpm: number;
 
-  private readonly playingSource: Subject<SequencerNote[]> = new Subject<SequencerNote[]>();
   private playing: SequencerNote[] = [];
+  private readonly playingSource: Subject<SequencerNote[]> = new Subject<SequencerNote[]>();
   /**
    * Array of playing at the moment notes.
    */
@@ -47,7 +47,7 @@ export class SoundPlayer {
 
   private reset() {
     this.currentPosition = new NotePosition(0, 0);
-    this.isPaused = false;
+    this.isPaused = true;
 
     this.nextNotes = [];
 
@@ -75,6 +75,12 @@ export class SoundPlayer {
   private playNext() {
     if (this.isPaused) return;
 
+    // Stop if no more notes left
+    if (this.nextNotes.length == 0) {
+      this.stop();
+      return;
+    }
+
     for (let note of this.nextNotes) {
       this.playNote(note);
     }
@@ -85,12 +91,6 @@ export class SoundPlayer {
 
     this.currentPosition = this.getNextPosition();
     this.nextNotes = this.getNotesByPosition(this.currentPosition);
-
-    // Stop if no more notes left
-    if (this.nextNotes.length == 0) {
-      this.stop();
-      return;
-    }
 
     // Schedule next notes to play
     let timeout = this.noteDurationToMillis(this.playing[0].duration);

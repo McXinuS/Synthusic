@@ -34,12 +34,14 @@ export class StaffService {
   notation$: Observable<Array<string>> = this.notationSource.asObservable();
 
   soundPlayer: SoundPlayer;
+  playing$: Observable<SequencerNote[]>;  // notes that are paying in the sound player
 
   constructor(private noteService: NoteService,
               private soundService: SoundService,
               private sequencerService: SequencerService) {
 
     this.soundPlayer = new SoundPlayer(sequencerService, soundService);
+    this.playing$ = this.soundPlayer.playing$;
 
     this.baseNotes = this.noteService.notes;
 

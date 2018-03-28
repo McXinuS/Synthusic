@@ -86,6 +86,12 @@ export class SoundPlayer {
     this.currentPosition = this.getNextPosition();
     this.nextNotes = this.getNotesByPosition(this.currentPosition);
 
+    // Stop if no more notes left
+    if (this.nextNotes.length == 0) {
+      this.stop();
+      return;
+    }
+
     // Schedule next notes to play
     let timeout = this.noteDurationToMillis(this.playing[0].duration);
     setTimeout(this.playNext.bind(this), timeout);

@@ -9,6 +9,7 @@ export enum WebSocketMessageType {
 
   room_updated = 20,
   room_name_update,
+  room_set_max_users,
   user_update,
   bpm_changed,
 

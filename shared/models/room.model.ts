@@ -6,6 +6,7 @@ export class Room {
   constructor(public bpm: number,
               public name: string,
               public users: User[],
+              public maxUsers: number,
               public instruments: Instrument[],
               public notes: SequencerNote[]) {
   }

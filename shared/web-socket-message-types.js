@@ -7,7 +7,8 @@
     WebSocketMessageType[WebSocketMessageType["instrument_delete"] = 12] = "instrument_delete";
     WebSocketMessageType[WebSocketMessageType["room_updated"] = 20] = "room_updated";
     WebSocketMessageType[WebSocketMessageType["room_name_update"] = 21] = "room_name_update";
-    WebSocketMessageType[WebSocketMessageType["user_update"] = 22] = "user_update";
+    WebSocketMessageType[WebSocketMessageType["room_set_max_users"] = 22] = "room_set_max_users";
+    WebSocketMessageType[WebSocketMessageType["user_update"] = 23] = "user_update";
     WebSocketMessageType[WebSocketMessageType["chat_new_message"] = 30] = "chat_new_message";
     WebSocketMessageType[WebSocketMessageType["get_state"] = 90] = "get_state";
     // keep connection alive

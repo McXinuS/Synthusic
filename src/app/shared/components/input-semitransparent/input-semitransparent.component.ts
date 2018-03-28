@@ -27,6 +27,7 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
 
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() integer: boolean = false;
 
   numberPipeValue: string = '1.2-2';
 
@@ -40,7 +41,7 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
 
   // Common attributes
 
-  @Input() type: string;
+  @Input() type: string = 'text';
   @Input() isDisabled: boolean;
   @Input() styles: object;
   @Input() name: string;
@@ -69,10 +70,14 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
   }
 
   ngOnInit() {
+    this.updateNumberPipeValue();
   }
 
   private updateNumberPipeValue() {
-    if (!this.step) return;
+    if (this.integer) {
+      this.numberPipeValue = '1.0-0';
+      return;
+    }
 
     let fraction = this.step.toString().split('.')[1] || [];
     let fractionsCount = fraction.length;

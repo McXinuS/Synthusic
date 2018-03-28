@@ -16,6 +16,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   roomName: string;
 
   roomUsers$: Observable<User[]>;
+  room$: Observable<Room>;
 
   currentUser: User;
   userName: string;
@@ -47,6 +48,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
       this.onMessagesUpdated(messages);
     });
 
+    this.room$ = this.roomService.room$;
     this.roomUsers$ = this.roomService.users$;
   }
 
@@ -92,5 +94,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   resetUsername() {
     this.userName = this.currentUser.name;
     this.userNameChanged = false;
+  }
+
+  onMaxUsersChanged(maxUsers: number) {
+    this.roomService.setMaxUsers(maxUsers);
   }
 }

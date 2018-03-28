@@ -7,8 +7,9 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class RoomService {
+
   private _room: Room;
-  private roomSource: Subject<Room> = new Subject();
+  private roomSource: Subject<Room> = new BehaviorSubject(null);
   room$: Observable<Room> = this.roomSource.asObservable();
 
   private _users: User[];
@@ -20,12 +21,14 @@ export class RoomService {
   currentUser$: Observable<User> = this.currentUserSource.asObservable();
 
   private readonly MaxMessagesInChat = 100;
+
   private _messages: ChatMessage[] = [];
   private messagesSource: Subject<ChatMessage[]> = new BehaviorSubject([]);
   messages$: Observable<ChatMessage[]> = this.messagesSource.asObservable();
 
   constructor(private webSocketService: WebSocketService) {
     this.webSocketService.registerHandler(WebSocketMessageType.room_updated, this.updateRoom.bind(this));
+    this.webSocketService.registerHandler(WebSocketMessageType.room_set_max_users, this.onMaxUsersChanged.bind(this));
     this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.insertChatMessage.bind(this));
   }
 
@@ -78,5 +81,17 @@ export class RoomService {
     }
     this._messages.push(message);
     this.messagesSource.next(this._messages);
+  }
+
+  setMaxUsers(maxUsers: number) {
+    if (maxUsers) {
+      this.webSocketService.send(WebSocketMessageType.room_set_max_users, maxUsers);
+      this.onMaxUsersChanged(maxUsers);
+    }
+  }
+
+  onMaxUsersChanged(maxUsers: number) {
+    this._room.maxUsers = maxUsers;
+    this.roomSource.next(this._room);
   }
 }

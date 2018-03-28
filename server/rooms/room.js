@@ -14,25 +14,13 @@ let Room = function (id) {
   this.users = [];
 
   let defaults = require('./../../shared/defaults');
+
+  this.maxUsers = defaults.maxUsers;
   this.bpm = defaults.bpm;
-  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
   this.instruments = defaults.instruments;
   this.notes = defaults.notes || [];
 
-  let self = this;
-
-  Object.defineProperties(this, {
-    hasUsers: {
-      get: function () {
-        return self.users.length !== 0;
-      }
-    },
-    usersNumber: {
-      get: function () {
-        return self.users.length;
-      }
-    }
-  })
+  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
 };
 
 Room.prototype = {
@@ -52,13 +40,21 @@ Room.prototype = {
       users: this.users.slice(),
 
       bpm: this.bpm,
+      maxUsers: this.maxUsers,
       instruments: this.instruments,
       notes: this.notes
     }
   },
 
-  changeRoomName: function (name) {
+  setRoomName: function (name) {
     this.name = name;
+  },
+
+  setMaxUsers: function (users) {
+    if (users < 1) {
+      return;
+    }
+    this.maxUsers = users;
   },
 
   addUser: function (id) {

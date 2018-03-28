@@ -2,6 +2,7 @@
 
 module.exports = {
   bpm: 60,
+  maxUsers: 2,
   instruments: [
     {
       id: 0,

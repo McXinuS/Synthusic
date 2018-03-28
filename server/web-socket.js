@@ -186,7 +186,11 @@ function Server(server) {
       // Room
 
       case WebSocketMessageType.room_name_update:
-        room.changeRoomName(message.data);
+        room.setRoomName(message.data);
+        broadcastToUserRoom(message, sender);
+        return true;
+      case WebSocketMessageType.room_set_max_users:
+        room.setMaxUsers(message.data);
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.user_update:

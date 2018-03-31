@@ -10,6 +10,7 @@
     WebSocketMessageType[WebSocketMessageType["user_update"] = 22] = "user_update";
     WebSocketMessageType[WebSocketMessageType["chat_new_message"] = 30] = "chat_new_message";
     WebSocketMessageType[WebSocketMessageType["get_state"] = 90] = "get_state";
+    WebSocketMessageType[WebSocketMessageType["get_rooms"] = 91] = "get_rooms";
     // keep connection alive
     WebSocketMessageType[WebSocketMessageType["ping"] = 100] = "ping";
     WebSocketMessageType[WebSocketMessageType["pong"] = 101] = "pong";

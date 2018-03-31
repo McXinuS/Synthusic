@@ -14,6 +14,8 @@ export enum WebSocketMessageType {
 
   chat_new_message = 30,
   get_state = 90,
+  get_rooms,
+
   // keep connection alive
   ping = 100,
   pong = 101

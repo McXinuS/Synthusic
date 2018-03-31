@@ -160,6 +160,13 @@ function Server(server) {
 
       // Room
 
+      case WebSocketMessageType.get_rooms:
+        send({
+          type: WebSocketMessageType.get_rooms,
+          data: roomService.getRooms()
+        }, sender);
+        return true;
+
       case WebSocketMessageType.room_name_update:
         roomService.getRoomByUser(sender).changeRoomName(message.data);
         notifyRoomUpdate(sender);

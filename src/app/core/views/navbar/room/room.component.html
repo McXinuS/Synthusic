@@ -2,7 +2,21 @@
 
   <div class="row">
 
-    <div class="box-chat col-sm-10">
+    <div class="box-room-list col-sm-2">
+
+      <h1 *ngIf="isRoomsLoading" class="center">Loading...</h1>
+
+      <h4 class="center-hor">Room list</h4>
+
+      <ul *ngIf="!isRoomsLoading">
+        <li *ngFor="let room of (rooms$ | async)">
+          {{room.name}}
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="box-chat col-sm-8">
 
       <div #messages class="box-messages" (scroll)="onChatScroll()">
         <h1 *ngIf="isChatEmpty" class="center">
@@ -51,6 +65,7 @@
     <div class="box-users col-sm-2">
 
       <h4>Users in room: {{(roomUsers$ | async)?.length}} / 2</h4>
+
       <ul>
         <li *ngFor="let user of (roomUsers$ | async)">
           {{user.name}}

@@ -7,6 +7,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class RoomService {
+
   private _room: Room;
   private roomSource: Subject<Room> = new Subject();
   room$: Observable<Room> = this.roomSource.asObservable();
@@ -24,6 +25,7 @@ export class RoomService {
   private messagesSource: Subject<ChatMessage[]> = new BehaviorSubject([]);
   messages$: Observable<ChatMessage[]> = this.messagesSource.asObservable();
 
+
   constructor(private webSocketService: WebSocketService) {
     this.webSocketService.registerHandler(WebSocketMessageType.room_updated, this.updateRoom.bind(this));
     this.webSocketService.registerHandler(WebSocketMessageType.chat_new_message, this.insertChatMessage.bind(this));
@@ -32,6 +34,10 @@ export class RoomService {
   init(room: Room, currentUser: User) {
     this.updateRoom(room);
     this.setCurrentUser(currentUser);
+  }
+
+  getRooms(): Observable<Room[]> {
+    return Observable.fromPromise(this.webSocketService.sendAsync(WebSocketMessageType.get_rooms));
   }
 
   private updateRoom(room: Room) {

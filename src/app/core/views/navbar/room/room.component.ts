@@ -13,8 +13,10 @@ import {User} from '@shared-global/models';
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  roomName: string;
+  rooms$: Observable<Room[]>;
+  isRoomsLoading: boolean = true;
 
+  roomName: string;
   roomUsers$: Observable<User[]>;
 
   currentUser: User;
@@ -25,7 +27,6 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   isChatEmpty: boolean = true;
   @ViewChild('messages') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
-
   myMessage: string;
 
   constructor(private roomService: RoomService) {
@@ -46,6 +47,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     this.roomService.messages$.subscribe(messages => {
       this.onMessagesUpdated(messages);
     });
+
+    this.rooms$ = this.roomService.getRooms();
+    this.rooms$.subscribe(null, null, () => this.isRoomsLoading = false);
 
     this.roomUsers$ = this.roomService.users$;
   }

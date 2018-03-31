@@ -51,6 +51,15 @@ let RoomService = function () {
     //}
   }
 
+  function getRooms() {
+    return rooms.map(room => {
+      return {
+        id: room.id,
+        name: room.name
+      }
+    });
+  }
+
   function getRoomByUser(userId) {
     for (let room of rooms) {
       if (room.hasUser(userId)) {
@@ -78,8 +87,10 @@ let RoomService = function () {
   this.updateUser = updateUser;
   this.removeUser = removeUser;
 
+  this.getRooms = getRooms;
   this.getRoomByUser = getRoomByUser;
   this.getRoomUsersByUser = getRoomUsersByUser;
+
   /**
    * Returns all room data.
    */

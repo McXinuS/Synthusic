@@ -10,10 +10,12 @@ export enum WebSocketMessageType {
   room_updated = 20,
   room_name_update,
   room_set_max_users,
+  room_lock,
+  room_unlock,
   user_update,
   bpm_changed,
+  chat_new_message,
 
-  chat_new_message = 30,
   get_state = 90,
   // keep connection alive
   ping = 100,

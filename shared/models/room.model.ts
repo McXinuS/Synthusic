@@ -7,6 +7,7 @@ export class Room {
               public name: string,
               public users: User[],
               public maxUsers: number,
+              public isLocked: boolean,
               public instruments: Instrument[],
               public notes: SequencerNote[]) {
   }

@@ -193,6 +193,14 @@ function Server(server) {
         room.setMaxUsers(message.data);
         broadcastToUserRoom(message, sender);
         return true;
+      case WebSocketMessageType.room_lock:
+        room.setRoomLock(true);
+        broadcastToUserRoom(message, sender);
+        return true;
+      case WebSocketMessageType.room_unlock:
+        room.setRoomLock(false);
+        broadcastToUserRoom(message, sender);
+        return true;
       case WebSocketMessageType.user_update:
         message.data.name = message.data.name.substring(0, CHAT_USER_NAME_LENGTH_MAX);
         room.updateUser(message.data);

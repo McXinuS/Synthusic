@@ -76,7 +76,13 @@ li .sender {
 }
 
 .user-count app-input-semitransparent {
-  width : 36px;
+  width    : 36px;
+  top      : 1px;
+  position : relative;
+}
+
+.room-lock .btn-square {
+  background-color : #545454;
 }
 
 .box-users ul {

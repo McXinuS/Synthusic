@@ -99,4 +99,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   onMaxUsersChanged(maxUsers: number) {
     this.roomService.setMaxUsers(maxUsers);
   }
+
+  onRoomLockChanged(lock: boolean) {
+    this.roomService.setRoomLock(lock);
+  }
 }

@@ -19,7 +19,7 @@ let RoomService = function () {
 
     // Find a room from existing
     for (let room of rooms) {
-      if (room.getUserCount() < room.maxUsers) {
+      if (!room.isLocked && room.getUserCount() < room.maxUsers) {
         freeRoom = room;
         break;
       }

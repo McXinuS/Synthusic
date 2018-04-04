@@ -9,19 +9,22 @@ function getRandomName() {
 }
 
 let Room = function (id) {
+
+  let defaults = require('./../../shared/defaults');
+
   this.id = id;
   this.name = 'Room #' + (id + 1);
   this.users = [];
 
-  let defaults = require('./../../shared/defaults');
-
-  this.maxUsers = defaults.maxUsers;
+  this.isLocked = defaults.isLocked;
   this.bpm = defaults.bpm;
   this.instruments = defaults.instruments;
-  this.notes = defaults.notes || [];
+  this.maxUsers = defaults.maxUsers;
+  this.notes = defaults.notes;
 
-  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
-};
+  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
+
+  };
 
 Room.prototype = {
   getState: function (id) {
@@ -38,9 +41,10 @@ Room.prototype = {
     return {
       name: this.name,
       users: this.users.slice(),
+      maxUsers: this.maxUsers,
+      isLocked: this.isLocked,
 
       bpm: this.bpm,
-      maxUsers: this.maxUsers,
       instruments: this.instruments,
       notes: this.notes
     }
@@ -50,11 +54,20 @@ Room.prototype = {
     this.name = name;
   },
 
-  setMaxUsers: function (users) {
-    if (users < 1) {
+  setRoomLock: function (lock) {
+    if (typeof lock !== 'boolean') {
+      console.log('Room locking error: wrong type ' + typeof lock);
+    }
+    this.isLocked = lock;
+  },
+
+  /* Users */
+
+  setMaxUsers: function (userCount) {
+    if (userCount < 1) {
       return;
     }
-    this.maxUsers = users;
+    this.maxUsers = userCount;
   },
 
   addUser: function (id) {

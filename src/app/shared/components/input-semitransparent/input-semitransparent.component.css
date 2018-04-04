@@ -17,3 +17,8 @@ input:focus {
   background-color : #fff;
   color            : #333;
 }
+
+.input-dots {
+  width         : 100%;
+  border-bottom : 1px dotted black;
+}

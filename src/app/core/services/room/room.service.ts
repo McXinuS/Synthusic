@@ -84,14 +84,27 @@ export class RoomService {
   }
 
   setMaxUsers(maxUsers: number) {
-    if (maxUsers) {
-      this.webSocketService.send(WebSocketMessageType.room_set_max_users, maxUsers);
-      this.onMaxUsersChanged(maxUsers);
-    }
+    this.webSocketService.send(WebSocketMessageType.room_set_max_users, maxUsers);
+    this.onMaxUsersChanged(maxUsers);
   }
 
   onMaxUsersChanged(maxUsers: number) {
     this._room.maxUsers = maxUsers;
+    this.roomSource.next(this._room);
+  }
+
+  setRoomLock(lock: boolean) {
+    if (lock === true) {
+      this.webSocketService.send(WebSocketMessageType.room_lock);
+      this.onRoomLockChanged(lock);
+    } else if (lock === false) {
+      this.webSocketService.send(WebSocketMessageType.room_unlock);
+      this.onRoomLockChanged(lock);
+    }
+  }
+
+  onRoomLockChanged(lock: boolean) {
+    this._room.isLocked = lock;
     this.roomSource.next(this._room);
   }
 }

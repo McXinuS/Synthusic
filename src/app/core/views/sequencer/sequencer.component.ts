@@ -2,6 +2,7 @@ import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChil
 import {Observable} from 'rxjs';
 import {InstrumentService, SequencerService, StaffService} from '@core/services';
 import {Instrument} from '@core/models';
+import {SequencerNote} from '@shared-global/models';
 
 @Component({
   selector: 'app-sequencer',
@@ -20,9 +21,13 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
   notes: NodeListOf<Element>;
   rests: NodeListOf<Element>;
 
+  playingNotes: Element[] = [];
+  readonly PlayingNoteClass = 'playing';
+
   constructor(private instrumentService: InstrumentService,
               private staffService: StaffService,
               private sequencerService: SequencerService) {
+    this.staffService.playing$.subscribe(this.onPlayingChanged.bind(this));
   }
 
   ngOnInit() {
@@ -35,7 +40,26 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
   }
 
   ngAfterViewChecked() {
-    //this.updateStaffEventListeners();
+    // this.updateStaffEventListeners();
+  }
+
+  // Update highlight of playing notes.
+  onPlayingChanged(notes: SequencerNote[]) {
+    let test = 1;
+
+    // Remove previous highlight
+    for (let el of this.playingNotes) {
+      el.classList.remove(this.PlayingNoteClass);
+    }
+
+    this.playingNotes = [];
+
+    // Add new highlight
+    for (let note of notes) {
+      let el = this.getNote(note.id);
+      el.classList.add(this.PlayingNoteClass);
+      this.playingNotes.push(el);
+    }
   }
 
   onResize() {
@@ -44,11 +68,15 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
     }
   }
 
-  getNotes() {
+  getNote(id: number): Element {
+    return document.getElementById(id.toString());
+  }
+
+  getNotes(): NodeListOf<Element> {
     return document.querySelectorAll('g.note');
   }
 
-  getRests() {
+  getRests(): NodeListOf<Element> {
     return document.querySelectorAll('g.rest');
   }
 

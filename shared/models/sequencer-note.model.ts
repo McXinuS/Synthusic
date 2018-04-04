@@ -12,11 +12,26 @@ export class SequencerNote {
     this.duration = duration;
     this.position = position;
   }
+
+  isEqual(note: SequencerNote): boolean {
+    return this.id === note.id;
+  }
 }
 
 const InfiniteNoteHash = 0x11111;
 const DottedShift = 0x10000;
 const TripletShift = 0x01000;
+
+export enum NoteDurationEnum {
+  Infinite = -1,
+  Whole = 1,
+  Half = Whole * 2,
+  Quarter = Half * 2,
+  Eighth = Quarter * 2,
+  Sixteenth = Eighth * 2,
+  ThirtySecond = Sixteenth * 2
+}
+
 export class NoteDuration {
   baseDuration: NoteDurationEnum;
   dotted: boolean;
@@ -42,17 +57,8 @@ export class NoteDuration {
   }
 }
 
-export enum NoteDurationEnum {
-  Infinite = -1,
-  Whole = 1,
-  Half = Whole * 2,
-  Quarter = Half * 2,
-  Eighth = Quarter * 2,
-  Sixteenth = Eighth * 2,
-  ThirtySecond = Sixteenth * 2
-}
-
 const BarMax = 1000;
+
 export class NotePosition {
   bar: number;
   offset: number;
@@ -64,5 +70,9 @@ export class NotePosition {
 
   getHash(): number {
     return this.offset * BarMax + this.bar;
+  }
+
+  isEqual(notePosition: NotePosition): boolean {
+    return this.bar === notePosition.bar && this.offset === notePosition.offset;
   }
 }

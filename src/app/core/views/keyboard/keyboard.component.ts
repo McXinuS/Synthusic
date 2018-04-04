@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit,
+  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit,
   ViewChild
 } from '@angular/core';
 import {BaseNote, Instrument, SequencerNote} from '@core/models';
@@ -34,7 +34,7 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
               private soundService: SoundService,
               private sequencerNoteService: SequencerNoteService,
               private instrumentService: InstrumentService,
-              private changeDetectionRef: ChangeDetectorRef) {
+              private zone: NgZone) {
   }
 
   ngOnInit() {
@@ -45,12 +45,22 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
     this.instrumentService.instruments$.subscribe(instruments => this.onInstrumentsUpdated(instruments));
   }
 
+  /**
+   * Pass keyboard scroll width to keyboard-up component.
+   */
   ngAfterViewChecked() {
-    // Prevent Angular from throwing an 'Expression has changed' error
-    setTimeout(() => {
-      this.keyboardWidth = this.keyboardKeys.nativeElement.scrollWidth;
-      this.changeDetectionRef.detectChanges();
-    }, 0);
+    let newWidth = this.keyboardKeys.nativeElement.scrollWidth;
+
+    if (this.keyboardWidth !== newWidth) {
+
+      // Not possible to use direct assign as Angular
+      //  throws 'Expression has changed after checking...' error.
+      // We don't want Angular to loop change detection over and over
+      //  so use NgZone instead of setTimeout.
+      this.zone.runOutsideAngular(() => {
+        this.keyboardWidth = newWidth;
+      });
+    }
   }
 
   onPlayingNotesUpdated(playingNotes: SequencerNote[]) {

@@ -10,31 +10,48 @@ let RoomService = function () {
 
   let lastRoomId = 0;
 
+
+  /**
+   * [internal] Add user to the room.
+   */
+  function addUserToRoom(userId, room) {
+    if (!room /* || room.usersNumber >= MAX_USERS_IN_ROOM-1 || room.isLocked */) {
+      return false;
+    }
+
+    room.addUser(userId);
+    return true;
+  }
+
+  /**
+   * Add user to room by their IDs.
+   */
+  function addUser(userId, roomId) {
+    let room = rooms.find(room => room.id === roomId);
+    return addUserToRoom(userId, room);
+  }
+
   function createRoom() {
+    if (rooms.length >= MAX_ROOMS) {
+      console.log('Unable to open a new room: too many rooms are opened.');
+      return;
+    }
+
     return new rm.Room(lastRoomId++);
   }
 
-  function addUser(id) {
-    let freeRoom;
-    for (let room of rooms) {
-      if (room.usersNumber < MAX_USERS_IN_ROOM) {
-        freeRoom = room;
-        break;
-      }
+  function addUserToNewRoom(userId) {
+    let room = createRoom();
+    rooms.push(room);
+
+    let addRes = addUserToRoom(userId, room);
+    if (!addRes) {
+      console.log('Cannot assign user ' + userId);
     }
-    if (!freeRoom) {
-      if (rooms.length >= MAX_ROOMS) {
-        console.log('Unable to open a new room: too many rooms are opened.');
-        console.log(`Cannot assign user ${id}: all rooms are full.`);
-        return;
-      } else {
-        freeRoom = createRoom();
-        rooms.push(freeRoom);
-      }
-    }
-    freeRoom.addUser(id);
-    return freeRoom.id;
+    return addRes;
   }
+
+
 
   function updateUser(id) {
     let room = getRoomByUser(id);
@@ -55,7 +72,8 @@ let RoomService = function () {
     return rooms.map(room => {
       return {
         id: room.id,
-        name: room.name
+        name: room.name,
+        users: room.getUsers()
       }
     });
   }
@@ -66,7 +84,6 @@ let RoomService = function () {
         return room;
       }
     }
-    throw new Error('There is no room assigned with user id ' + userId);
   }
 
   function getRoomUsersByUser(userId) {
@@ -84,6 +101,7 @@ let RoomService = function () {
   /* API */
 
   this.addUser = addUser;
+  this.addUserToNewRoom = addUserToNewRoom;
   this.updateUser = updateUser;
   this.removeUser = removeUser;
 

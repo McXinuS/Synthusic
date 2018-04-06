@@ -9,7 +9,8 @@
       <h4 class="center-hor">Room list</h4>
 
       <ul *ngIf="!isRoomsLoading">
-        <li *ngFor="let room of (rooms$ | async)">
+        <li *ngFor="let room of (rooms$ | async)"
+        (click)="enterRoom(room)">
           {{room.name}}
         </li>
       </ul>

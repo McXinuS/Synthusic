@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {ErrorPopupData, InstrumentPopupData, LoadingPopupData, PopupData, PopupType, TextPopupData} from '@core/models';
-import {Instrument} from '@shared-global/models';
+import {Instrument, Room} from '@shared-global/models';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
+import {RoomListPopupData} from '@core/models/popup-data.model';
 
 // TODO animations
 
@@ -53,6 +54,8 @@ export class PopupService {
         return new LoadingPopupData(id, payload[0], payload[1]);
       case PopupType.instrument:
         return new InstrumentPopupData(id, payload[0]);
+      case PopupType.room_list:
+        return new RoomListPopupData(id, payload[0], payload[1]);
       default:
         throw new Error('Incorrect popup data type.');
     }
@@ -75,6 +78,11 @@ export class PopupService {
 
   showInstrument(instrument: Instrument): number {
     let data = this.createPopupData(PopupType.instrument, instrument);
+    return this.show(data);
+  }
+
+  showRoomList(rooms: Room[], onSelected: () => any): number {
+    let data = this.createPopupData(PopupType.room_list, rooms, onSelected);
     return this.show(data);
   }
 

@@ -1,0 +1,19 @@
+<h2 class="center-hor">Room List</h2>
+
+<div *ngIf="data.payload.rooms?.length === 0"
+  class="center">
+  <span>No rooms yet.</span>
+  <span class="new-room-label" (click)="data.payload.roomChangeHandler()">Create one?</span>
+</div>
+
+<!-- TODO add max users here -->
+
+<ul>
+  <li *ngFor="let room of data.payload.rooms"
+      (click)="data.payload.roomChangeHandler(room.id)">
+    <span class="room-name">{{room.name}} </span>
+    <span class="user-count">({{room.users.length}} users)</span>
+  </li>
+</ul>
+
+<div class="new-room-div btn btn-primary" (click)="data.payload.roomChangeHandler()">New room</div>

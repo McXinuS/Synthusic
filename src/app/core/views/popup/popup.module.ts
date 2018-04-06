@@ -6,6 +6,7 @@ import { TextPopupComponent } from './text-popup/text-popup.component';
 import { InstrumentPopupComponent } from './instrument-popup/instrument-popup.component';
 import { LoadingPopupComponent } from './loading-popup/loading-popup.component';
 import { ErrorPopupComponent } from './error-popup/error-popup.component';
+import { RoomsPopupComponent } from './rooms-popup/rooms-popup.component';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { ErrorPopupComponent } from './error-popup/error-popup.component';
     TextPopupComponent,
     InstrumentPopupComponent,
     LoadingPopupComponent,
-    ErrorPopupComponent
+    ErrorPopupComponent,
+    RoomsPopupComponent
   ],
   exports: [
     PopupComponent

@@ -21,8 +21,6 @@ function Server(server) {
   function onConnection(ws) {
     let id = wsLastId++;
     wsClients.set(id, ws);
-    roomService.addUser(id);
-    notifyRoomUpdate(id);
 
     console.log("New connection : id " + id);
 
@@ -31,13 +29,7 @@ function Server(server) {
     });
 
     ws.on('close', function () {
-      let room = roomService.getRoomInfoByUser(id);
-      room.users = room.users.filter(user => user.id !== id);
-      broadcastToUserRoom({
-        type: WebSocketMessageType.room_updated,
-        data: room
-      }, id);
-      roomService.removeUser(id);
+      leaveRoom(id);
       wsClients.delete(id);
       console.log('Connection closed : id ' + id);
     });
@@ -47,7 +39,7 @@ function Server(server) {
 
 
   /**
-   * Get web socket (or array of web sockets), assigned to user id.
+   * Get web socket (or array of web sockets), assigned to user(s) id.
    */
   function getWebSockets(id) {
     if (!(id instanceof Array)) {
@@ -88,13 +80,18 @@ function Server(server) {
    * @param includeSender Indicates whether or not the message will be sent to user.
    */
   function broadcastToUserRoom(message, userId, includeSender = false) {
-    let rec = roomService.getRoomUsersByUser(userId);
-    if (!rec) return;
-    rec = rec.map(user => user.id); // get only ids
+    let users = roomService.getRoomUsersByUser(userId);
+    if (!users) return;
+
+    users = users.map(user => user.id); // take only ids
+
     if (!includeSender) {
-      rec.splice(rec.indexOf(userId), 1);
+      // Remove user from list
+      let senderIndex = users.indexOf(userId);
+      if (senderIndex >= 0) users.splice(senderIndex, 1);
     }
-    broadcast(message, rec);
+
+    broadcast(message, users);
   }
 
   /**
@@ -115,11 +112,66 @@ function Server(server) {
     receiver.send(message);
   }
 
-  function notifyRoomUpdate(userId) {
+  /**
+   * Send room state to all users of the room.
+   * Find room by one of its users ID.
+   * @param userId ID of user who is in the room.
+   */
+  function notifyRoomUpdateByUser(userId) {
+    let room = roomService.getRoomInfoByUser(userId);
     broadcastToUserRoom({
       type: WebSocketMessageType.room_updated,
-      data: roomService.getRoomInfoByUser(userId)
+      data: room
     }, userId, true);
+  }
+
+  /**
+   * Send room state to all users of the room.
+   * Find room by its ID.
+   * @param room Room object.
+   */
+  function notifyRoomUpdate(room) {
+    let users = room.users.map(u => u.id);
+    broadcast({
+      type: WebSocketMessageType.room_updated,
+      data: room
+    }, users);
+  }
+
+
+  function leaveRoom(userId) {
+    let room = roomService.getRoomByUser(userId);
+    if (room) {
+      roomService.removeUser(userId);
+      notifyRoomUpdate(room);
+      console.log(`User ${userId} has left the room ${room.id}.`);
+    }
+  }
+
+
+  function processUserRelocationMessage(message, sender) {
+    switch (message.type) {
+
+      case WebSocketMessageType.enter_room:
+        leaveRoom(sender);
+        roomService.addUser(sender, message.data);
+        notifyRoomUpdateByUser(sender);
+        send({type: WebSocketMessageType.enter_room}, sender);
+        return true;
+
+      case WebSocketMessageType.enter_new_room:
+        leaveRoom(sender);
+        roomService.addUserToNewRoom(sender);
+        send({type: WebSocketMessageType.enter_room}, sender);
+        return true;
+
+      case WebSocketMessageType.leave_room:
+        leaveRoom(sender);
+        return true;
+
+    }
+
+    return false;
   }
 
   function processStateMessage(message, sender) {
@@ -131,6 +183,12 @@ function Server(server) {
           data: roomService.getRoomStateByUser(sender)
         }, sender);
         return true;
+      case WebSocketMessageType.get_available_rooms:
+        send({
+          type: WebSocketMessageType.get_available_rooms,
+          data: roomService.getRooms()
+        }, sender);
+        return true;
 
       // Note
 
@@ -138,7 +196,7 @@ function Server(server) {
         roomService.getRoomByUser(sender).addNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
-      case WebSocketMessageType.note_remove:
+      case WebSocketMessageType.note_delete:
         roomService.getRoomByUser(sender).removeNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
@@ -158,23 +216,15 @@ function Server(server) {
         broadcastToUserRoom(message, sender);
         return true;
 
-      // Room
-
-      case WebSocketMessageType.get_rooms:
-        send({
-          type: WebSocketMessageType.get_rooms,
-          data: roomService.getRooms()
-        }, sender);
-        return true;
 
       case WebSocketMessageType.room_name_update:
         roomService.getRoomByUser(sender).changeRoomName(message.data);
-        notifyRoomUpdate(sender);
+        notifyRoomUpdateByUser(sender);
         return true;
       case WebSocketMessageType.user_update:
         message.data.name = message.data.name.substring(0, CHAT_USER_NAME_LENGTH_MAX);
         roomService.getRoomByUser(sender).updateUser(message.data);
-        notifyRoomUpdate(sender);
+        notifyRoomUpdateByUser(sender);
         return true;
       case WebSocketMessageType.chat_new_message:
         let userMessage = message.data || '';
@@ -198,7 +248,7 @@ function Server(server) {
     return false;
   }
 
-  let messageHandlers = [processStateMessage, processServiceMessage];
+  let messageHandlers = [processUserRelocationMessage, processStateMessage, processServiceMessage];
 
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {

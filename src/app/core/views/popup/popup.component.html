@@ -27,6 +27,10 @@
                             [data]="data">
       </app-instrument-popup>
 
+      <app-rooms-popup *ngIf="data.type === PopupType.room_list"
+                            [data]="data">
+      </app-rooms-popup>
+
       <div class="btn-group"
            [class.hidden]="data.isModal">
         <div class="btn btn-primary" (click)="close()">Close</div>

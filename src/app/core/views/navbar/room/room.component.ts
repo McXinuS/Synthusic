@@ -73,6 +73,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  // Scroll chat window when new messages are received
+  // if the window is scrolled down to the end.
   onChatScroll() {
     let curPos = this.chatContainer.nativeElement.scrollTop;
     let topPos = this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
@@ -96,5 +98,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   resetUsername() {
     this.userName = this.currentUser.name;
     this.userNameChanged = false;
+  }
+
+  enterRoom(room: Room) {
+    this.roomService.enterRoom(room.id);
   }
 }

@@ -37,7 +37,7 @@ export class RoomService {
   }
 
   getRooms(): Observable<Room[]> {
-    return Observable.fromPromise(this.webSocketService.sendAsync(WebSocketMessageType.get_rooms));
+    return Observable.fromPromise(this.webSocketService.sendAsync(WebSocketMessageType.get_available_rooms));
   }
 
   private updateRoom(room: Room) {
@@ -75,6 +75,14 @@ export class RoomService {
     if (message) {
       this.webSocketService.send(WebSocketMessageType.chat_new_message, message);
     }
+  }
+
+  enterRoom(roomId: number) {
+    this.webSocketService.send(WebSocketMessageType.enter_room, roomId);
+  }
+
+  leaveRoom() {
+    this.webSocketService.send(WebSocketMessageType.leave_room);
   }
 
   private insertChatMessage(message: ChatMessage) {

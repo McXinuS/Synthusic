@@ -7,6 +7,7 @@ let users = [{id: 0, name: 'Offline  user'}];
 let SETTINGS_OFFLINE: Settings = Object.assign({}, CONSTANTS, {
   currentUser: users[0],
   room: {
+    id: 0,
     name: 'Offline room',
     users: users
   },

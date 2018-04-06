@@ -14,6 +14,10 @@ let Room = function (id) {
   this.users = [];
 
   let defaults = require('./../../shared/defaults');
+  // Deep clone default settings object to prevent changes sharing between rooms.
+  // Method is expensive but called not too often.
+  defaults = JSON.parse(JSON.stringify(defaults));
+
   this.bpm = defaults.bpm;
   this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
   this.instruments = defaults.instruments;
@@ -51,6 +55,7 @@ Room.prototype = {
    */
   getRoomInfo: function () {
     return {
+      id: this.id,
       name: this.name,
       users: this.users.slice()
     }

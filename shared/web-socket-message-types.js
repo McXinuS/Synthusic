@@ -8,9 +8,13 @@
     WebSocketMessageType[WebSocketMessageType["room_updated"] = 20] = "room_updated";
     WebSocketMessageType[WebSocketMessageType["room_name_update"] = 21] = "room_name_update";
     WebSocketMessageType[WebSocketMessageType["user_update"] = 22] = "user_update";
+    WebSocketMessageType[WebSocketMessageType["bpm_changed"] = 23] = "bpm_changed";
+    WebSocketMessageType[WebSocketMessageType["enter_room"] = 24] = "enter_room";
+    WebSocketMessageType[WebSocketMessageType["enter_new_room"] = 25] = "enter_new_room";
+    WebSocketMessageType[WebSocketMessageType["leave_room"] = 26] = "leave_room";
     WebSocketMessageType[WebSocketMessageType["chat_new_message"] = 30] = "chat_new_message";
     WebSocketMessageType[WebSocketMessageType["get_state"] = 90] = "get_state";
-    WebSocketMessageType[WebSocketMessageType["get_rooms"] = 91] = "get_rooms";
+    WebSocketMessageType[WebSocketMessageType["get_available_rooms"] = 91] = "get_available_rooms";
     // keep connection alive
     WebSocketMessageType[WebSocketMessageType["ping"] = 100] = "ping";
     WebSocketMessageType[WebSocketMessageType["pong"] = 101] = "pong";

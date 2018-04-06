@@ -5,14 +5,14 @@ export const fadeInOutAnimation = trigger('fadeInOutAnimation', [
     group([
       style({opacity: 0}),
       animate('150ms ease-in', style({opacity: 1})),
-      query('@*', [animateChild()])
+      query('@*', [animateChild()], { optional: true })
     ])
   ]),
   transition(':leave', [
     group([
       style({opacity: 1}),
       animate('150ms ease-out', style({opacity: 0})),
-      query('@*', [animateChild()])
+      query('@*', [animateChild()], { optional: true })
     ])
   ])
 ]);

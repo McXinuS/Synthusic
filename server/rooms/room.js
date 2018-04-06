@@ -54,6 +54,10 @@ Room.prototype = {
     this.name = name;
   },
 
+  setBpm: function (bpm) {
+    this.bpm = bpm;
+  },
+
   setRoomLock: function (lock) {
     if (typeof lock !== 'boolean') {
       console.log('Room locking error: wrong type ' + typeof lock);

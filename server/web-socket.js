@@ -189,6 +189,10 @@ function Server(server) {
         room.setRoomName(message.data);
         broadcastToUserRoom(message, sender);
         return true;
+      case WebSocketMessageType.bpm_changed:
+        room.setBpm(message.data);
+        broadcastToUserRoom(message, sender);
+        return true;
       case WebSocketMessageType.room_set_max_users:
         room.setMaxUsers(message.data);
         broadcastToUserRoom(message, sender);
@@ -233,6 +237,7 @@ function Server(server) {
 
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {
+
       let message = JSON.parse(messageStr);
       // replace type with its description
       let describedMsg = Object.assign({}, message, {type: WebSocketMessageType[message.type]});

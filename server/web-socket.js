@@ -187,7 +187,7 @@ function Server(server) {
 
       case WebSocketMessageType.room_name_update:
         room.setRoomName(message.data);
-        broadcastToUserRoom(message, sender);
+        notifyRoomUpdate(sender);
         return true;
       case WebSocketMessageType.bpm_changed:
         room.setBpm(message.data);

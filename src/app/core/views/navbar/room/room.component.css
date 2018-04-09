@@ -66,13 +66,17 @@ li .sender {
   padding : 10px 4px;
 }
 
+.room-name {
+  font-size  : 1.2em;
+  text-align : center;
+}
+
 .user-count {
   display         : flex;
   width           : 200px;
   padding         : 5px;
   justify-content : space-around;
   align-items     : center;
-  font-size       : 1.2em;
 }
 
 .user-count app-input-semitransparent {
@@ -86,9 +90,8 @@ li .sender {
 }
 
 .box-users ul {
-  padding   : 0;
-  margin    : 5px auto;
-  font-size : 1.2em;
+  padding : 0;
+  margin  : 5px auto;
 }
 
 .buttons > .btn-square {

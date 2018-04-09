@@ -17,7 +17,7 @@ export class RoomService {
   users$: Observable<User[]> = this.usersSource.asObservable();
 
   private _currentUser: User;
-  private currentUserSource: Subject<User> = new Subject();
+  private currentUserSource: Subject<User> = new BehaviorSubject(null);
   currentUser$: Observable<User> = this.currentUserSource.asObservable();
 
   private readonly MaxMessagesInChat = 100;
@@ -61,8 +61,9 @@ export class RoomService {
 
   changeUserName(name: string) {
     // TODO: weird construction, may be 'Object.assign({}, this._currentUser, {name})' is better?
-    this._currentUser.name = name;
-    this.webSocketService.send(WebSocketMessageType.user_update, this._currentUser);
+    // this._currentUser.name = name;
+    let user = {...this._currentUser, name};
+    this.webSocketService.send(WebSocketMessageType.user_update, user);
   }
 
   getUserById(id: number): User {

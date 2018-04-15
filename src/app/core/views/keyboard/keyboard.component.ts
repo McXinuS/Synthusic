@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit,
+  ViewChild
+} from '@angular/core';
 import {BaseNote, Instrument, SequencerNote} from '@core/models';
-import {NoteService, SoundService, InstrumentService, SequencerNoteService, PopupService} from '@core/services';
+import {NoteService, SoundService, InstrumentService, SequencerNoteService} from '@core/services';
 import {KeyChangeMode} from './key';
 
 @Component({
@@ -8,7 +11,7 @@ import {KeyChangeMode} from './key';
   templateUrl: './keyboard.component.html',
   styleUrls: ['./keyboard.component.css']
 })
-export class KeyboardComponent implements OnInit {
+export class KeyboardComponent implements OnInit, AfterViewChecked {
 
   instruments: Instrument[];  // array of all instruments
   activeInstrument: Instrument;  // selected instrument
@@ -24,11 +27,14 @@ export class KeyboardComponent implements OnInit {
   touches: BaseNote[] = []; // note that is pointed by the touch
   touchOff: Boolean[] = []; // if true, the touch got off the key to another
 
+  @ViewChild('keyboardKeys') keyboardKeys: ElementRef;
+  keyboardWidth: number;
+
   constructor(private noteService: NoteService,
               private soundService: SoundService,
               private sequencerNoteService: SequencerNoteService,
               private instrumentService: InstrumentService,
-              private popupService: PopupService) {
+              private zone: NgZone) {
   }
 
   ngOnInit() {
@@ -37,6 +43,24 @@ export class KeyboardComponent implements OnInit {
     this.soundService.playingNotes$.subscribe(notes => this.onPlayingNotesUpdated(notes));
 
     this.instrumentService.instruments$.subscribe(instruments => this.onInstrumentsUpdated(instruments));
+  }
+
+  /**
+   * Pass keyboard scroll width to keyboard-up component.
+   */
+  ngAfterViewChecked() {
+    let newWidth = this.keyboardKeys.nativeElement.scrollWidth;
+
+    if (this.keyboardWidth !== newWidth) {
+
+      // Not possible to use direct assign as Angular
+      //  throws 'Expression has changed after checking...' error.
+      // We don't want Angular to loop change detection over and over
+      //  so use NgZone instead of setTimeout.
+      this.zone.runOutsideAngular(() => {
+        this.keyboardWidth = newWidth;
+      });
+    }
   }
 
   onPlayingNotesUpdated(playingNotes: SequencerNote[]) {
@@ -64,7 +88,8 @@ export class KeyboardComponent implements OnInit {
     }
   }
 
-  onInstrumentChange() {
+  onInstrumentChange(instrument: Instrument) {
+    this.activeInstrument = instrument;
     this.updateHighlight();
   }
 
@@ -93,10 +118,6 @@ export class KeyboardComponent implements OnInit {
 
   onMiniChange(e) {
     if (e.which === 1) this.miniMode = !this.miniMode;
-  }
-
-  openSettings() {
-    this.popupService.showInstrument(this.activeInstrument);
   }
 
   /* Touch events handlers */

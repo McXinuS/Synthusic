@@ -19,6 +19,10 @@ export class SequencerNote {
       this.duration.getHash() + '-' +
       this.position.getHash();
   }
+
+  isEqual(note: SequencerNote): boolean {
+    return this.id === note.id;
+  }
 }
 
 export enum NoteDurationEnum {
@@ -73,6 +77,7 @@ export class NoteDuration {
 }
 
 const BarMax = 1000;
+
 export class NotePosition {
   bar: number;
   offset: number;
@@ -88,5 +93,9 @@ export class NotePosition {
 
   static fromHash(hash: number): NotePosition {
     return new NotePosition(hash%BarMax, Math.floor(hash/BarMax));
+  }
+
+  isEqual(notePosition: NotePosition): boolean {
+    return this.bar === notePosition.bar && this.offset === notePosition.offset;
   }
 }

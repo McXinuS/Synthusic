@@ -6,7 +6,6 @@ import {Point} from '@core/models';
  * Contains common canvas vars and methods; helps to handle resize events.
  */
 export abstract class BaseCanvasComponent implements AfterViewInit {
-  @Input() popupScrollTop: number;  // TODO: remove
 
   @ViewChild('canvas') canvas: ElementRef;
   ctx: CanvasRenderingContext2D;

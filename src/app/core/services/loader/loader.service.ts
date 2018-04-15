@@ -14,8 +14,6 @@ import {RoomService} from '../room';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 
-// TODO: refactor constants
-
 @Injectable()
 export class LoaderService {
   readonly WebSocketTimeout = 10000;
@@ -59,7 +57,7 @@ export class LoaderService {
         this.initSequencer(settings);
         onDone();
       }, () => {
-        this.popupService.showMessage(
+        this.popupService.showError(
           'Unable to initialize app',
           'Something went wrong during the loading if the application. Try to reload the page.');
         onDone();
@@ -110,7 +108,7 @@ export class LoaderService {
   }
 
   private initInstruments(settings: Settings) {
-    this.instrumentService.init(settings.instruments);
+    this.instrumentService.init(settings.room.instruments);
   }
 
   private initSoundModule(settings: Settings) {
@@ -131,7 +129,7 @@ export class LoaderService {
 
   goOffline() {
     this.isOffline.next(true);
-    this.popupService.showMessage(
+    this.popupService.showError(
       'We lost connection to server',
       'The remote server is not responding, going offline mode.\n' +
       'In offline mode you are unable to share your creativity with other people.' +

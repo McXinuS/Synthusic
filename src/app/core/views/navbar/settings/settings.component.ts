@@ -10,7 +10,7 @@ export class SettingsComponent implements OnInit {
 
   masterGainBeforeMute: number = 0;
 
-  constructor(private sequencerService: SequencerService,
+  constructor(public sequencerService: SequencerService,
               public soundService: SoundService) {
   }
 
@@ -25,4 +25,9 @@ export class SettingsComponent implements OnInit {
       this.soundService.masterGain = this.masterGainBeforeMute;
     }
   };
+
+  setBpm(bpm: number) {
+    this.sequencerService.setBpm(bpm);
+  }
+
 }

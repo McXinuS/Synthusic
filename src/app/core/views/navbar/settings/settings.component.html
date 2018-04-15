@@ -1,22 +1,42 @@
 <div id="nav_settings">
 
   <div class="row">
-
+  
+    <!-- Master gain -->
+  
     <div class="col-sm-4">
       <div class="well">
-
+      
         <app-input-slider class="navbar-theme" [description]="'Gain (master)'"
-                      [min]="0"
-                      [max]="0.5"
-                      [step]="0.01"
-                      [(ngModel)]="soundService.masterGain"></app-input-slider>
-
+                          [min]="0"
+                          [max]="0.5"
+                          [step]="0.01"
+                          [(ngModel)]="soundService.masterGain">
+        </app-input-slider>
+      
         <div *ngIf="soundService.masterGain==0" class="btn" (click)="toggleMute()">
-          <span class="glyphicon glyphicon-volume-off"></span> Unmute</div>
+          <span class="glyphicon glyphicon-volume-off"></span> Unmute
+        </div>
         <div *ngIf="soundService.masterGain!=0" class="btn" (click)="toggleMute()">
           <span class="glyphicon glyphicon-volume-up"></span> Mute
         </div>
-
+    
+      </div>
+    </div>
+    
+    <!-- BPM -->
+  
+    <div class="col-sm-4">
+      <div class="well">
+      
+        <app-input-slider class="navbar-theme" [description]="'Tempo (beats per minute)'"
+                          [min]="20"
+                          [max]="240"
+                          [step]="1"
+                          [ngModel]="sequencerService.bpm$ | async"
+                          (ngModelChange)="setBpm($event)">
+        </app-input-slider>
+    
       </div>
     </div>
 

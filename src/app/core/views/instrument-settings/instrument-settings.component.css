@@ -2,13 +2,18 @@
   user-select : none;
 }
 
-h2 {
-  margin-top : 0;
-}
-
 label {
   display   : block;
   font-size : 1.2em;
+}
+
+.ins-name {
+  font-family   : Courier New, monospace;
+  font-size     : 1.5em;
+  margin-bottom : 25px;
+  height        : 45px;
+  border-radius : 10px;
+  border        : 1px solid #dbeeff;
 }
 
 .description {

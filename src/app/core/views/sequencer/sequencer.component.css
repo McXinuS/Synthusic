@@ -59,5 +59,9 @@
 }
 
 /deep/ g.rest:hover {
+  fill : #564dff;
+}
+
+/deep/ g.playing {
   fill : #16de5c;
 }

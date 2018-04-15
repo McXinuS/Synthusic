@@ -2,8 +2,8 @@ import {Instrument, BaseNote, SequencerNote} from '@core/models';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {NoteService} from '../note';
-import {SequencerService} from '../sequencer/sequencer.service';
-// import {SoundService} from '../sound';
+import {SequencerService} from './sequencer.service';
+import {SoundService} from '../sound';
 import {SoundPlayer} from './soundplayer'
 import {MeiConverter} from "@core/services/sequencer/mei-converter";
 import {ScoreState} from "@core/models/score-state";
@@ -28,14 +28,14 @@ export class StaffService {
   notation$: Observable<Array<string>> = this.notationSource.asObservable();
 
   soundPlayer: SoundPlayer;
+  playing$: Observable<SequencerNote[]>;  // notes that are paying in the sound player
 
   constructor(private noteService: NoteService,
-              // private soundService: SoundService,
+              private soundService: SoundService,
               private sequencerService: SequencerService) {
 
-    // TODO: play from staff service
-    // this.soundPlayer = new SoundPlayer(sequencerService, soundService);
-    // this.soundPlayer.onMeasureChanged = this.setPage.bind(this);
+    this.soundPlayer = new SoundPlayer(sequencerService, soundService);
+    this.playing$ = this.soundPlayer.playing$;
 
     this._state = new ScoreState();
 

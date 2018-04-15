@@ -21,25 +21,6 @@
   cursor : pointer;
 }
 
-.settings {
-  display  : inline-block;
-  position : absolute;
-}
-
-label {
-  font-size      : 0.8em;
-  text-transform : uppercase;
-  color          : #d6c0b3;
-  display        : block;
-}
-
-select {
-  width              : 200px;
-  -webkit-appearance : none;
-  -moz-appearance    : none;
-  appearance         : none;
-}
-
 #keyboard {
   border        : 5px solid #582E16;
   max-width     : 100%;
@@ -50,19 +31,10 @@ select {
   border-radius : 3px 0 0 3px;
 }
 
-#keyboard-up {
-  background : url(../../../../assets/img/piano-up.jpg);
-  height     : 94px;
-  transition : height .5s;
-}
-
-.mini #keyboard-up {
-  height : 0;
-}
-
 #keyboard-keys {
   height     : 15vh;
   min-height : 130px;
+  max-height : 300px;
   font-size  : 0;
   transition : min-height .5s, height .5s;
 }

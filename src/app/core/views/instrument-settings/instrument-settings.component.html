@@ -1,21 +1,12 @@
-<h2 class="center-hor">Instrument Settings</h2>
-
 <label id="instr-name-label">Name</label>
 <app-input-semitransparent
+  class="ins-name"
   [type]="'text'"
   [(ngModel)]="instrument.name"
   [labelId]="'instr-name-label'"
   [placeholder]="'Enter instrument name'"
-  [styles]="{
-    'font-family'   : 'Courier New, monospace',
-    'font-size'     : '1.5em',
-    'padding-rigth' : '16px',
-    'padding-left'  : '16px',
-    'margin-bottom' : '25px',
-    'height'        : '45px',
-    'border-radius' : '10px',
-    'border'        : '1px solid #dbeeff'
-  }"></app-input-semitransparent>
+  [styles]="{ 'padding' : '0 16px' }">
+</app-input-semitransparent>
 
 <div class="row">
 
@@ -29,16 +20,15 @@
       <p> - mouse move: change frequency scale and gain of selected oscillator</p>
       <p> - mouse double click: change type of selected oscillator</p>
     </div>
-    <app-oscillator-settings [instrument]="instrument"
-                             [popupScrollTop]="popupScrollTop"></app-oscillator-settings>
+    <app-oscillator-settings [instrument]="instrument">
+    </app-oscillator-settings>
 
   </div>
 
   <div class="col-md-4">
 
     <!--
-    <app-oscilloscope
-      [popupScrollTop]="popupScrollTop"></app-oscilloscope>
+    <app-oscilloscope></app-oscilloscope>
     -->
 
     <div class="panner">
@@ -46,14 +36,14 @@
       <div class="description">
         <p>Adjust instrument location on the scene. The darkest part of gradient indicates the observer point.</p>
       </div>
-      <app-panner-settings [instrument]="instrument"
-                           [popupScrollTop]="popupScrollTop"></app-panner-settings>
+      <app-panner-settings [instrument]="instrument">
+      </app-panner-settings>
     </div>
 
     <div class="envelope">
       <label>Envelope</label>
-      <app-envelope-settings [instrument]="instrument"
-                             [popupScrollTop]="popupScrollTop"></app-envelope-settings>
+      <app-envelope-settings [instrument]="instrument">
+      </app-envelope-settings>
     </div>
 
   </div>

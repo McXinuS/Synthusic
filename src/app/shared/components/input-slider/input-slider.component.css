@@ -1,18 +1,8 @@
-.label-value {
+app-input-semitransparent.label-value {
   position   : relative;
   float      : right;
   text-align : end;
   top        : -6px;
   left       : 25px;
   width      : 65px;
-}
-
->>> .label-value input::-webkit-inner-spin-button,
->>> .label-value input::-webkit-outer-spin-button {
-  margin-left : 6px;
-}
-
->>> .label-value input {
-  padding-top   : 2px;
-  padding-right : 6px;
 }

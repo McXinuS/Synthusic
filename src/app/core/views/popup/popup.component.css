@@ -1,11 +1,43 @@
+.overlay {
+  z-index    : 999;
+  position   : fixed;
+  top        : 0;
+  bottom     : 0;
+  left       : 0;
+  right      : 0;
+  background : rgba(0, 0, 0, 0.7);
+  overflow-y : auto;
+}
+
+.popup-wrapper {
+  position   : fixed;
+  top        : 0;
+  bottom     : 0;
+  left       : 0;
+  right      : 0;
+  overflow-y : auto;
+}
+
+.text {
+  background      : linear-gradient(123deg, hsla(228, 40%, 20%, 0.8), hsla(208, 40%, 20%, 0.8), hsla(180, 40%, 20%, 0.8));
+  background-size : 600% 600%;
+  animation       : startOverlayAnimation 15s ease infinite;
+}
+
 .popup {
   padding          : 30px 10px;
-  background-color : aliceblue;
-  border           : solid 1px black;
-  border-radius    : 5px;
   min-width        : 30%;
   max-width        : 100%;
   margin           : auto;
+  background-color : aliceblue;
+  border           : solid 1px black;
+  border-radius    : 5px;
+  box-shadow       : 0 0 18px 1px aliceblue;
+}
+
+.text .popup {
+  background-color : rgba(240, 248, 255, 0.31);
+  border-color     : #ffffff;
 }
 
 @media (min-width : 992px) {
@@ -15,15 +47,19 @@
   }
 }
 
-.popup-text > h2 {
-  margin-top : 5px;
-}
-
-.popup-text > p {
-  font-size : 16px;
-}
-
 .btn-group {
   padding-top : 20px;
   float       : right;
+}
+
+@keyframes startOverlayAnimation {
+  0% {
+    background-position : 0 20%
+  }
+  50% {
+    background-position : 100% 80%
+  }
+  100% {
+    background-position : 0 20%
+  }
 }

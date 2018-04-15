@@ -4,7 +4,6 @@ let rm = require('./room');
 
 let RoomService = function () {
   const MAX_ROOMS = 10;
-  const MAX_USERS_IN_ROOM = 2;
 
   let rooms = [];
 
@@ -15,25 +14,35 @@ let RoomService = function () {
   }
 
   function addUser(id) {
+
     let freeRoom;
+
+    // Find a room from existing
     for (let room of rooms) {
-      if (room.usersNumber < MAX_USERS_IN_ROOM) {
+      if (!room.isLocked && room.getUserCount() < room.maxUsers) {
         freeRoom = room;
         break;
       }
     }
+
+    // Create a new room if no free room was found
     if (!freeRoom) {
       if (rooms.length >= MAX_ROOMS) {
         console.log('Unable to open a new room: too many rooms are opened.');
-        console.log(`Cannot assign user ${id}: all rooms are full.`);
-        return;
       } else {
+        console.log('All room are full, creating a new room.');
         freeRoom = createRoom();
         rooms.push(freeRoom);
       }
     }
-    freeRoom.addUser(id);
-    return freeRoom.id;
+
+    if (freeRoom) {
+      freeRoom.addUser(id);
+      return freeRoom.id;
+    } else {
+      console.log(`Cannot assign user ${id}: all rooms are full.`);
+    }
+
   }
 
   function updateUser(id) {

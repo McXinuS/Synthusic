@@ -32,15 +32,15 @@ export class SequencerFooterComponent implements OnInit, AfterViewInit {
   }
 
   play() {
-
+    this.staffService.play();
   }
 
   pause() {
-
+    this.staffService.pause();
   }
 
   stop() {
-
+    this.staffService.stop();
   }
 
   goPrevPage() {

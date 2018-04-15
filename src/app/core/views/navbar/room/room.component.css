@@ -29,7 +29,7 @@ li .sender {
 }
 
 #userName {
-  border-top: 1px solid hsla(0, 0%, 37%, 1);
+  border-top : 1px solid hsla(0, 0%, 37%, 1);
 }
 
 .box-form {
@@ -66,14 +66,32 @@ li .sender {
   padding : 10px 4px;
 }
 
-.box-users h4:first-of-type {
+.room-name {
+  font-size  : 1.2em;
   text-align : center;
 }
 
+.user-count {
+  display         : flex;
+  width           : 200px;
+  padding         : 5px;
+  justify-content : space-around;
+  align-items     : center;
+}
+
+.user-count app-input-semitransparent {
+  width    : 36px;
+  top      : 1px;
+  position : relative;
+}
+
+.room-lock .btn-square {
+  background-color : #545454;
+}
+
 .box-users ul {
-  padding   : 0;
-  margin    : 5px auto;
-  font-size : 1.2em;
+  padding : 0;
+  margin  : 5px auto;
 }
 
 .buttons > .btn-square {
@@ -89,11 +107,11 @@ li .sender {
 }
 
 .box-users form label {
-  display: block;
+  display : block;
 }
 
 .box-users input {
-  padding-right: 65px;
+  padding-right : 65px;
 }
 
 .wrapper .row .animation-delay-0 {

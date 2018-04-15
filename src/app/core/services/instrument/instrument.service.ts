@@ -57,7 +57,7 @@ export class InstrumentService {
 
   /**
    * Callback for web socket. No need to use it inside of this application
-   * due to high CPU usage when resetting instrument
+   * due to high CPU usage when resetting instrument.
    */
   private onInstrumentUpdated(instrument: Instrument) {
     let index = this.getInstrumentIndex(instrument.id);
@@ -66,7 +66,6 @@ export class InstrumentService {
       Object.assign(this._instruments[index], instrument);
       this.instrumentsSource.next(this._instruments);
       this.soundService.onInstrumentUpdate(instrument.id);
-      this.popupService.updateInstrument(this._instruments[index]);
     } else {
       this.onInstrumentAdded(instrument);
     }

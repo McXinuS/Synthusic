@@ -13,9 +13,13 @@ import {User} from '@shared-global/models';
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  roomName: string;
+  room$: Observable<Room>;
 
   roomUsers$: Observable<User[]>;
+
+  room: Room;
+  roomName: string;
+  roomNameChanged: boolean = false;
 
   currentUser: User;
   userName: string;
@@ -33,7 +37,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.roomService.room$.subscribe(room => {
+      this.room = room;
       this.roomName = room.name;
+      this.roomNameChanged = false;
     });
 
     this.roomService.currentUser$.subscribe(cu => {
@@ -47,6 +53,7 @@ export class RoomComponent implements OnInit, AfterViewChecked {
       this.onMessagesUpdated(messages);
     });
 
+    this.room$ = this.roomService.room$;
     this.roomUsers$ = this.roomService.users$;
   }
 
@@ -92,5 +99,23 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   resetUsername() {
     this.userName = this.currentUser.name;
     this.userNameChanged = false;
+  }
+
+  changeRoomName() {
+    this.roomService.changeRoomName(this.roomName);
+    this.roomNameChanged = false;
+  }
+
+  resetRoomName() {
+    this.roomName = this.room.name;
+    this.roomNameChanged = false;
+  }
+
+  onMaxUsersChanged(maxUsers: number) {
+    this.roomService.setMaxUsers(maxUsers);
+  }
+
+  onRoomLockChanged(lock: boolean) {
+    this.roomService.setRoomLock(lock);
   }
 }

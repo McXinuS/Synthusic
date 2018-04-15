@@ -1,0 +1,26 @@
+:host(.label-value) input {
+  padding-top     : 2px;
+  padding-right   : 6px;
+  -moz-appearance : textfield;
+  -moz-padding-end: 24px;
+}
+
+:host(.label-value) input::-webkit-inner-spin-button,
+:host(.label-value) input::-webkit-outer-spin-button {
+  margin-left : 6px;
+}
+
+:host(.label-value) input::-webkit-inner-spin-button,
+:host(.label-value) input::-webkit-outer-spin-button {
+  margin-left : 6px;
+}
+
+:host(.label-value) input::-webkit-inner-spin-button,
+:host(.label-value) input::-webkit-outer-spin-button {
+  margin-left : 6px;
+}
+
+:host(.label-value) input:hover {
+  -moz-appearance : number-input;
+  -moz-padding-end: 6px;
+}

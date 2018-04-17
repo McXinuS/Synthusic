@@ -21,8 +21,11 @@ li {
 /* Room list */
 
 .box-room-list {
-  overflow-y : auto;
-  overflow-x : hidden;
+  display         : flex;
+  flex-direction  : column;
+  justify-content : space-between;
+  overflow-y      : auto;
+  overflow-x      : hidden;
 }
 
 .box-room-list h4 {

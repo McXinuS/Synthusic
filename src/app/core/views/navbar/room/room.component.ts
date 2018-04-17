@@ -9,7 +9,7 @@ import {User} from '@shared-global/models';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
-  styleUrls: ['./room.component.css']
+  styleUrls: ['./room.component.css', '../navbar.theme.css']
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
@@ -102,5 +102,9 @@ export class RoomComponent implements OnInit, AfterViewChecked {
 
   enterRoom(room: Room) {
     this.roomService.enterRoom(room.id);
+  }
+
+  leaveRoom() {
+    this.roomService.leaveRoom();
   }
 }

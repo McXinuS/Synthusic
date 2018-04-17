@@ -4,7 +4,7 @@ import {SequencerService, SoundService} from '@core/services';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css', '../navbar.theme.css']
 })
 export class SettingsComponent implements OnInit {
 

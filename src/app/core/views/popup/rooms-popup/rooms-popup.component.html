@@ -8,7 +8,7 @@
 
 <!-- TODO add max users here -->
 
-<ul>
+<ul *ngIf="data.payload.rooms?.length !== 0">
   <li *ngFor="let room of data.payload.rooms"
       (click)="data.payload.roomChangeHandler(room.id)">
     <span class="room-name">{{room.name}} </span>

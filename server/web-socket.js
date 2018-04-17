@@ -167,6 +167,7 @@ function Server(server) {
 
       case WebSocketMessageType.leave_room:
         leaveRoom(sender);
+        send({type: WebSocketMessageType.leave_room}, sender);
         return true;
 
     }

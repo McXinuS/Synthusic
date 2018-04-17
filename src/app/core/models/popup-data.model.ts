@@ -63,5 +63,7 @@ export class RoomListPopupData extends PopupData {
   constructor(id: number, rooms: Room[], roomChangeHandler: any) {
     super(id, PopupType.room_list);
     this.payload = { rooms, roomChangeHandler };
+    this.isModal = true;
+    this.isText = true;
   }
 }

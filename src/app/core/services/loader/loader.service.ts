@@ -42,14 +42,19 @@ export class LoaderService {
 
     this.init();
     this.wsService.registerHandler(WebSocketMessageType.enter_room, this.onRoomChanged.bind(this));
+    this.wsService.registerHandler(WebSocketMessageType.leave_room, this.leaveRoom.bind(this));
 
   }
 
   private init() {
-    this.popupId = this.popupService.showLoader(this.popupHeader, 'Please wait');
 
+    this.hasEnteredRoom.next(false);
+
+    // Show loading popup
+    this.popupId = this.popupService.showLoader(this.popupHeader, 'Please wait');
     this.onLoadingProgressChange('Establishing server connection...');
 
+    // Establich web socket connection. Load offline room settings if failed.
     this.establishWebSocketConnection()
       .then(() => {
         this.goOnline();
@@ -61,6 +66,7 @@ export class LoaderService {
         // Currently it isn't possible to save changes in this mode.
         this.goOffline();
         this.wsService.disconnect();
+
         let settings = this.loadLocalSettings();
         this.loadRoom(settings);
         this.onLoadingDone(false);
@@ -112,7 +118,7 @@ export class LoaderService {
 
   /**
    * Send request to enter room.
-   * @param {number} roomId Id of the room to enter.
+   * @param {number} roomId Id of the room to enter. If not set, request creating a new room.
    */
   private onRoomSelected(roomId?: number) {
 
@@ -129,6 +135,11 @@ export class LoaderService {
     } else {
       this.wsService.send(WebSocketMessageType.enter_room, roomId);
     }
+  }
+
+  private leaveRoom() {
+    this.hasEnteredRoom.next(true);
+    this.showRoomList();
   }
 
   /**
@@ -163,7 +174,10 @@ export class LoaderService {
     });
   }
 
-
+  /**
+   * Get settings from server.
+   * @returns {Promise<Settings>}
+   */
   private loadSettings(): Promise<Settings> {
     return new Promise((resolve, reject) => {
       this.wsService.sendAsync<Settings>(WebSocketMessageType.get_state)
@@ -209,6 +223,8 @@ export class LoaderService {
       this.initSoundModule(settings);
       this.onLoadingProgressChange('Initializing sequencer...');
       this.initSequencer(settings);
+
+      this.hasEnteredRoom.next(true);
       this.onLoadingDone(true);
 
     } catch (e) {

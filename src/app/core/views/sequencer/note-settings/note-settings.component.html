@@ -1,0 +1,68 @@
+<div class="wrapper">
+  
+  <form novalidate
+        [formGroup]="form"
+  (ngSubmit)="onSubmit()">
+    
+    <input type="text"
+           hidden
+           formControlName="id">
+    
+    <select formControlName="baseNoteId">
+      <option *ngFor="let note of notes"
+              [value]="note.id">
+        {{ note.fullname }}
+      </option>
+    </select>
+    
+    <select formControlName="instrumentId">
+      <option *ngFor="let instrument of instruments$ | async"
+              [value]="instrument.id">
+        {{ instrument.name }}
+      </option>
+    </select>
+    
+    <label>Is rest
+      <input type="checkbox"
+             formControlName="isRest">
+    </label>
+    
+    <fieldset formGroupName="duration">
+      
+      <select formControlName="baseDuration">
+        <option *ngFor="let dur of noteDurationEnum | enumToArray"
+                [value]="noteDurationEnum[dur]">
+          {{ dur }}
+        </option>
+      </select>
+      
+      <label>Dot
+        <input type="checkbox"
+               formControlName="dotted">
+      </label>
+      
+      <label>Triplet
+        <input type="checkbox"
+               formControlName="triplet">
+      </label>
+    
+    </fieldset>
+    
+    <fieldset formGroupName="position">
+      
+      <input type="number"
+             formControlName="bar">
+      
+      <input type="number"
+             formControlName="offset">
+    
+    </fieldset>
+    
+    <div>
+      <button type="submit" class="btn btn-primary">Save</button>
+      <button class="btn btn-info" (click)="close()">Close</button>
+    </div>
+  
+  </form>
+
+</div>

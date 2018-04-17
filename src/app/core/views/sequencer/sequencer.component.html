@@ -15,4 +15,14 @@
       <div [innerHTML]="(notationSVG$ | async)[instrument.id] | safe: 'html'"></div>
     </div>
   </div>
+  
+  <app-note-settings *ngIf="(noteSettingsState$ | async)?.isShown"
+                     [state]="noteSettingsState$ | async"
+                     [ngStyle]="{
+                       'top': (noteSettingsState$ | async)?.position.y + 'px',
+                       'left': (noteSettingsState$ | async)?.position.x + 'px'
+                     }"
+                     (clickOutside)="hideNoteSettings($event)">
+  </app-note-settings>
+  
 </div>

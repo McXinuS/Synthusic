@@ -1,8 +1,8 @@
 import {AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs';
-import {InstrumentService, SequencerNoteService, SequencerService, StaffService} from '@core/services';
-import {Instrument} from '@core/models';
-import {SequencerNote} from '@shared-global/models';
+import {InstrumentService, SequencerNoteService, SequencerService, SoundService, StaffService} from '@core/services';
+import {Instrument, SequencerNoteSettingsState} from '@core/models';
+import {Point, SequencerNote} from "@shared-global/models";
 
 @Component({
   selector: 'app-sequencer',
@@ -15,9 +15,12 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
 
   collapsed: boolean[] = [];
 
+  noteSettingsState$: Observable<SequencerNoteSettingsState>;
+
   instruments$: Observable<Array<Instrument>>;
   notationSVG$: Observable<Array<string>>;
 
+  // Save references to remove event handlers when dom changes
   notes: NodeListOf<Element>;
   rests: NodeListOf<Element>;
 
@@ -27,12 +30,14 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
   constructor(private instrumentService: InstrumentService,
               private staffService: StaffService,
               private sequencerService: SequencerService,
-              private sequencerNoteService: SequencerNoteService) {
+              private sequencerNoteService: SequencerNoteService,
+              private soundService: SoundService) {
     this.staffService.playing$.subscribe(this.onPlayingChanged.bind(this));
   }
 
   ngOnInit() {
     this.notationSVG$ = this.staffService.notation$;
+    this.noteSettingsState$ = this.sequencerService.noteSettingsState$;
     this.instruments$ = this.instrumentService.instruments$;
   }
 
@@ -41,12 +46,11 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
   }
 
   ngAfterViewChecked() {
-    //this.updateStaffEventListeners();
+    this.updateStaffEventListeners();
   }
 
   // Update highlight of playing notes.
   onPlayingChanged(notes: SequencerNote[]) {
-    let test = 1;
 
     // Remove previous highlight
     for (let el of this.playingNotes) {
@@ -69,6 +73,8 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
     }
   }
 
+  /* Events */
+
   getNote(id: number): Element {
     return document.getElementById(id.toString());
   }
@@ -81,40 +87,43 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
     return document.querySelectorAll('g.rest');
   }
 
-  onNoteClicked(id: string) {
-    let note = this.sequencerNoteService.getNoteById(id);
+  onNoteClicked(id: string, e: MouseEvent) {
+    let note = this.getSequencerNote(id);
+
+    // this.playNote(note);
+    this.showNoteSettings(e, note);
   }
 
   onRestClicked(id: string) {
-    let note = this.sequencerNoteService.getNoteById(id);
-    this.sequencerService.addNote(note);
+    let note = this.getSequencerNote(id);
+    this.addNote(note);
   }
 
   setNoteEventListeners(notes) {
     if (!notes) return;
     for (let i = 0; i < notes.length; i++) {
-      notes[i].addEventListener('click', this.onNoteClicked.bind(this, notes[i].id));
+      notes[i].onclick = this.onNoteClicked.bind(this, notes[i].id);
     }
   }
 
   removeNoteEventListeners(notes) {
     if (!notes) return;
     for (let i = 0; i < notes.length; i++) {
-      notes[i].removeEventListener('click');
+      notes[i].onclick = null;
     }
   }
 
   setRestEventListeners(rests) {
     if (!rests) return;
     for (let i = 0; i < rests.length; i++) {
-      rests[i].addEventListener('click', this.onRestClicked.bind(this, rests[i].id));
+      rests[i].onclick = this.onRestClicked.bind(this, rests[i].id);
     }
   }
 
   removeRestEventListeners(rests) {
     if (!rests) return;
     for (let i = 0; i < rests.length; i++) {
-      rests[i].removeEventListener('click');
+      rests[i].onclick = null;
     }
   }
 
@@ -125,5 +134,40 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
     this.rests = this.getRests();
     this.setNoteEventListeners(this.notes);
     this.setRestEventListeners(this.rests);
+  }
+
+  /* Actions */
+
+  playNote(note: SequencerNote) {
+    this.soundService.playNote(note);
+  }
+
+  addNote(note: SequencerNote) {
+    this.sequencerService.addNote(note);
+  }
+
+  getSequencerNote(svgId: string): SequencerNote {
+    return this.sequencerNoteService.getNoteById(svgId);
+  }
+
+  /* Note settings */
+
+  showNoteSettings(e: MouseEvent, note: SequencerNote) {
+
+    let mouseLoc = new Point();
+    mouseLoc.x  = e.clientX + 20;
+    mouseLoc.y  = e.clientY - 30;
+
+    this.sequencerService.showNoteSettings(note, mouseLoc);
+  }
+
+  hideNoteSettings(target: HTMLElement) {
+    // Don't hide settings window if staff element has been clicked
+    const insideStaff = this.staffContainer.nativeElement.contains(target),
+      parentIsStaffElement = target.parentElement.tagName === 'g';
+
+    if (!(insideStaff && parentIsStaffElement)) {
+      this.sequencerService.hideNoteSettings();
+    }
   }
 }

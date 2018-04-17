@@ -4,6 +4,7 @@ import {SequencerNote, NoteDuration, NotePosition, NoteDurationEnum} from '@core
 @Injectable()
 export class SequencerNoteService {
 
+  // TODO remove
   // Bitwise offsets of sequencer note information in its ID (used in getID())
   private readonly ID_MULTIPLIER_BASE_NOTE = 1;
   private readonly ID_MULTIPLIER_INSTRUMENT = this.ID_MULTIPLIER_BASE_NOTE * 200;
@@ -17,12 +18,14 @@ export class SequencerNoteService {
    * Get a sequencer note according to parameters.
    * @param {number} baseNoteId Id of the base note (object, containing frequency, name etc).
    * @param {number} instrumentId Id of instrument.
+   * @param {boolean} isRest Whether or not the note is a rest (pause).
    * @param {NoteDuration} duration Object with information about duration.
    * @param {NotePosition} position Object with information about position (bar, offset).
    * @param {number} id Id of the note.
    */
   getSequencerNote(baseNoteId: number,
                    instrumentId: number,
+                   isRest: boolean = false,
                    duration?: NoteDuration,
                    position?: NotePosition,
                    id?: number): SequencerNote {
@@ -61,19 +64,22 @@ export class SequencerNoteService {
       id = this.getID(baseNoteId, instrumentId, populatedDuration, populatedPosition);
     }
 
-    return new SequencerNote(id, baseNoteId, instrumentId, populatedDuration, populatedPosition);
+    return new SequencerNote(id, baseNoteId, instrumentId, isRest, populatedDuration, populatedPosition);
 
   }
 
-  getNoteById(id: string): SequencerNote {
-    let [baseNote, instrument, durHash, posHash] = id
+  getNoteById(svgId: string): SequencerNote {
+    let [baseNote, instrument, restNumber, durHash, posHash] = svgId
       .split('-')
       .map(num => parseInt(num));
+
+    // Cast 0 or 1 to boolean
+    let isRest = Boolean(restNumber);
 
     let duration = NoteDuration.fromHash(durHash);
     let position = NotePosition.fromHash(posHash);
 
-    return this.getSequencerNote(baseNote, instrument, duration, position);
+    return this.getSequencerNote(baseNote, instrument, isRest, duration, position);
   }
 
   private getID(baseNoteId: number,

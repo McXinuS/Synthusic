@@ -1,21 +1,17 @@
 export class SequencerNote {
-  readonly id: number;
-  readonly baseNoteId: number;
-  readonly duration: NoteDuration;
-  readonly position: NotePosition;
-  readonly instrumentId: number;
 
-  constructor(id: number, baseNoteId: number, instrumentId: number, duration: NoteDuration, position: NotePosition) {
-    this.id = id;
-    this.baseNoteId = baseNoteId;
-    this.instrumentId = instrumentId;
-    this.duration = duration;
-    this.position = position;
+  constructor(public id: number,
+              public baseNoteId: number,
+              public instrumentId: number,
+              public isRest: boolean,
+              public duration: NoteDuration,
+              public position: NotePosition) {
   }
 
   getHash(): string {
     return this.baseNoteId + '-' +
       this.instrumentId + '-' +
+      (this.isRest ? 1 : 0) + '-' +
       this.duration.getHash() + '-' +
       this.position.getHash();
   }
@@ -41,14 +37,10 @@ const TripletMask = 0x01000;
 const InfiniteNoteHash = 0x11111;
 
 export class NoteDuration {
-  baseDuration: NoteDurationEnum;
-  dotted: boolean;
-  triplet: boolean;
 
-  constructor(baseDuration: NoteDurationEnum, dotted?: boolean, triplet?: boolean) {
-    this.baseDuration = baseDuration;
-    this.dotted = dotted || false;
-    this.triplet = triplet || false;
+  constructor(public baseDuration: NoteDurationEnum,
+              public dotted: boolean = false,
+              public triplet: boolean = false) {
   }
 
   isInfinite(): boolean {
@@ -79,12 +71,9 @@ export class NoteDuration {
 const BarMax = 1000;
 
 export class NotePosition {
-  bar: number;
-  offset: number;
 
-  constructor(bar: number, offset: number) {
-    this.bar = bar;
-    this.offset = offset;
+  constructor(public bar: number,
+              public offset: number) {
   }
 
   getHash(): number {

@@ -65,3 +65,7 @@
 /deep/ g.playing {
   fill : #16de5c;
 }
+
+app-note-settings {
+  position : absolute;
+}

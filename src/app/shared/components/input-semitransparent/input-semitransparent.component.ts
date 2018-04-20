@@ -1,5 +1,7 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, forwardRef, Input, OnInit, Output,
+  AfterViewInit,
+  ChangeDetectionStrategy, Component, ElementRef, EventEmitter, forwardRef, Input, OnChanges, OnInit, Output,
+  SimpleChanges, ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -14,7 +16,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
     multi: true
   }]
 })
-export class InputSemitransparentComponent implements OnInit, ControlValueAccessor {
+export class InputSemitransparentComponent implements OnInit, AfterViewInit, ControlValueAccessor {
 
   // String attributes
 
@@ -27,6 +29,7 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
 
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() integer: boolean = false;
 
   numberPipeValue: string = '1.2-2';
 
@@ -40,11 +43,14 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
 
   // Common attributes
 
-  @Input() type: string;
+  @Input() type: string = 'text';
   @Input() isDisabled: boolean;
   @Input() styles: object;
   @Input() name: string;
-  @Input() labelId: string;   // to be used with input-slider component
+  @Input() labelId: string;           // to be used with input-slider component
+  @Input() dotted: boolean = false;   // underlined with dots
+
+  private dotsDivStyle: string;
 
   // ngModel value
   _value: string | number;
@@ -69,14 +75,34 @@ export class InputSemitransparentComponent implements OnInit, ControlValueAccess
   }
 
   ngOnInit() {
+    this.updateNumberPipeValue();
   }
 
+  ngAfterViewInit() {
+    this.updateDotsWidth();
+  }
+
+
   private updateNumberPipeValue() {
-    if (!this.step) return;
+    if (this.integer) {
+      this.numberPipeValue = '1.0-0';
+      return;
+    }
 
     let fraction = this.step.toString().split('.')[1] || [];
     let fractionsCount = fraction.length;
     this.numberPipeValue = `1.${fractionsCount}-${fractionsCount}`;
+  }
+
+  private updateDotsWidth() {
+    let marginLeft = 0;
+    let marginRight = 0;
+
+    if (this.type == 'number') {
+      marginRight += 20;
+    }
+
+    this.dotsDivStyle = `margin-left: ${marginLeft}px; width: calc(100% - ${marginRight}px);`;
   }
 
   /*** ControlValueAccessor implementation ***/

@@ -10,13 +10,16 @@ const CHAT_MESSAGE_LENGTH_MAX = 340;
 const CHAT_USER_NAME_LENGTH_MAX = 20;
 
 function Server(server) {
+
   let webSocketServer = new ws.Server({
     server: server
   });
 
-  let wsClients = new Map(),
-    wsLastId = 0,
-    roomService = new rs();
+  // List of all connected users
+  const wsClients = new Map();
+  let wsLastId = 0;
+
+  const roomService = new rs();
 
   function onConnection(ws) {
     let id = wsLastId++;
@@ -42,8 +45,9 @@ function Server(server) {
    * Get web socket (or array of web sockets), assigned to user(s) id.
    */
   function getWebSockets(id) {
+
+    // single id
     if (!(id instanceof Array)) {
-      // single id
       return wsClients.get(id);
     }
 
@@ -77,7 +81,7 @@ function Server(server) {
    * Broadcast message to the particular users.
    * @param message String or an object, containing message type.
    * @param userId ID or websocket of user, whose room's users will be broadcasted with message.
-   * @param includeSender Indicates whether or not the message will be sent to user.
+   * @param includeSender Indicates whether or not the message will be sent to user (userId).
    */
   function broadcastToUserRoom(message, userId, includeSender = false) {
     let users = roomService.getRoomUsersByUser(userId);
@@ -100,15 +104,26 @@ function Server(server) {
    * @param receiver Array of user ids or websockets.
    */
   function send(message, receiver) {
-    if (typeof(message) === 'object') {
+
+    // Convert message to string if it is an object
+    if (typeof message === 'object') {
       message = JSON.stringify(message);
     }
-    if (!message.includes('type')) {
-      throw new Error('Message must have a type');
+
+    if (!message) {
+      throw new Error('Message is empty.');
     }
+
+    // Throw error if no type is specified
+    if (!message.includes('type')) {
+      throw new Error('Message must have a type.');
+    }
+
+    // Convert receiver ID(s) to web socket clients
     if (!(receiver instanceof ws)) {
       receiver = getWebSockets(receiver);
     }
+
     receiver.send(message);
   }
 
@@ -176,6 +191,9 @@ function Server(server) {
   }
 
   function processStateMessage(message, sender) {
+
+    let room = roomService.getRoomByUser(sender);
+
     switch (message.type) {
 
       case WebSocketMessageType.get_state:
@@ -194,37 +212,54 @@ function Server(server) {
       // Note
 
       case WebSocketMessageType.note_add:
-        roomService.getRoomByUser(sender).addNote(message.data);
+        room.addNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.note_delete:
-        roomService.getRoomByUser(sender).removeNote(message.data);
+        room.removeNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
 
       // Instrument
 
       case WebSocketMessageType.instrument_add:
-        message.data = roomService.getRoomByUser(sender).createInstrument();
+        message.data = room.createInstrument();
         broadcastToUserRoom(message, sender, true);
         return true;
       case WebSocketMessageType.instrument_update:
-        roomService.getRoomByUser(sender).updateInstrument(message.data);
+        room.updateInstrument(message.data);
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.instrument_delete:
-        roomService.getRoomByUser(sender).deleteInstrument(message.data);
+        room.deleteInstrument(message.data);
         broadcastToUserRoom(message, sender);
         return true;
 
+      // Room
 
       case WebSocketMessageType.room_name_update:
-        roomService.getRoomByUser(sender).changeRoomName(message.data);
+        room.setRoomName(message.data);
         notifyRoomUpdateByUser(sender);
+        return true;
+      case WebSocketMessageType.bpm_changed:
+        room.setBpm(message.data);
+        broadcastToUserRoom(message, sender);
+        return true;
+      case WebSocketMessageType.room_set_max_users:
+        room.setMaxUsers(message.data);
+        broadcastToUserRoom(message, sender);
+        return true;
+      case WebSocketMessageType.room_lock:
+        room.setRoomLock(true);
+        broadcastToUserRoom(message, sender);
+        return true;
+      case WebSocketMessageType.room_unlock:
+        room.setRoomLock(false);
+        broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.user_update:
         message.data.name = message.data.name.substring(0, CHAT_USER_NAME_LENGTH_MAX);
-        roomService.getRoomByUser(sender).updateUser(message.data);
+        room.updateUser(message.data);
         notifyRoomUpdateByUser(sender);
         return true;
       case WebSocketMessageType.chat_new_message:
@@ -237,6 +272,7 @@ function Server(server) {
         broadcastToUserRoom(message, sender, true);
         return true;
     }
+
     return false;
   }
 
@@ -253,10 +289,12 @@ function Server(server) {
 
   function processWebSocketMessage(messageStr, sender) {
     new Promise(function (resolve, reject) {
+
       let message = JSON.parse(messageStr);
       // replace type with its description
       let describedMsg = Object.assign({}, message, {type: WebSocketMessageType[message.type]});
       let logMsg = `New message from id ${sender}: ${JSON.stringify(describedMsg)}`;
+
       for (let handler of messageHandlers) {
         let handled = handler(message, sender);
         if (handled) {

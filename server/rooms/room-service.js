@@ -4,7 +4,6 @@ let rm = require('./room');
 
 let RoomService = function () {
   const MAX_ROOMS = 10;
-  const MAX_USERS_IN_ROOM = 2;
 
   let rooms = [];
 
@@ -15,7 +14,7 @@ let RoomService = function () {
    * [internal] Add user to the room.
    */
   function addUserToRoom(userId, room) {
-    if (!room /* || room.usersNumber >= MAX_USERS_IN_ROOM-1 || room.isLocked */) {
+    if (!room || room.isLocked || (room.getUserCount() >= room.maxUsers)) {
       return false;
     }
 
@@ -32,15 +31,15 @@ let RoomService = function () {
   }
 
   function createRoom() {
-    if (rooms.length >= MAX_ROOMS) {
-      console.log('Unable to open a new room: too many rooms are opened.');
-      return;
-    }
-
     return new rm.Room(lastRoomId++);
   }
 
   function addUserToNewRoom(userId) {
+    if (rooms.length >= MAX_ROOMS) {
+      console.log('Unable to open a new room: too many rooms are opened.');
+      return false;
+    }
+
     let room = createRoom();
     rooms.push(room);
 

@@ -2,6 +2,10 @@
 
   <div class="row">
 
+
+    <!-- Room list -->
+
+
     <div class="box-room-list col-sm-2">
 
       <h1 *ngIf="isRoomsLoading" class="center">Loading...</h1>
@@ -20,6 +24,11 @@
       </div>
 
     </div>
+
+
+    <!-- Chat -->
+
+
 
     <div class="box-chat col-sm-8">
 
@@ -67,9 +76,78 @@
 
     </div>
 
+
+    <!-- Room info -->
+
+
     <div class="box-users col-sm-2">
 
-      <h4>Users in room: {{(roomUsers$ | async)?.length}} / 2</h4>
+      <div>
+
+        <form (ngSubmit)="changeRoomName()">
+
+          <div class="room-name box-form button-group">
+
+            <app-input-semitransparent
+              id="roomName"
+              class="navbar-theme"
+              [type]="'text'"
+              [autocomplete]="'off'"
+              required
+              placeholder="Room name"
+              [name]="'roomname'"
+              [styles]="{'padding-right':'8px'}"
+              [(ngModel)]="roomName"
+              (ngModelChange)="roomNameChanged=true"
+              [ngModelOptions]="{standalone: true}">
+            </app-input-semitransparent>
+
+            <div class="buttons" [class.btn-shown]="roomNameChanged">
+              <button type="submit" class="btn-square animation-delay-0">
+                <span class="glyphicon glyphicon-ok"></span>
+              </button>
+              <button type="button" class="btn-square animation-delay-1" (click)="resetRoomName()">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </div>
+
+          </div>
+
+        </form>
+
+        <div class="user-count">
+          <span>Users: </span>
+          <span>{{(roomUsers$ | async)?.length}} / </span>
+          <app-input-semitransparent
+            [min]="1"
+            [max]="32"
+            [type]="'number'"
+            [integer]="true"
+            [dotted]="true"
+            [ngModel]="(room$ | async)?.maxUsers"
+            (ngModelChange)="onMaxUsersChanged($event)">
+          </app-input-semitransparent>
+
+          <div class="room-lock">
+
+            <div *ngIf="(room$ | async)?.isLocked"
+                 class="btn-square"
+                 title="Unlock room to let other people enter."
+                 (click)="onRoomLockChanged(false)">
+              <span class="glyphicon glyphicon-lock"></span>
+            </div>
+
+            <div *ngIf="!((room$ | async)?.isLocked)"
+                 class="btn-square"
+                 title="Lock room to forbid people enter the room."
+                 (click)="onRoomLockChanged(true)">
+              <span class="glyphicon glyphicon-folder-open"></span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
 
       <ul>
         <li *ngFor="let user of (roomUsers$ | async)">
@@ -100,7 +178,7 @@
             <button type="submit" class="btn-square animation-delay-0">
               <span class="glyphicon glyphicon-ok"></span>
             </button>
-            <button class="btn-square animation-delay-1" (click)="resetUsername()">
+            <button type="button" class="btn-square animation-delay-1" (click)="resetUsername()">
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </div>
@@ -110,6 +188,7 @@
       </form>
 
     </div>
+
 
   </div>
 

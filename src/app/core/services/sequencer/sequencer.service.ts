@@ -41,7 +41,7 @@ export class SequencerService {
   }
 
   init(settings: Settings) {
-    let notes = settings.notes;
+    let notes = settings.room.notes;
 
     // Apply notes received from server
     for (let note of notes) {
@@ -58,7 +58,7 @@ export class SequencerService {
       this.addNote(populatedNote, false);
     }
 
-    this.onBpmChanged(settings.bpm);
+    this.onBpmChanged(settings.room.bpm);
   }
 
   addNote(note: SequencerNote, broadcast = true) {

@@ -1,5 +1,6 @@
 <input *ngIf="type === 'text'"
        type="text"
+       
        [disabled]="isDisabled"
        [attr.aria-labelledby]="labelId"
        [ngStyle]="styles"
@@ -7,11 +8,13 @@
        [placeholder]="placeholder"
        [autocomplete]="autocomplete"
        [name]="name"
+       
        [(ngModel)]="value"
        (blur)="onBlur()"/>
 
 <input *ngIf="type === 'number'"
        type="number"
+       
        [disabled]="isDisabled"
        [attr.aria-labelledby]="labelId"
        [ngStyle]="styles"
@@ -19,6 +22,12 @@
        [max]="max"
        [step]="step"
        [name]="name"
+       
        [ngModel]="value | number : numberPipeValue | numberPipeFix"
        (ngModelChange)="value=$event"
        (blur)="onBlur()"/>
+
+<div *ngIf="dotted"
+     [attr.style]="dotsDivStyle | safe : 'style'"
+     class="input-dots">
+</div>

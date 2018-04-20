@@ -9,11 +9,13 @@ let SETTINGS_OFFLINE: Settings = Object.assign({}, CONSTANTS, {
   room: {
     id: 0,
     name: 'Offline room',
-    users: users
-  },
-  notes: [],
-  instruments: INSTRUMENTS,
-  bpm: 60
+    users: users,
+    maxUsers: 2,
+    isLocked: true,
+    bpm: 60,
+    notes: [],
+    instruments: INSTRUMENTS
+  }
 });
 
 export {

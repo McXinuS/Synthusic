@@ -9,42 +9,29 @@ function getRandomName() {
 }
 
 let Room = function (id) {
-  this.id = id;
-  this.name = 'Room #' + (id + 1);
-  this.users = [];
 
   let defaults = require('./../../shared/defaults');
   // Deep clone default settings object to prevent changes sharing between rooms.
   // Method is expensive but called not too often.
   defaults = JSON.parse(JSON.stringify(defaults));
 
+  this.id = id;
+  this.name = 'Room #' + (id + 1);
+  this.users = [];
+
+  this.isLocked = defaults.isLocked;
   this.bpm = defaults.bpm;
-  this.lastInstrumentId = defaults.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
   this.instruments = defaults.instruments;
-  this.notes = defaults.notes || [];
+  this.maxUsers = defaults.maxUsers;
+  this.notes = defaults.notes;
 
-  let self = this;
+  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
 
-  Object.defineProperties(this, {
-    hasUsers: {
-      get: function () {
-        return self.users.length !== 0;
-      }
-    },
-    usersNumber: {
-      get: function () {
-        return self.users.length;
-      }
-    }
-  })
-};
+  };
 
 Room.prototype = {
   getState: function (id) {
     return {
-      bpm: this.bpm,
-      instruments: this.instruments,
-      notes: this.notes,
       room: this.getRoomInfo(),
       currentUser: this.getUser(id)
     }
@@ -57,12 +44,38 @@ Room.prototype = {
     return {
       id: this.id,
       name: this.name,
-      users: this.users.slice()
+      users: this.users.slice(),
+      maxUsers: this.maxUsers,
+      isLocked: this.isLocked,
+
+      bpm: this.bpm,
+      instruments: this.instruments,
+      notes: this.notes
     }
   },
 
-  changeRoomName: function (name) {
+  setRoomName: function (name) {
     this.name = name;
+  },
+
+  setBpm: function (bpm) {
+    this.bpm = bpm;
+  },
+
+  setRoomLock: function (lock) {
+    if (typeof lock !== 'boolean') {
+      console.log('Room locking error: wrong type ' + typeof lock);
+    }
+    this.isLocked = lock;
+  },
+
+  /* Users */
+
+  setMaxUsers: function (userCount) {
+    if (userCount < 1) {
+      return;
+    }
+    this.maxUsers = userCount;
   },
 
   addUser: function (id) {
@@ -73,12 +86,19 @@ Room.prototype = {
     this.users.push(user);
     return user;
   },
+
   getUser: function (id) {
     return this.users.find(user => user.id === id);
   },
+
+  getUserCount: function () {
+    return this.users.length;
+  },
+
   getUsers: function () {
     return this.users.slice();
   },
+
   updateUser: function (user) {
     let index = this.users.findIndex(u => u.id === user.id);
     if (index >= 0) {
@@ -86,10 +106,12 @@ Room.prototype = {
       u.name = user.name;
     }
   },
+
   removeUser: function (id) {
     let index = this.users.findIndex(user => user.id === id);
     if (index >= 0) this.users.splice(index, 1);
   },
+
   hasUser: function (id) {
     return this.users.findIndex(user => user.id === id) >= 0;
   },

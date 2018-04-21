@@ -90,7 +90,7 @@ export class MeiConverter {
     if (baseNote.isAccidental)
       accidental = 'accid="' + baseNote.name[1] + '"';
 
-    return '<note xml:id="' + note.getHash()
+    return '<note xml:id="' + note.id
       + '" dur="' + note.duration.baseDuration
       + '" oct="' + baseNote.octave
       + '" pname="' + baseNote.pitchNameLower

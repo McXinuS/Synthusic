@@ -1,4 +1,4 @@
-export class SequencerNote {
+export class SequencerNote{
 
   constructor(public id: number,
               public baseNoteId: number,
@@ -31,10 +31,10 @@ export enum NoteDurationEnum {
   ThirtySecond = Sixteenth * 2
 }
 
-const BaseDurationMask = 0x00111;
-const DotMask = 0x10000;
-const TripletMask = 0x01000;
-const InfiniteNoteHash = 0x11111;
+const BaseDurationMask = 0b00111;
+const DotMask = 0b10000;
+const TripletMask = 0b01000;
+const InfiniteNoteHash = 0b11111;
 
 export class NoteDuration {
 
@@ -61,7 +61,7 @@ export class NoteDuration {
       return new NoteDuration(NoteDurationEnum.Infinite, false, false);
     }
 
-    let duration = (hash & BaseDurationMask)**2,
+    let duration = (hash & BaseDurationMask) ** 2,
       dotted = !!(hash & DotMask),
       triplet = !!(hash & TripletMask);
     return new NoteDuration(duration, dotted, triplet);
@@ -81,7 +81,7 @@ export class NotePosition {
   }
 
   static fromHash(hash: number): NotePosition {
-    return new NotePosition(hash%BarMax, Math.floor(hash/BarMax));
+    return new NotePosition(hash % BarMax, Math.floor(hash / BarMax));
   }
 
   isEqual(notePosition: NotePosition): boolean {

@@ -106,13 +106,13 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
 
   playNote(basenote: BaseNote) {
     if (!this.activeInstrument) return;
-    let note = this.sequencerNoteService.getSequencerNote(basenote.id, this.activeInstrument.id);
+    let note = this.sequencerNoteService.getDimSequencerNote(basenote.id, this.activeInstrument.id);
     this.soundService.playNote(note);
   }
 
   stopNote(basenote: BaseNote) {
     if (!this.activeInstrument) return;
-    let note = this.sequencerNoteService.getSequencerNote(basenote.id, this.activeInstrument.id);
+    let note = this.sequencerNoteService.getDimSequencerNote(basenote.id, this.activeInstrument.id);
     this.soundService.stopNote(note);
   }
 

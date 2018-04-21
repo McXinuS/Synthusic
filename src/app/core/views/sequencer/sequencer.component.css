@@ -4,6 +4,7 @@
 }
 
 .sequencer {
+  position    : relative;
   transition  : height .3s, background-color .5s, visibility .3s, opacity .3s linear;
   height      : 100%;
   width       : 100%;

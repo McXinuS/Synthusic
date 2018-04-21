@@ -4,6 +4,7 @@ import {InstrumentService, NoteService, SequencerService} from "@core/services";
 import {Observable} from "rxjs/Observable";
 import {NoteDurationEnum} from "@shared-global/models/sequencer-note.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {SequencerNote} from "@shared-global/models";
 
 @Component({
   selector: 'app-note-settings',
@@ -50,7 +51,18 @@ export class NoteSettingsComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      this.sequencerService.updateNote(this.form.value);
+
+      const formValue = this.form.value;
+      let note: SequencerNote = formValue;
+
+      note.id = parseInt(formValue.id);
+      note.baseNoteId = parseInt(formValue.baseNoteId);
+      note.instrumentId = parseInt(formValue.instrumentId);
+      note.duration.baseDuration = parseInt(formValue.duration.baseDuration);
+      note.position.bar = parseInt(formValue.position.bar);
+      note.position.offset = parseInt(formValue.position.offset);
+      
+      this.sequencerService.updateNote(note);
     }
   }
 

@@ -140,7 +140,7 @@ export class SoundService {
     }
 
     // Note duration in ms
-    const ReferenceBpm = 60;
+    const ReferenceBpm = 60 * 1000;
     let relBpm = ReferenceBpm / this.bpm;
     let duration = relBpm / note.duration.baseDuration * NoteDurationEnum.Quarter;
 
@@ -167,6 +167,8 @@ export class SoundService {
   }
 
   private stopNoteImmediately(note: SequencerNote) {
+
+    // Stop and disconnect oscillator nodes of the note.
     if (this.hasOscillator(note)) {
       let oscArr = this.oscillators.get(note.id);
       for (let j = oscArr.length - 1; j >= 0; j--) {
@@ -185,9 +187,43 @@ export class SoundService {
     }
   }
 
-  stop(instrumentId?: number) {
+  /**
+   * Stop all notes.
+   */
+  stop() {
+
+    // Stop the sound.
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      if (typeof instrumentId != 'number' || this.sequencerNoteService.hasInstrumentPrefix(instrumentId, id)) {
+      for (let osc of oscArr) {
+        osc.stop(0);
+        osc.disconnect();
+      }
+      this.oscillators.delete(id);
+    });
+
+    this.notesToStop.clear();
+
+    // Remove notes from playing notes array.
+    // Instrument is not specified: clear all notes.
+    this._playingNotes.splice(0, this._playingNotes.length);
+
+    // Update observable.
+    this.playingNotesSource.next(this._playingNotes);
+  }
+
+  /**
+   * Stop all notes of specified instrument.
+   * @param {number} instrumentId ID of the instrument, which notes should be stopped.
+   */
+  stopInstrument(instrumentId: number) {
+
+    // Stop the sound.
+    this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
+
+      const note = this.sequencerNoteService.getNoteById(id);
+      const instrumentMatch = note && note.instrumentId == instrumentId;
+
+      if (instrumentMatch) {
         for (let osc of oscArr) {
           osc.stop(0);
           osc.disconnect();
@@ -196,17 +232,17 @@ export class SoundService {
       }
     });
 
-    if (typeof instrumentId == 'number') {
-      this.notesToStop.delete(instrumentId);
-      for (let i = this._playingNotes.length - 1; i >= 0; i--) {
-        if (this._playingNotes[i].instrumentId === instrumentId) {
-          this._playingNotes.splice(i, 1);
-        }
+    this.notesToStop.delete(instrumentId);
+
+    // Remove notes from playing notes array.
+    // Instrument is specified.
+    for (let i = this._playingNotes.length - 1; i >= 0; i--) {
+      if (this._playingNotes[i].instrumentId === instrumentId) {
+        this._playingNotes.splice(i, 1);
       }
-    } else {
-      this.notesToStop.clear();
-      this._playingNotes.splice(0, this._playingNotes.length);
     }
+
+    // Update observable.
     this.playingNotesSource.next(this._playingNotes);
   }
 
@@ -373,7 +409,7 @@ export class SoundService {
       instrument.envelope,
       destination,
       function () {
-        this.stop(instrument.id);
+        this.stopInstrument(instrument.id);
       }.bind(this));
   }
 

@@ -22,7 +22,8 @@ let Room = function (id) {
   this.maxUsers = defaults.maxUsers;
   this.notes = defaults.notes;
 
-  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
+  this.lastNoteId = this.notes.reduce((maxId, note) => (note.id > maxId) ? note.id : maxId, 0);
+  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => (ins.id > maxId) ? ins.id : maxId, 0);
 
   };
 
@@ -112,14 +113,25 @@ Room.prototype = {
     return this.users.findIndex(user => user.id === id) >= 0;
   },
 
-  addNote: function (note) {
-    let index = this.instruments.findIndex(n => n.id === note.id);
-    if (index >= 0) this.notes.push(note);
+  /* Note */
+
+  addNote: function (note, id) {
+    if (typeof id !== 'number') {
+      note.id = ++this.lastNoteId;
+    }
+    this.notes.push(note);
+    return note.id;
+  },
+  updateNote: function (note) {
+    this.removeNote(note);
+    this.addNote(note, note.id);
   },
   removeNote: function (note) {
-    let index = this.notes.indexOf(note);
+    let index = this.notes.findIndex(n => n.id === note.id);
     if (index >= 0) this.notes.splice(index, 1);
   },
+
+  /* Instrument */
 
   createInstrument: function () {
     let instrument = Object.assign({}, require('./../defaults/defaults').instrument);

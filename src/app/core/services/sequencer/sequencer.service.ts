@@ -28,7 +28,8 @@ export class SequencerService {
               private soundService: SoundService) {
 
     this.webSocketService.registerHandler(WebSocketMessageType.note_add, this.onNoteReceived.bind(this, 'add'));
-    this.webSocketService.registerHandler(WebSocketMessageType.note_delete, this.onNoteReceived.bind(this, 'remove'));
+    this.webSocketService.registerHandler(WebSocketMessageType.note_update, this.onNoteReceived.bind(this, 'update'));
+    this.webSocketService.registerHandler(WebSocketMessageType.note_delete, this.onNoteReceived.bind(this, 'delete'));
     this.webSocketService.registerHandler(WebSocketMessageType.bpm_changed, this.onBpmChanged.bind(this));
 
     this.soundService.setBpmObservable(this.bpm$.asObservable());
@@ -39,10 +40,16 @@ export class SequencerService {
    * Called when a new note is received from a server.
    */
   private onNoteReceived(type: string, note: SequencerNote) {
-    if (type === 'add') {
-      this.addNote(note, false);
-    } else if (type === 'remove') {
-      this.removeNote(note, false);
+    switch (type) {
+      case 'add':
+        this.addNote(note, false);
+        break;
+      case 'update':
+        this.updateNote(note, false);
+        break;
+      case 'delete':
+        this.removeNote(note, false);
+        break;
     }
   }
 
@@ -55,25 +62,26 @@ export class SequencerService {
 
     // Apply notes received from server
     for (let note of notes) {
-
-      // Restore missing methods
-      let populatedNote = this.sequencerNoteService.getSequencerNote(
-        note.baseNoteId,
-        note.instrumentId,
-        note.isRest,
-        note.duration,
-        note.position,
-        note.id
-      );
-
-      this.addNote(populatedNote, false);
+      this.insertNote(note);
     }
+    this.updateNotesObservable();
 
     this.onBpmChanged(settings.room.bpm);
   }
 
   private insertNote(note: SequencerNote) {
-    this._notes.push(note);
+
+    // Restore missing methods.
+    let populatedNote = this.sequencerNoteService.createSequencerNote(
+      note.id,
+      note.baseNoteId,
+      note.instrumentId,
+      note.isRest,
+      note.duration,
+      note.position
+    );
+
+    this._notes.push(populatedNote);
   }
 
   private deleteNote(note: SequencerNote) {
@@ -92,15 +100,15 @@ export class SequencerService {
           // Take note ID from server
           note.id = id;
           this.insertNote(note);
-          this.notes$.next(this._notes);
+          this.updateNotesObservable();
         });
     } else {
       this.insertNote(note);
-      this.notes$.next(this._notes);
+      this.updateNotesObservable();
     }
   }
 
-  updateNote(note: SequencerNote) {
+  updateNote(note: SequencerNote, broadcast = true) {
     if (note == null) return;
 
     if (this.hasNote(note)) {
@@ -108,16 +116,18 @@ export class SequencerService {
     }
 
     this.insertNote(note);
-    this.notes$.next(this._notes);
+    this.updateNotesObservable();
 
-    this.webSocketService.send(WebSocketMessageType.note_update, note);
+    if (broadcast) {
+      this.webSocketService.send(WebSocketMessageType.note_update, note);
+    }
   }
 
   removeNote(note: SequencerNote, broadcast = true) {
     if (note == null || !this.hasNote(note)) return;
 
     this.deleteNote(note);
-    this.notes$.next(this._notes);
+    this.updateNotesObservable();
 
     if (broadcast) {
       this.webSocketService.send(WebSocketMessageType.note_delete, note);
@@ -142,5 +152,10 @@ export class SequencerService {
   hideNoteSettings() {
     this.noteSettingsState.isShown = false;
     this.noteSettingsStateSource.next(this.noteSettingsState);
+  }
+
+  private updateNotesObservable() {
+    this.notes$.next(this._notes);
+    this.sequencerNoteService.setNotes(this._notes);
   }
 }

@@ -146,8 +146,8 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
     this.sequencerService.addNote(note);
   }
 
-  getSequencerNote(svgId: string): SequencerNote {
-    return this.sequencerNoteService.getNoteById(svgId);
+  getSequencerNote(id: string): SequencerNote {
+    return this.sequencerNoteService.getNoteById(parseInt(id));
   }
 
   /* Note settings */
@@ -156,7 +156,7 @@ export class SequencerComponent implements OnInit, AfterViewInit, AfterViewCheck
 
     let mouseLoc = new Point();
     mouseLoc.x  = e.clientX + 20;
-    mouseLoc.y  = e.clientY - 30;
+    mouseLoc.y  = e.clientY - 70;
 
     this.sequencerService.showNoteSettings(note, mouseLoc);
   }

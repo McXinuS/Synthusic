@@ -60,8 +60,6 @@ export class RoomService {
   }
 
   changeUserName(name: string) {
-    // TODO: weird construction, may be 'Object.assign({}, this._currentUser, {name})' is better?
-    // this._currentUser.name = name;
     let user = {...this._currentUser, name};
     this.webSocketService.send(WebSocketMessageType.user_update, user);
   }

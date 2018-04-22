@@ -18,7 +18,7 @@ input:focus {
   color            : #333;
 }
 
-.input-dots {
-  width         : 100%;
-  border-bottom : 1px dotted black;
+.underline {
+  text-decoration       : underline;
+  text-decoration-style : dotted;
 }

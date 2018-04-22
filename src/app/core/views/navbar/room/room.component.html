@@ -123,7 +123,7 @@
             [max]="32"
             [type]="'number'"
             [integer]="true"
-            [dotted]="true"
+            [underline]="true"
             [ngModel]="(room$ | async)?.maxUsers"
             (ngModelChange)="onMaxUsersChanged($event)">
           </app-input-semitransparent>

@@ -75,13 +75,14 @@ li .sender {
   display         : flex;
   width           : 200px;
   padding         : 5px;
+  margin          : 0 auto;
   justify-content : space-around;
   align-items     : center;
 }
 
 .user-count app-input-semitransparent {
   width    : 36px;
-  top      : 1px;
+  top      : -1px;
   position : relative;
 }
 

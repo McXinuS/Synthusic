@@ -3,7 +3,8 @@ import {Instrument} from "./instrument.model";
 import {SequencerNote} from "./sequencer-note.model";
 
 export class Room {
-  constructor(public bpm: number,
+  constructor(public id: number,
+              public bpm: number,
               public name: string,
               public users: User[],
               public maxUsers: number,

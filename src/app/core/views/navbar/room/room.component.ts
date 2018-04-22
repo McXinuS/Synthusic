@@ -9,14 +9,16 @@ import {User} from '@shared-global/models';
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
-  styleUrls: ['./room.component.css']
+  styleUrls: ['./room.component.css', '../navbar.theme.css']
 })
 export class RoomComponent implements OnInit, AfterViewChecked {
 
-  room$: Observable<Room>;
+  rooms$: Observable<Room[]>;
+  isRoomsLoading: boolean = true;
 
   roomUsers$: Observable<User[]>;
 
+  room$: Observable<Room>;
   room: Room;
   roomName: string;
   roomNameChanged: boolean = false;
@@ -29,7 +31,6 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   isChatEmpty: boolean = true;
   @ViewChild('messages') private chatContainer: ElementRef;
   chatStickToBottom: boolean = true;
-
   myMessage: string;
 
   constructor(private roomService: RoomService) {
@@ -54,6 +55,10 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     });
 
     this.room$ = this.roomService.room$;
+
+    this.rooms$ = this.roomService.getRooms();
+    this.rooms$.subscribe(null, null, () => this.isRoomsLoading = false);
+
     this.roomUsers$ = this.roomService.users$;
   }
 
@@ -76,6 +81,8 @@ export class RoomComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  // Scroll chat window when new messages are received
+  // if the window is scrolled down to the end.
   onChatScroll() {
     let curPos = this.chatContainer.nativeElement.scrollTop;
     let topPos = this.chatContainer.nativeElement.scrollHeight - this.chatContainer.nativeElement.clientHeight;
@@ -99,6 +106,14 @@ export class RoomComponent implements OnInit, AfterViewChecked {
   resetUsername() {
     this.userName = this.currentUser.name;
     this.userNameChanged = false;
+  }
+
+  enterRoom(room: Room) {
+    this.roomService.enterRoom(room.id);
+  }
+
+  leaveRoom() {
+    this.roomService.leaveRoom();
   }
 
   changeRoomName() {

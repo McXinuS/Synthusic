@@ -9,41 +9,48 @@ let RoomService = function () {
 
   let lastRoomId = 0;
 
+
+  /**
+   * [internal] Add user to the room.
+   */
+  function addUserToRoom(userId, room) {
+    if (!room || room.isLocked || (room.getUserCount() >= room.maxUsers)) {
+      return false;
+    }
+
+    room.addUser(userId);
+    return true;
+  }
+
+  /**
+   * Add user to room by their IDs.
+   */
+  function addUser(userId, roomId) {
+    let room = rooms.find(room => room.id === roomId);
+    return addUserToRoom(userId, room);
+  }
+
   function createRoom() {
     return new rm.Room(lastRoomId++);
   }
 
-  function addUser(id) {
-
-    let freeRoom;
-
-    // Find a room from existing
-    for (let room of rooms) {
-      if (!room.isLocked && room.getUserCount() < room.maxUsers) {
-        freeRoom = room;
-        break;
-      }
+  function addUserToNewRoom(userId) {
+    if (rooms.length >= MAX_ROOMS) {
+      console.log('Unable to open a new room: too many rooms are opened.');
+      return false;
     }
 
-    // Create a new room if no free room was found
-    if (!freeRoom) {
-      if (rooms.length >= MAX_ROOMS) {
-        console.log('Unable to open a new room: too many rooms are opened.');
-      } else {
-        console.log('All room are full, creating a new room.');
-        freeRoom = createRoom();
-        rooms.push(freeRoom);
-      }
-    }
+    let room = createRoom();
+    rooms.push(room);
 
-    if (freeRoom) {
-      freeRoom.addUser(id);
-      return freeRoom.id;
-    } else {
-      console.log(`Cannot assign user ${id}: all rooms are full.`);
+    let addRes = addUserToRoom(userId, room);
+    if (!addRes) {
+      console.log('Cannot assign user ' + userId);
     }
-
+    return addRes;
   }
+
+
 
   function updateUser(id) {
     let room = getRoomByUser(id);
@@ -60,13 +67,22 @@ let RoomService = function () {
     //}
   }
 
+  function getRooms() {
+    return rooms.map(room => {
+      return {
+        id: room.id,
+        name: room.name,
+        users: room.getUsers()
+      }
+    });
+  }
+
   function getRoomByUser(userId) {
     for (let room of rooms) {
       if (room.hasUser(userId)) {
         return room;
       }
     }
-    throw new Error('There is no room assigned with user id ' + userId);
   }
 
   function getRoomUsersByUser(userId) {
@@ -84,11 +100,14 @@ let RoomService = function () {
   /* API */
 
   this.addUser = addUser;
+  this.addUserToNewRoom = addUserToNewRoom;
   this.updateUser = updateUser;
   this.removeUser = removeUser;
 
+  this.getRooms = getRooms;
   this.getRoomByUser = getRoomByUser;
   this.getRoomUsersByUser = getRoomUsersByUser;
+
   /**
    * Returns all room data.
    */

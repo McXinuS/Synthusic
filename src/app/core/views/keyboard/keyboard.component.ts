@@ -3,8 +3,9 @@ import {
   ViewChild
 } from '@angular/core';
 import {BaseNote, Instrument, SequencerNote} from '@core/models';
-import {NoteService, SoundService, InstrumentService, SequencerNoteService} from '@core/services';
+import {NoteService, SoundService, InstrumentService, SequencerNoteService, WebSocketService} from '@core/services';
 import {KeyChangeMode} from './key';
+import {WebSocketMessageType} from '@shared-global/web-socket-message-types';
 
 @Component({
   selector: 'app-keyboard',
@@ -34,6 +35,7 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
               private soundService: SoundService,
               private sequencerNoteService: SequencerNoteService,
               private instrumentService: InstrumentService,
+              private webSocketService: WebSocketService,
               private zone: NgZone) {
   }
 
@@ -43,6 +45,8 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
     this.soundService.playingNotes$.subscribe(notes => this.onPlayingNotesUpdated(notes));
 
     this.instrumentService.instruments$.subscribe(instruments => this.onInstrumentsUpdated(instruments));
+
+    this.webSocketService.registerHandler(WebSocketMessageType.enter_room, this.onRoomChanged.bind(this));
   }
 
   /**
@@ -91,6 +95,10 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
   onInstrumentChange(instrument: Instrument) {
     this.activeInstrument = instrument;
     this.updateHighlight();
+  }
+
+  onRoomChanged() {
+    this.activeInstrument = null;
   }
 
   onKeyStateUpdated(e) {

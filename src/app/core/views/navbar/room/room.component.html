@@ -1,13 +1,37 @@
 <div class="wrapper">
-  
+
   <div class="row">
-    
-    
+
+
+    <!-- Room list -->
+
+
+    <div class="box-room-list col-sm-2">
+
+      <h1 *ngIf="isRoomsLoading" class="center">Loading...</h1>
+
+      <h4 class="center-hor">Room list</h4>
+
+      <ul *ngIf="!isRoomsLoading">
+        <li *ngFor="let room of (rooms$ | async)"
+        (click)="enterRoom(room)">
+          {{room.name}}
+        </li>
+      </ul>
+
+      <div class="room-actions">
+        <div class="btn" (click)="leaveRoom()">Leave room</div>
+      </div>
+
+    </div>
+
+
     <!-- Chat -->
-    
-    
-    <div class="box-chat col-sm-10">
-      
+
+
+
+    <div class="box-chat col-sm-8">
+
       <div #messages class="box-messages" (scroll)="onChatScroll()">
         <h1 *ngIf="isChatEmpty" class="center">
           No messages yet. Be the first to chat!
@@ -18,13 +42,13 @@
           </li>
         </ul>
       </div>
-      
+
       <form (ngSubmit)="sendMessage()">
-        
+
         <div class="box-form button-group">
-          
+
           <label hidden for="messageText">Your message</label>
-          
+
           <app-input-semitransparent
             id="messageText"
             class="navbar-theme"
@@ -36,7 +60,7 @@
             [(ngModel)]="myMessage"
             [ngModelOptions]="{standalone: true}">
           </app-input-semitransparent>
-          
+
           <div class="buttons" [class.btn-shown]="!!myMessage">
             <button type="submit" class="btn-square animation-delay-0">
               <span class="glyphicon glyphicon-send"></span>
@@ -45,25 +69,25 @@
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </div>
-        
+
         </div>
-      
+
       </form>
-    
+
     </div>
-    
-    
+
+
     <!-- Room info -->
-    
-    
+
+
     <div class="box-users col-sm-2">
-      
+
       <div>
-        
+
         <form (ngSubmit)="changeRoomName()">
-          
+
           <div class="room-name box-form button-group">
-            
+
             <app-input-semitransparent
               id="roomName"
               class="navbar-theme"
@@ -77,7 +101,7 @@
               (ngModelChange)="roomNameChanged=true"
               [ngModelOptions]="{standalone: true}">
             </app-input-semitransparent>
-            
+
             <div class="buttons" [class.btn-shown]="roomNameChanged">
               <button type="submit" class="btn-square animation-delay-0">
                 <span class="glyphicon glyphicon-ok"></span>
@@ -86,11 +110,11 @@
                 <span class="glyphicon glyphicon-remove"></span>
               </button>
             </div>
-          
+
           </div>
-        
+
         </form>
-        
+
         <div class="user-count">
           <span>Users: </span>
           <span>{{(roomUsers$ | async)?.length}} / </span>
@@ -103,40 +127,40 @@
             [ngModel]="(room$ | async)?.maxUsers"
             (ngModelChange)="onMaxUsersChanged($event)">
           </app-input-semitransparent>
-          
+
           <div class="room-lock">
-            
+
             <div *ngIf="(room$ | async)?.isLocked"
                  class="btn-square"
                  title="Unlock room to let other people enter."
                  (click)="onRoomLockChanged(false)">
               <span class="glyphicon glyphicon-lock"></span>
             </div>
-            
+
             <div *ngIf="!((room$ | async)?.isLocked)"
                  class="btn-square"
                  title="Lock room to forbid people enter the room."
                  (click)="onRoomLockChanged(true)">
               <span class="glyphicon glyphicon-folder-open"></span>
             </div>
-          
+
           </div>
         </div>
-      
+
       </div>
-      
+
       <ul>
         <li *ngFor="let user of (roomUsers$ | async)">
           {{user.name}}
         </li>
       </ul>
-      
+
       <form (ngSubmit)="changeUserName()">
-        
+
         <label for="userName" class="center-hor">Your username</label>
-        
+
         <div class="box-form button-group">
-          
+
           <app-input-semitransparent
             id="userName"
             class="navbar-theme"
@@ -149,7 +173,7 @@
             (ngModelChange)="userNameChanged=true"
             [ngModelOptions]="{standalone: true}">
           </app-input-semitransparent>
-          
+
           <div class="buttons" [class.btn-shown]="userNameChanged">
             <button type="submit" class="btn-square animation-delay-0">
               <span class="glyphicon glyphicon-ok"></span>
@@ -158,14 +182,14 @@
               <span class="glyphicon glyphicon-remove"></span>
             </button>
           </div>
-        
+
         </div>
-      
+
       </form>
-    
+
     </div>
-  
-  
+
+
   </div>
 
 </div>

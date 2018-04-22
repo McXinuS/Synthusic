@@ -7,13 +7,53 @@ li {
   padding    : 4px 0;
 }
 
+.row {
+  height : 100%;
+}
+
 .wrapper {
+  min-height : 370px;
+  height     : 30vh;
   border     : 1px solid hsla(0, 0%, 50%, 1);
   background : hsla(0, 0%, 32%, 0.7);
 }
 
+/* Room list */
+
+.box-room-list {
+  display         : flex;
+  flex-direction  : column;
+  justify-content : space-between;
+  overflow-y      : auto;
+  overflow-x      : hidden;
+}
+
+.box-room-list h4 {
+  margin           : 0;
+  height           : 40px;
+  padding          : 10px;
+  background-color : #535353;
+}
+
+.box-room-list ul {
+  padding  : 0;
+  overflow : auto;
+}
+
+.box-room-list li {
+  cursor  : pointer;
+  padding : 8px;
+}
+
+.box-room-list li:hover {
+  background-color : rgba(0, 0, 0, 0.1);
+  transition       : .1s;
+}
+
+/* Chat */
+
 .box-messages {
-  height     : 340px;
+  height     : calc(100% - 30px);
   overflow-y : auto;
   background : rgba(85, 85, 85, 0.85);
 }
@@ -56,6 +96,8 @@ li .sender {
   left : -1px;
 }
 
+/* Users */
+
 .box-users {
   display         : flex;
   flex-direction  : column;
@@ -91,8 +133,12 @@ li .sender {
 }
 
 .box-users ul {
-  padding : 0;
-  margin  : 5px auto;
+  max-height : calc(100% - 45px - 30px);
+  padding    : 0;
+  text-align : center;
+  font-size  : 1.2em;
+  overflow-y : auto;
+  overflow-x : hidden;
 }
 
 .buttons > .btn-square {
@@ -123,14 +169,21 @@ li .sender {
   animation-delay : 75ms;
 }
 
+/* Non mobile */
+
 @media (min-width : 768px) {
   .wrapper .row {
     display : flex;
   }
 
-  .box-chat {
+  .box-room-list {
     padding-right : 0;
     border-right  : 1px solid hsla(0, 0%, 50%, 1);
+  }
+
+  .box-chat {
+    padding      : 0;
+    border-right : 1px solid hsla(0, 0%, 50%, 1);
   }
 
   .box-users {

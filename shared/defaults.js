@@ -1,4 +1,6 @@
-
+/**
+ * Room default settings.
+ */
 
 module.exports = {
   bpm: 60,

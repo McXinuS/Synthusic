@@ -11,6 +11,9 @@ function getRandomName() {
 let Room = function (id) {
 
   let defaults = require('./../../shared/defaults');
+  // Deep clone default settings object to prevent changes sharing between rooms.
+  // Method is expensive but called not too often.
+  defaults = JSON.parse(JSON.stringify(defaults));
 
   this.id = id;
   this.name = 'Room #' + (id + 1);
@@ -39,6 +42,7 @@ Room.prototype = {
    */
   getRoomInfo: function () {
     return {
+      id: this.id,
       name: this.name,
       users: this.users.slice(),
       maxUsers: this.maxUsers,

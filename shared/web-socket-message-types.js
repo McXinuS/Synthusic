@@ -16,7 +16,11 @@ var WebSocketMessageType;
     WebSocketMessageType[WebSocketMessageType["user_update"] = 25] = "user_update";
     WebSocketMessageType[WebSocketMessageType["bpm_changed"] = 26] = "bpm_changed";
     WebSocketMessageType[WebSocketMessageType["chat_new_message"] = 27] = "chat_new_message";
+    WebSocketMessageType[WebSocketMessageType["enter_room"] = 28] = "enter_room";
+    WebSocketMessageType[WebSocketMessageType["enter_new_room"] = 29] = "enter_new_room";
+    WebSocketMessageType[WebSocketMessageType["leave_room"] = 30] = "leave_room";
     WebSocketMessageType[WebSocketMessageType["get_state"] = 90] = "get_state";
+    WebSocketMessageType[WebSocketMessageType["get_available_rooms"] = 91] = "get_available_rooms";
     // keep connection alive
     WebSocketMessageType[WebSocketMessageType["ping"] = 100] = "ping";
     WebSocketMessageType[WebSocketMessageType["pong"] = 101] = "pong";

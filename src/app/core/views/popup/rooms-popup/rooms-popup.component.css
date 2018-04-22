@@ -1,0 +1,40 @@
+.new-room-label {
+  border-bottom : 1px dotted black;
+  cursor        : pointer;
+}
+
+.new-room-div {
+  position : relative;
+  top      : 20px;
+}
+
+ul {
+  padding          : 0;
+  margin           : 0;
+  max-height       : 40vh;
+  overflow         : auto;
+  background-color : rgba(0, 0, 0, 0.01);
+  border           : 1px solid hsla(208, 100%, 94%, 1);
+
+}
+
+li {
+  padding         : 6px;
+  cursor          : pointer;
+  list-style-type : none;
+}
+
+li:hover {
+  background-color : rgba(13, 13, 13, 0.05);
+}
+
+.user-count {
+  color : #b3b3b3;
+}
+
+h2 {
+  margin      : 0 0 25px 0;
+  color       : white;
+  line-height : 1;
+  text-shadow : #333 0 0 1px, #333 0 0 1px, #333 0 0 1px, #333 0 0 1px;
+}

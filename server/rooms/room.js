@@ -61,7 +61,7 @@ Room.prototype = {
 
   setRoomLock: function (lock) {
     if (typeof lock !== 'boolean') {
-      console.log('Room locking error: wrong type ' + typeof lock);
+      this.log('Room locking error: wrong type ' + typeof lock);
     }
     this.isLocked = lock;
   },
@@ -123,12 +123,16 @@ Room.prototype = {
     return note.id;
   },
   updateNote: function (note) {
-    this.removeNote(note);
+    this.removeNote(note.id);
     this.addNote(note, note.id);
   },
-  removeNote: function (note) {
-    let index = this.notes.findIndex(n => n.id === note.id);
-    if (index >= 0) this.notes.splice(index, 1);
+  removeNote: function (id) {
+    let index = this.notes.findIndex(n => n.id === id);
+    if (index >= 0) {
+      this.notes.splice(index, 1);
+    } else {
+      this.log(`Unable to remove note: No such note with id ${id} is found.`);
+    }
   },
 
   /* Instrument */
@@ -146,6 +150,12 @@ Room.prototype = {
   deleteInstrument: function (id) {
     let index = this.instruments.findIndex(ins => ins.id === id);
     if (index >= 0) this.instruments.splice(index, 1);
+  },
+
+
+
+  log: function(msg) {
+    console.log(`Room '${this.name}' (id${this.id}): ${msg}`);
   }
 };
 

@@ -39,16 +39,16 @@ export class SequencerService {
   /**
    * Called when a new note is received from a server.
    */
-  private onNoteReceived(type: string, note: SequencerNote) {
+  private onNoteReceived(type: string, note: SequencerNote | number) {
     switch (type) {
       case 'add':
-        this.addNote(note, false);
+        this.addNote(<SequencerNote>note, false);
         break;
       case 'update':
-        this.updateNote(note, false);
+        this.updateNote(<SequencerNote>note, false);
         break;
       case 'delete':
-        this.removeNote(note, false);
+        this.removeNote(<number>note, false);
         break;
     }
   }
@@ -84,8 +84,8 @@ export class SequencerService {
     this._notes.push(populatedNote);
   }
 
-  private deleteNote(note: SequencerNote) {
-    let index = this._notes.findIndex(ns => ns.id === note.id);
+  private deleteNote(id: number) {
+    let index = this._notes.findIndex(ns => ns.id === id);
     if (index >= 0) {
       this._notes.splice(index, 1);
     }
@@ -112,7 +112,7 @@ export class SequencerService {
     if (note == null) return;
 
     if (this.hasNote(note)) {
-      this.deleteNote(note);
+      this.deleteNote(note.id);
     }
 
     this.insertNote(note);
@@ -123,14 +123,14 @@ export class SequencerService {
     }
   }
 
-  removeNote(note: SequencerNote, broadcast = true) {
-    if (note == null || !this.hasNote(note)) return;
+  removeNote(id: number, broadcast = true) {
+    if (id == null) return;
 
-    this.deleteNote(note);
+    this.deleteNote(id);
     this.updateNotesObservable();
 
     if (broadcast) {
-      this.webSocketService.send(WebSocketMessageType.note_delete, note);
+      this.webSocketService.send(WebSocketMessageType.note_delete, id);
     }
   }
 

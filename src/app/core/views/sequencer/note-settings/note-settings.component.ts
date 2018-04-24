@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {BaseNote, Instrument, SequencerNoteSettingsState} from "@core/models";
 import {InstrumentService, NoteService, SequencerService} from "@core/services";
 import {Observable} from "rxjs/Observable";
@@ -49,21 +49,38 @@ export class NoteSettingsComponent implements OnInit {
     });
   }
 
+  private getNote(): SequencerNote {
+
+    const formValue = this.form.value;
+
+    // Convert number string values to integer.
+    const parsedValue = {
+      id: parseInt(formValue.id),
+      baseNoteId: parseInt(formValue.baseNoteId),
+      instrumentId: parseInt(formValue.instrumentId),
+      duration: {
+        baseDuration: parseInt(formValue.duration.baseDuration)
+      },
+      position: {
+        bar: parseInt(formValue.position.bar),
+        offset: parseInt(formValue.position.offset)
+      }
+    };
+
+    return {...formValue, ...parsedValue};
+  }
+
   onSubmit() {
     if (this.form.valid) {
-
-      const formValue = this.form.value;
-      let note: SequencerNote = formValue;
-
-      note.id = parseInt(formValue.id);
-      note.baseNoteId = parseInt(formValue.baseNoteId);
-      note.instrumentId = parseInt(formValue.instrumentId);
-      note.duration.baseDuration = parseInt(formValue.duration.baseDuration);
-      note.position.bar = parseInt(formValue.position.bar);
-      note.position.offset = parseInt(formValue.position.offset);
-      
+      let note = this.getNote();
       this.sequencerService.updateNote(note);
     }
+  }
+
+  remove() {
+    let note = this.getNote();
+    this.sequencerService.removeNote(note.id);
+    this.close();
   }
 
   close() {

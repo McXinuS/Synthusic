@@ -68,13 +68,7 @@ let RoomService = function () {
   }
 
   function getRooms() {
-    return rooms.map(room => {
-      return {
-        id: room.id,
-        name: room.name,
-        users: room.getUsers()
-      }
-    });
+    return rooms.map(room => room.getRoomInfo());
   }
 
   function getRoomByUser(userId) {

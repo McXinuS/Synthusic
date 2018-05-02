@@ -1,26 +1,25 @@
-export class SequencerNote {
-  readonly id: number;
-  readonly baseNoteId: number;
-  readonly duration: NoteDuration;
-  readonly position: NotePosition;
-  readonly instrumentId: number;
+export class SequencerNote{
 
-  constructor(id: number, baseNoteId: number, instrumentId: number, duration: NoteDuration, position: NotePosition) {
-    this.id = id;
-    this.baseNoteId = baseNoteId;
-    this.instrumentId = instrumentId;
-    this.duration = duration;
-    this.position = position;
+  constructor(public id: number,
+              public baseNoteId: number,
+              public instrumentId: number,
+              public isRest: boolean,
+              public duration: NoteDuration,
+              public position: NotePosition) {
+  }
+
+  getHash(): string {
+    return this.baseNoteId + '-' +
+      this.instrumentId + '-' +
+      (this.isRest ? 1 : 0) + '-' +
+      this.duration.getHash() + '-' +
+      this.position.getHash();
   }
 
   isEqual(note: SequencerNote): boolean {
     return this.id === note.id;
   }
 }
-
-const InfiniteNoteHash = 0x11111;
-const DottedShift = 0x10000;
-const TripletShift = 0x01000;
 
 export enum NoteDurationEnum {
   Infinite = -1,
@@ -32,15 +31,16 @@ export enum NoteDurationEnum {
   ThirtySecond = Sixteenth * 2
 }
 
-export class NoteDuration {
-  baseDuration: NoteDurationEnum;
-  dotted: boolean;
-  triplet: boolean;
+const BaseDurationMask = 0b00111;
+const DotMask = 0b10000;
+const TripletMask = 0b01000;
+const InfiniteNoteHash = 0b11111;
 
-  constructor(baseDuration: NoteDurationEnum, dotted?: boolean, triplet?: boolean) {
-    this.baseDuration = baseDuration;
-    this.dotted = dotted || false;
-    this.triplet = triplet || false;
+export class NoteDuration {
+
+  constructor(public baseDuration: NoteDurationEnum,
+              public dotted: boolean = false,
+              public triplet: boolean = false) {
   }
 
   isInfinite(): boolean {
@@ -48,28 +48,40 @@ export class NoteDuration {
   }
 
   getHash(): number {
-    if (this.baseDuration == NoteDurationEnum.Infinite) return InfiniteNoteHash;
+    if (this.baseDuration === NoteDurationEnum.Infinite) return InfiniteNoteHash;
 
     let res = Math.log2(this.baseDuration);
-    if (this.dotted) res |= DottedShift;
-    if (this.triplet) res |= TripletShift;
+    if (this.dotted) res |= DotMask;
+    if (this.triplet) res |= TripletMask;
     return res;
+  }
+
+  static fromHash(hash: number): NoteDuration {
+    if (hash === InfiniteNoteHash) {
+      return new NoteDuration(NoteDurationEnum.Infinite, false, false);
+    }
+
+    let duration = (hash & BaseDurationMask) ** 2,
+      dotted = !!(hash & DotMask),
+      triplet = !!(hash & TripletMask);
+    return new NoteDuration(duration, dotted, triplet);
   }
 }
 
 const BarMax = 1000;
 
 export class NotePosition {
-  bar: number;
-  offset: number;
 
-  constructor(bar: number, offset: number) {
-    this.bar = bar;
-    this.offset = offset;
+  constructor(public bar: number,
+              public offset: number) {
   }
 
   getHash(): number {
     return this.offset * BarMax + this.bar;
+  }
+
+  static fromHash(hash: number): NotePosition {
+    return new NotePosition(hash % BarMax, Math.floor(hash / BarMax));
   }
 
   isEqual(notePosition: NotePosition): boolean {

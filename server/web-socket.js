@@ -212,7 +212,12 @@ function Server(server) {
       // Note
 
       case WebSocketMessageType.note_add:
-        room.addNote(message.data);
+        let noteId = room.addNote(message.data);
+        broadcastToUserRoom(message, sender);
+        send({type: WebSocketMessageType.note_add, data: noteId});
+        return true;
+      case WebSocketMessageType.note_update:
+        room.updateNote(message.data);
         broadcastToUserRoom(message, sender);
         return true;
       case WebSocketMessageType.note_delete:

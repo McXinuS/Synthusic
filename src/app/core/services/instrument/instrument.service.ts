@@ -74,7 +74,7 @@ export class InstrumentService {
   private onInstrumentDeleted(id: number) {
     let index = this.getInstrumentIndex(id);
     if (index >= 0) {
-      this.soundService.stop(id);
+      this.soundService.stopInstrument(id);
       this._instruments.splice(index, 1);
       this.instrumentsSource.next(this._instruments);
     }

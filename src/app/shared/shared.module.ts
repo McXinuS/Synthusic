@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import { UTILITIES } from './utilities'
-import { SHARED_COMPONENTS } from './components'
+import { SHARED_COMPONENTS } from './components';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
   ],
   declarations: [
@@ -18,6 +19,7 @@ import { SHARED_COMPONENTS } from './components'
   exports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     ...UTILITIES,
     ...SHARED_COMPONENTS

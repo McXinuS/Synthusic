@@ -25,7 +25,8 @@ let Room = function (id) {
   this.maxUsers = defaults.maxUsers;
   this.notes = defaults.notes;
 
-  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => ins.id > maxId ? ins.id : maxId, 0);
+  this.lastNoteId = this.notes.reduce((maxId, note) => (note.id > maxId) ? note.id : maxId, 0);
+  this.lastInstrumentId = this.instruments.reduce((maxId, ins) => (ins.id > maxId) ? ins.id : maxId, 0);
 
   };
 
@@ -64,7 +65,7 @@ Room.prototype = {
 
   setRoomLock: function (lock) {
     if (typeof lock !== 'boolean') {
-      console.log('Room locking error: wrong type ' + typeof lock);
+      this.log('Room locking error: wrong type ' + typeof lock);
     }
     this.isLocked = lock;
   },
@@ -116,14 +117,29 @@ Room.prototype = {
     return this.users.findIndex(user => user.id === id) >= 0;
   },
 
-  addNote: function (note) {
-    let index = this.instruments.findIndex(n => n.id === note.id);
-    if (index >= 0) this.notes.push(note);
+  /* Note */
+
+  addNote: function (note, id) {
+    if (typeof id !== 'number') {
+      note.id = ++this.lastNoteId;
+    }
+    this.notes.push(note);
+    return note.id;
   },
-  removeNote: function (note) {
-    let index = this.notes.indexOf(note);
-    if (index >= 0) this.notes.splice(index, 1);
+  updateNote: function (note) {
+    this.removeNote(note.id);
+    this.addNote(note, note.id);
   },
+  removeNote: function (id) {
+    let index = this.notes.findIndex(n => n.id === id);
+    if (index >= 0) {
+      this.notes.splice(index, 1);
+    } else {
+      this.log(`Unable to remove note: No such note with id ${id} is found.`);
+    }
+  },
+
+  /* Instrument */
 
   createInstrument: function () {
     let instrument = Object.assign({}, require('./../defaults/defaults').instrument);
@@ -138,6 +154,12 @@ Room.prototype = {
   deleteInstrument: function (id) {
     let index = this.instruments.findIndex(ins => ins.id === id);
     if (index >= 0) this.instruments.splice(index, 1);
+  },
+
+
+
+  log: function(msg) {
+    console.log(`Room '${this.name}' (id${this.id}): ${msg}`);
   }
 };
 

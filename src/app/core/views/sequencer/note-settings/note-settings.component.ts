@@ -74,6 +74,7 @@ export class NoteSettingsComponent implements OnInit {
     if (this.form.valid) {
       let note = this.getNote();
       this.sequencerService.updateNote(note);
+      this.close();
     }
   }
 

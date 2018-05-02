@@ -22,6 +22,7 @@
   background      : linear-gradient(123deg, hsla(228, 40%, 20%, 0.8), hsla(208, 40%, 20%, 0.8), hsla(180, 40%, 20%, 0.8));
   background-size : 600% 600%;
   animation       : startOverlayAnimation 15s ease infinite;
+  color           : white;
 }
 
 .popup {

@@ -1,6 +1,20 @@
+:host {
+  position : relative;
+  z-index  : 10;
+}
+
 .wrapper {
   padding          : 15px;
   border           : 1px solid black;
   border-radius    : 5px;
-  background-color : rgba(255, 255, 255, 0.80);
+  background-color : rgba(255, 255, 255, 0.95);
+}
+
+select {
+  display       : block;
+  margin-bottom : 4px;
+}
+
+.controls {
+  margin-top : 18px;
 }

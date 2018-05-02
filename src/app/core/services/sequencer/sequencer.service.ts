@@ -60,6 +60,8 @@ export class SequencerService {
   init(settings: Settings) {
     let notes = settings.room.notes;
 
+    this._notes = [];
+
     // Apply notes received from server
     for (let note of notes) {
       this.insertNote(note);

@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, NgZone, OnInit,
+  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit,
   ViewChild
 } from '@angular/core';
 import {BaseNote, Instrument, SequencerNote} from '@core/models';
@@ -36,7 +36,7 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
               private sequencerNoteService: SequencerNoteService,
               private instrumentService: InstrumentService,
               private webSocketService: WebSocketService,
-              private zone: NgZone) {
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
@@ -53,16 +53,12 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
    * Pass keyboard scroll width to keyboard-up component.
    */
   ngAfterViewChecked() {
+    // TODO: read more about change detection; is there a way to not produce change detection error?
     let newWidth = this.keyboardKeys.nativeElement.scrollWidth;
-
     if (this.keyboardWidth !== newWidth) {
-
-      // Not possible to use direct assign as Angular
-      //  throws 'Expression has changed after checking...' error.
-      // We don't want Angular to loop change detection over and over
-      //  so use NgZone instead of setTimeout.
-      this.zone.runOutsideAngular(() => {
+      setTimeout(() => {
         this.keyboardWidth = newWidth;
+        this.changeDetectorRef.markForCheck();
       });
     }
   }

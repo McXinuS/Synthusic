@@ -13,6 +13,7 @@ export class NavbarService {
   currentUser$: Observable<User>;
 
   private tabVisibility: Map<string, boolean> = new Map();
+
   private anyTabVisibleSource: Subject<boolean> = new Subject<boolean>();
   anyTabVisible$: Observable<boolean> = this.anyTabVisibleSource.asObservable();
 
@@ -28,13 +29,17 @@ export class NavbarService {
    * @param {string} tab Selected tab.
    */
   showNav(tab: string) {
-    let visState = this.tabVisibility.get(tab),
-      newVisState = !visState;
+    let newVisState = !this.tabVisibility.get(tab);
 
     this.tabVisibility.clear();
     this.tabVisibility.set(tab, newVisState);
 
     this.anyTabVisibleSource.next(newVisState);
+  }
+
+  hideAll() {
+    this.tabVisibility.clear();
+    this.anyTabVisibleSource.next(false);
   }
 
   isVisible(tab: string): boolean {

@@ -60,4 +60,8 @@ export class NavbarComponent implements OnInit {
   reloadPage() {
     location.reload();
   }
+
+  onClickOutside() {
+    this.navbarService.hideAll();
+  }
 }

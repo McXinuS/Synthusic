@@ -14,6 +14,8 @@ export class SoundPlayer {
 
   private bpm: number;
 
+  private playerTimeout: number;
+
   private playing: SequencerNote[] = [];
   private readonly playingSource: Subject<SequencerNote[]> = new Subject<SequencerNote[]>();
   /**
@@ -23,8 +25,6 @@ export class SoundPlayer {
 
   // Notes are divided by instrument
   private notes: SequencerNote[] = [];
-  // Notes that will be played next. A little optimization to reduce play lag when changing note array
-  private nextNotes: SequencerNote[];
 
   isPaused: boolean;
 
@@ -47,15 +47,12 @@ export class SoundPlayer {
     this.currentPosition = new NotePosition(0, 0);
     this.isPaused = true;
 
-    this.nextNotes = [];
-
-    this.playing = [];
-    this.playingSource.next(this.playing);
+    this.stopAllNotes();
+    this.updatePlayingObservable([]);
   }
 
   play() {
     this.isPaused = false;
-    this.prepareNextNotes();
     this.playNext();
   }
 
@@ -70,34 +67,50 @@ export class SoundPlayer {
     this.reset();
   }
 
+  isPlaying(note: SequencerNote) {
+    return this.playing.find(n => n.id === note.id);
+  }
+
+  /**
+   * Start playing notes next to currently playing.
+   */
   private playNext() {
+
+    if (this.playerTimeout) {
+      clearTimeout(this.playerTimeout);
+    }
+
     if (this.isPaused) return;
 
+    // Stop currently playing notes before staring the next ones.
+    this.stopAllNotes();
+
+    const nextNotes: Array<SequencerNote> = this.getNextNotes();
+
     // Stop if no more notes left
-    if (this.nextNotes.length == 0) {
+    if (nextNotes.length == 0) {
       this.stop();
       return;
     }
 
-    for (let note of this.nextNotes) {
+    // Play the notes.
+    for (let note of nextNotes) {
       this.playNote(note);
     }
 
-    // Update observable
-    this.playing = this.nextNotes;
-    this.playingSource.next(this.playing);
-
     this.currentPosition = this.getNextPosition();
-    this.nextNotes = this.getNotesByPosition(this.currentPosition);
+
+    // Notify other services/components of currently playing notes.
+    this.updatePlayingObservable(nextNotes);
 
     // Schedule next notes to play
     let timeout = this.noteDurationToMillis(this.playing[0].duration);
-    setTimeout(this.playNext.bind(this), timeout);
+    this.playerTimeout = setTimeout(this.playNext.bind(this), timeout);
   }
 
-  private prepareNextNotes() {
+  private getNextNotes() {
     // Get array of notes to play after current
-    this.nextNotes = this.getNotesByPosition(this.currentPosition);
+    return this.getNotesByPosition(this.currentPosition);
   }
 
   private playNote(note: SequencerNote) {
@@ -110,19 +123,23 @@ export class SoundPlayer {
     this.soundService.stopNote(note);
   }
 
-  isPlaying(note: SequencerNote) {
-    return this.playing.find(n => n.id === note.id);
+  /**
+   * Stop all notes that playing at the moment.
+   */
+  private stopAllNotes() {
+    for (let note of this.notes) {
+      this.stopNote(note);
+    }
   }
 
   private getNotesByPosition(notePosition: NotePosition): SequencerNote[] {
-    return this.notes.reduce((res, note) => {
-      if (note.position.isEqual(notePosition)) {
-        res.push(note);
-      }
-      return res;
-    }, []);
+    return this.notes.filter(note => note.position.isEqual(notePosition));
   }
 
+  /**
+   * Returns position of the note next to current position.
+   * @returns {NotePosition} Next position.
+   */
   private getNextPosition(): NotePosition {
     let bar = this.currentPosition.bar;
     let argOffset = this.currentPosition.offset;
@@ -149,9 +166,19 @@ export class SoundPlayer {
     return new NotePosition(bar, bestOffset);
   }
 
+  /**
+   * Convert duration within NoteDuration object to milliseconds considering BPM.
+   * @param {NoteDuration} duration Duration of a note.
+   * @returns {number} Interval in milliseconds that coresponds to the duration.
+   */
   private noteDurationToMillis(duration: NoteDuration): number {
     // ignore triplet and dot as long as they not implemented in UI
     return this.BpmDurationConstant / this.bpm / duration.baseDuration;
+  }
+
+  private updatePlayingObservable(notes: Array<SequencerNote>) {
+    this.playing = notes;
+    this.playingSource.next(this.playing);
   }
 
 }

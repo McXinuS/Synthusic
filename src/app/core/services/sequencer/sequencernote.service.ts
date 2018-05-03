@@ -6,15 +6,6 @@ import {DimSequencerNote} from "@shared-global/models";
 @Injectable()
 export class SequencerNoteService {
 
-  /*
-  // TODO remove
-  // Bitwise offsets of sequencer note information in its ID (used in getID())
-  private readonly ID_MULTIPLIER_BASE_NOTE = 1;
-  private readonly ID_MULTIPLIER_INSTRUMENT = this.ID_MULTIPLIER_BASE_NOTE * 200;
-  private readonly ID_MULTIPLIER_DURATION = this.ID_MULTIPLIER_INSTRUMENT * 10000;
-  private readonly ID_MULTIPLIER_POSITION = this.ID_MULTIPLIER_DURATION * 32;
-  */
-
   private notes: SequencerNote[] = [];
 
   constructor() {

@@ -5,8 +5,6 @@ import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {RoomListPopupData} from '@core/models/popup-data.model';
 
-// TODO animations
-
 @Injectable()
 export class PopupService {
 

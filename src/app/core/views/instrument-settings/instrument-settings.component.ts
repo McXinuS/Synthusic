@@ -1,5 +1,3 @@
-// TODO: lazy load
-
 import {Component, Input} from '@angular/core';
 import {Instrument} from '@core/models';
 

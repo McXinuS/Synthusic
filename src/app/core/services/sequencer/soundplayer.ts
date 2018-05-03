@@ -5,8 +5,6 @@ import {SequencerNote} from '@core/models';
 import {NoteDuration, NoteDurationEnum, NotePosition} from '@shared-global/models';
 import {Observable} from 'rxjs/Observable';
 
-// TODO
-
 export class SoundPlayer {
 
   // TODO differ (or remove) bass and treble
@@ -105,8 +103,6 @@ export class SoundPlayer {
   private playNote(note: SequencerNote) {
     if (note == null || note.duration.isInfinite() || this.isPlaying(note)) return;
     this.soundService.playNote(note);
-    // TODO: move this logic to sound service
-    setTimeout(this.stopNote.bind(this, note), this.noteDurationToMillis(note.duration));
   }
 
   private stopNote(note: SequencerNote) {

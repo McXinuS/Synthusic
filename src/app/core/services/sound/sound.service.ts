@@ -300,9 +300,8 @@ export class SoundService {
 
         } else if (oscillator && oldOscillator) {
 
+          // Find oscillator that has been changed and update it.
           for (let osc of this.oscillators.get(note.id)) {
-
-            // CPU usage optimization: update only changed oscillator.
 
             // Compare frequency and gain multipliers of existing sound oscillator and multipliers of its model
             //  to find the changed oscillator.
@@ -322,18 +321,19 @@ export class SoundService {
             // Compare oscillator wave type.
             let typeEqual = (osc.type === oldOscillator.type);
 
-            // Update oscillator values
+            // Update oscillator values.
             if (freqEqual && gainEqual && typeEqual) {
 
               osc.frequency.value = oscillator.freq * this.noteService.getNote(note.baseNoteId).freq;
               osc.gainNode.gain.value = oscillator.gain;
               osc.type = oscillator.type;
 
+              break;
+
             }
           }
 
         }
-
       }
     }
 

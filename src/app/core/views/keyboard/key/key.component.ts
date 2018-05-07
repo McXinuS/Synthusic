@@ -42,7 +42,7 @@ export class KeyComponent {
   }
 
   onMouseUp(e: MouseEvent) {
-    if (e.buttons == 2) this.stopNote();
+    if (e.button == 2) this.stopNote();
   }
 
 

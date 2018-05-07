@@ -147,12 +147,12 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent implements 
 
   onMouseDown(e: MouseEvent) {
     this.gainChangeInvert = this.getMouseCoordinates(e).y <= this.height / 2;
-    if (e.which == 1) {
+    if (e.buttons == 1) {
       this.isMouseDown = true;
       this.selectedIndex = this.closestIndex;
       this.selectedOscillator = this.instrument.oscillators[this.selectedIndex];
       this.render();
-    } else if (e.which == 3) {
+    } else if (e.buttons == 2) {
       if (this.closestIndex != -1) {
         this.instrumentService.deleteOscillator(this.instrument.id, this.instrument.oscillators[this.closestIndex]);
         this.closestIndex = -1;
@@ -209,7 +209,7 @@ export class OscillatorSettingsComponent extends BaseCanvasComponent implements 
   }
 
   onDoubleClick(e) {
-    if (e.which == 1 && this.selectedIndex != -1) {
+    if (e.buttons == 1 && this.selectedIndex != -1) {
       let newTypeIndex = (OscillatorType.indexOf(this.selectedOscillator.type) + 1) % OscillatorType.length;
       this.updateProperty('type', OscillatorType[newTypeIndex]);
       this.render();

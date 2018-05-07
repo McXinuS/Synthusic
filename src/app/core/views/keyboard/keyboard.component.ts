@@ -120,8 +120,8 @@ export class KeyboardComponent implements OnInit, AfterViewChecked {
     this.soundService.stopNote(note);
   }
 
-  onMiniChange(e) {
-    if (e.which === 1) this.miniMode = !this.miniMode;
+  onMiniChange(e: MouseEvent) {
+    if (e.buttons === 1) this.miniMode = !this.miniMode;
   }
 
   /* Touch events handlers */

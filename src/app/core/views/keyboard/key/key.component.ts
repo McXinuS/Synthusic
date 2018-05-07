@@ -19,30 +19,30 @@ export class KeyComponent {
   }
 
   onMouseDown(e: MouseEvent) {
-    if (e.which == 3) {
+    if (e.buttons == 2) {
       this.selected = true;
       this.playNote();
     }
-    if (e.which == 1) {
+    if (e.buttons == 1) {
       this.highlighted ? this.stopNote() : this.playNote();
     }
-    if (e.which == 1 || e.which == 2) {
+    if (e.buttons == 1 || e.buttons == 4) {
       // disable scroll on mouse wheel click and text selection when dragging
       return false;
     }
   }
 
   onMouseEnter(e: MouseEvent) {
-    if (e.which == 3) this.selected = true;
-    if (e.which == 1 || e.which == 3) this.playNote();
+    if (e.buttons == 2) this.selected = true;
+    if (e.buttons == 1 || e.buttons == 2) this.playNote();
   }
 
   onMouseLeave(e: MouseEvent) {
-    if (e.which == 1 || e.which == 3) this.stopNote();
+    if (e.buttons == 1 || e.buttons == 2) this.stopNote();
   }
 
   onMouseUp(e: MouseEvent) {
-    if (e.which == 3) this.stopNote();
+    if (e.buttons == 2) this.stopNote();
   }
 
 

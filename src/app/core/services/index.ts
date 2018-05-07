@@ -3,8 +3,7 @@
  * Barrels (index.ts files) of each subfolder exports services and some classes/functions that should be exposed
  *  to other parts of the application. It makes easier to import one service from another.
  *
- * Important! Every time one service imports another it should not be done using
- *  '@core/services)
+ * Important! Every time one service imports another it should not be done using '@core/services)
  *  use instead
  *  '../(service_folder)/(service_name).service'.
  *  Otherwise the circular dependency error will occur.
@@ -20,6 +19,7 @@ export * from './sequencer'
 export * from './sound'
 export * from './websocket'
 export * from './navbar'
+export * from './keyboard'
 
 // Import services to pass them into CoreModule using SERVICES array.
 import {InstrumentService} from './instrument'
@@ -31,6 +31,7 @@ import {SequencerNoteService, SequencerService, StaffService} from './sequencer'
 import {SoundService} from './sound'
 import {WebSocketService} from './websocket'
 import {NavbarService} from './navbar'
+import {KeyboardService} from './keyboard'
 
 export const SERVICES = [
   InstrumentService,
@@ -44,4 +45,5 @@ export const SERVICES = [
   SoundService,
   WebSocketService,
   NavbarService,
+  KeyboardService
 ];

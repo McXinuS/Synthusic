@@ -15,17 +15,16 @@ import {NoteDurationEnum} from "@shared-global/models";
 @Injectable()
 export class SoundService {
 
+  private readonly audioContext: AudioContext;
+  private readonly masterGainNode: GainNode;
+  private readonly analyser: Analyser;
+
   private oscillators: Map<number, GainedOscillatorNode[]> = new Map();
-  private audioContext: AudioContext;
 
   /**
    * We need to remember currently fading note to stop it if some note will be played before enveloper released.
    */
   private notesToStop: Map<number, SequencerNote> = new Map();
-
-  private masterGainNode: GainNode;
-
-  private analyser: Analyser;
 
   /**
    * Contains InstrumentModifiers for each instrument.
@@ -168,15 +167,7 @@ export class SoundService {
 
   private stopNoteImmediately(note: SequencerNote) {
 
-    // Stop and disconnect oscillator nodes of the note.
-    if (this.hasOscillator(note)) {
-      let oscArr = this.oscillators.get(note.id);
-      for (let j = oscArr.length - 1; j >= 0; j--) {
-        oscArr[j].stop(0);
-        oscArr[j].disconnect();
-      }
-      this.oscillators.delete(note.id);
-    }
+    this.disconnectNote(note.id);
 
     if (this.isPlaying(note)) {
       let ind = this._playingNotes.findIndex(n => n.isEqual(note));
@@ -188,17 +179,34 @@ export class SoundService {
   }
 
   /**
+   * Stop and disconnect oscillator nodes of the note and related gain nodes.
+   * @param {number} id Note ID.
+   */
+  private disconnectNote(id: number) {
+
+    let oscArr = this.oscillators.get(id);
+
+    if (!oscArr) {
+      return;
+    }
+
+    for (let osc of oscArr) {
+      osc.stop(0);
+      osc.disconnect();
+      osc.gainNode.disconnect();
+    }
+
+    this.oscillators.delete(id);
+  }
+
+  /**
    * Stop all notes.
    */
   stop() {
 
     // Stop the sound.
     this.oscillators.forEach((oscArr: GainedOscillatorNode[], id: number) => {
-      for (let osc of oscArr) {
-        osc.stop(0);
-        osc.disconnect();
-      }
-      this.oscillators.delete(id);
+      this.disconnectNote(id);
     });
 
     this.notesToStop.clear();
@@ -282,7 +290,6 @@ export class SoundService {
     this.onPannerUpdate(instrument.id, instrument.panner);
   }
 
-  // TODO: doesn't update when select component of settings changes
   // Update existing oscillator or reset currently playing notes (if no oscillator is provided).
   onOscillatorsUpdate(instrumentId: number, oscillator?: Oscillator, oldOscillator?: Oscillator) {
 
@@ -348,7 +355,8 @@ export class SoundService {
   }
 
   // Methods to set instrument and bpm observable externally
-  //  as a hack to prevent circular reference
+  //  as a hack to prevent circular reference.
+  // TODO: remove it using redux (ngrx)
 
   setInstrumentObservable(observable: Observable<Array<Instrument>>) {
     this.instruments$ = observable;
@@ -388,29 +396,21 @@ export class SoundService {
   }
 
   private createInstrumentModifiers(instrument: Instrument, destination: AudioNode): InstrumentModifiers {
-    let panner = this.createPanner(instrument, destination);
-    return new InstrumentModifiers(
-      this.createEnveloper(instrument, panner.getAudioNode()),
-      panner
-    );
-  }
 
-  private createPanner(instrument: Instrument, destination: AudioNode): Panner {
-    return new Panner(
+    const panner = new Panner(
       this.audioContext,
       instrument.panner,
       destination
     );
-  }
 
-  private createEnveloper(instrument: Instrument, destination: AudioNode): Enveloper {
-    return new Enveloper(
+    const enveloper = new Enveloper(
       this.audioContext,
       instrument.envelope,
-      destination,
-      function () {
-        this.stopInstrument(instrument.id);
-      }.bind(this));
+      panner.getAudioNode(),
+      this.stopInstrument.bind(this, instrument.id)
+    );
+
+    return new InstrumentModifiers(enveloper, panner);
   }
 
   private getInstrument(instrumentId: number): Instrument {

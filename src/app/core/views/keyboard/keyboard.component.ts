@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit,
+  AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit,
   ViewChild
 } from '@angular/core';
 import {BaseNote, Instrument, SequencerNote} from '@core/models';
@@ -20,7 +20,8 @@ import {Observable} from "rxjs/Observable";
 @Component({
   selector: 'app-keyboard',
   templateUrl: './keyboard.component.html',
-  styleUrls: ['./keyboard.component.css']
+  styleUrls: ['./keyboard.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KeyboardComponent implements OnInit, AfterViewChecked {
 

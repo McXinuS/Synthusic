@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ViewEncapsulation} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
 import {BaseNote} from '@core/models';
 import {KeyChangeMode} from './key-change-mode.enum';
 
@@ -6,7 +6,8 @@ import {KeyChangeMode} from './key-change-mode.enum';
   encapsulation: ViewEncapsulation.None,
   selector: 'app-keyboard-key',
   templateUrl: './key.component.html',
-  styleUrls: ['./key.component.css']
+  styleUrls: ['./key.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KeyComponent {
   @Input() note: BaseNote;

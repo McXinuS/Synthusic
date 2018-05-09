@@ -18,7 +18,7 @@ export class KeyboardService {
   private playingNotes: SequencerNote[];  // array of all playing notes of application
   private activeInstrument: Instrument;
 
-  private miniMode: boolean;
+  private miniMode: boolean = false;
 
   private selections: boolean[];
   private highlights: boolean[];
@@ -126,7 +126,7 @@ export class KeyboardService {
   }
 
   onMiniChange(e: MouseEvent) {
-    if (e.buttons === 1) this.miniMode = !this.miniMode;
+    if (e.which === 1 || e.button === 0) this.miniMode = !this.miniMode;
     this.miniModeSource.next(this.miniMode);
   }
 
@@ -158,6 +158,10 @@ export class KeyboardService {
     this.selections[id] = value;
     this.selectionsSource.next(this.selections);
   }
+
+
+  /* Touch events handlers */
+
 
   onTouchStart(e: TouchEvent) {
     let touches = e.changedTouches;

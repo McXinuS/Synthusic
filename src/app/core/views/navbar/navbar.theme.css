@@ -5,3 +5,15 @@
   border-color : #3a3a3a;
   color        : inherit;
 }
+
+:host {
+  position   : absolute;
+  width      : 100%;
+  /* max-height : calc(100vh - 45px); */
+  overflow-y : auto;
+  overflow-x : hidden;
+  z-index    : 10;
+  background : rgba(60, 60, 60, .9);
+  color      : #ddd;
+  padding    : 24px 48px;
+}

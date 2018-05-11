@@ -4,6 +4,7 @@ import {LoaderService} from '../loader';
 import {RoomService} from '../room';
 import {ChatMessage, User} from '@core/models';
 import {Subject} from 'rxjs/Subject';
+import {Router} from "@angular/router";
 
 @Injectable()
 export class NavbarService {
@@ -12,38 +13,26 @@ export class NavbarService {
   messages$: Observable<ChatMessage[]>;
   currentUser$: Observable<User>;
 
-  private tabVisibility: Map<string, boolean> = new Map();
-
-  private anyTabVisibleSource: Subject<boolean> = new Subject<boolean>();
-  anyTabVisible$: Observable<boolean> = this.anyTabVisibleSource.asObservable();
-
   constructor(public loaderService: LoaderService,
-              private roomService: RoomService) {
+              private roomService: RoomService,
+              private router: Router) {
     this.isOffline$ = this.loaderService.isOffline$;
     this.messages$ = this.roomService.messages$;
     this.currentUser$ = this.roomService.currentUser$;
   }
 
-  /**
-   * Shows selected navbar tab and hides other. If the selected tab is already shown, hide it, too.
-   * @param {string} tab Selected tab.
-   */
-  showNav(tab: string) {
-    let newVisState = !this.tabVisibility.get(tab);
-
-    this.tabVisibility.clear();
-    this.tabVisibility.set(tab, newVisState);
-
-    this.anyTabVisibleSource.next(newVisState);
-  }
-
   hideAll() {
-    this.tabVisibility.clear();
-    this.anyTabVisibleSource.next(false);
+    this.router.navigate(['']);
   }
 
   isVisible(tab: string): boolean {
-    return this.tabVisibility.get(tab);
+    return this.router.isActive(tab, true);
+  }
+
+  isAnyVisible(): boolean {
+    return this.router.isActive('about', true) ||
+           this.router.isActive('room', true) ||
+           this.router.isActive('settings', true);
   }
 
 }

@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import {NavbarComponent} from './navbar.component';
-import {NavbarContentHolderComponent} from './navbar-content-holder';
 import {AboutComponent} from './about';
 import {RoomComponent} from './room';
 import {SettingsComponent} from './settings';
 import {SharedModule} from '@shared/shared.module';
+import {routing} from "@core/views/navbar/navbar.routing";
 
 @NgModule({
   imports: [
-    SharedModule
+    SharedModule,
+    routing
   ],
   declarations: [
     NavbarComponent,
-    NavbarContentHolderComponent,
     AboutComponent,
     RoomComponent,
     SettingsComponent

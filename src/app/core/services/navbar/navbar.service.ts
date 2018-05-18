@@ -22,7 +22,9 @@ export class NavbarService {
   }
 
   hideAll() {
-    this.router.navigate(['']);
+    if (this.isAnyVisible()) {
+      this.router.navigate(['']);
+    }
   }
 
   isVisible(tab: string): boolean {

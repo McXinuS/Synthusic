@@ -20,7 +20,7 @@ export const fadeCornerAnimation = trigger('fadeCornerAnimation', [
         '150ms ease-in',
         style({transform: 'scaleY(1)', opacity: 1})
       )
-    ]),
+    ], { optional: true }),
     query(':leave', [
       style({
         'transform-origin': 'top right',
@@ -31,6 +31,6 @@ export const fadeCornerAnimation = trigger('fadeCornerAnimation', [
         '150ms ease-out',
         style({transform: 'scaleY(0.95)', opacity: 0})
       )
-    ])
+    ], { optional: true })
   ])
 ]);

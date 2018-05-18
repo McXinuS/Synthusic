@@ -7,11 +7,15 @@ import { InstrumentPopupComponent } from './instrument-popup/instrument-popup.co
 import { LoadingPopupComponent } from './loading-popup/loading-popup.component';
 import { ErrorPopupComponent } from './error-popup/error-popup.component';
 import { RoomsPopupComponent } from './rooms-popup/rooms-popup.component';
+import {routing} from 'app/core/views/popup/popup.routing';
+import { PopupWindowWrapperComponent } from './popup-window-wrapper/popup-window-wrapper.component';
+import { RoutedPopupWindowWrapperComponent } from './popup-window-wrapper/routed-popup-window-wrapper/routed-popup-window-wrapper.component';
 
 @NgModule({
   imports: [
     SharedModule,
-    InstrumentSettingsModule
+    InstrumentSettingsModule,
+    routing
   ],
   declarations: [
     PopupComponent,
@@ -19,7 +23,9 @@ import { RoomsPopupComponent } from './rooms-popup/rooms-popup.component';
     InstrumentPopupComponent,
     LoadingPopupComponent,
     ErrorPopupComponent,
-    RoomsPopupComponent
+    RoomsPopupComponent,
+    PopupWindowWrapperComponent,
+    RoutedPopupWindowWrapperComponent
   ],
   exports: [
     PopupComponent

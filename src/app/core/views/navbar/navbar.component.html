@@ -3,7 +3,7 @@
 
     <li>
       <a id="logo-holder"
-         routerLink="about"
+         [routerLink]="[{ outlets: { navbar: ['about'] } }]"
          routerLinkActive="selected">
         <img src="assets/img/icon/main-32.png" width="32px" height="32px"/>
         <span> Synthusic</span>
@@ -11,14 +11,14 @@
     </li>
     
     <li>
-      <a routerLink="room"
+      <a [routerLink]="[{ outlets: { navbar: ['room'] } }]"
          routerLinkActive="selected"
          [class.new-message]="newChatMessages">
         <span class="glyphicon glyphicon-user"></span> Room</a>
     </li>
     
     <li>
-      <a routerLink="settings"
+      <a [routerLink]="[{ outlets: { navbar: ['settings'] } }]"
          routerLinkActive="selected">
         <span class="glyphicon glyphicon-wrench"></span> Settings</a>
     </li>
@@ -31,7 +31,7 @@
   
   <div class="nav-content"
        [@fadeCornerAnimation]="getRouterOutletState(o)">
-    <router-outlet #o="outlet"></router-outlet>
+    <router-outlet #o="outlet" name="navbar"></router-outlet>
   </div>
   
 </div>

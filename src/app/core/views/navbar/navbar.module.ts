@@ -4,12 +4,12 @@ import {AboutComponent} from './about';
 import {RoomComponent} from './room';
 import {SettingsComponent} from './settings';
 import {SharedModule} from '@shared/shared.module';
-import {routing} from "@core/views/navbar/navbar.routing";
+import {NavbarRouting} from "@core/views/navbar/navbar.routing";
 
 @NgModule({
   imports: [
     SharedModule,
-    routing
+    NavbarRouting
   ],
   declarations: [
     NavbarComponent,

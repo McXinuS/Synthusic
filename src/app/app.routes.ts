@@ -5,6 +5,5 @@ export const ROUTES: Routes = [
   // { path: '', redirectTo: 'login', pathMatch: 'full' },
 
   // TODO show 404 page
-  // { path: 'error404', component: PageNotFoundComponent },
-  // { path: '**', redirectTo: 'error404' }
+  // { path: '**', component: PageNotFoundComponent }
 ];

@@ -23,7 +23,7 @@ export class NavbarService {
 
   hideAll() {
     if (this.isAnyVisible()) {
-      this.router.navigate(['']);
+      this.router.navigate([{ outlets: { navbar: null }}]);
     }
   }
 
@@ -32,9 +32,9 @@ export class NavbarService {
   }
 
   isAnyVisible(): boolean {
-    return this.router.isActive('about', true) ||
-           this.router.isActive('room', true) ||
-           this.router.isActive('settings', true);
+    return this.router.isActive('(navbar:about)', false) ||
+      this.router.isActive('(navbar:room)', false) ||
+      this.router.isActive('(navbar:settings)', false);
   }
 
 }

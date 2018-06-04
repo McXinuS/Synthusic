@@ -3,11 +3,13 @@ import {NavbarService} from '@core/services';
 import {ChatMessage} from '@core/models';
 import {Observable} from 'rxjs/Observable';
 import {User} from '@shared-global/models';
+import {fadeCornerAnimation} from "@shared/animations";
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
+  animations: [fadeCornerAnimation],
 })
 export class NavbarComponent implements OnInit {
 
@@ -15,11 +17,9 @@ export class NavbarComponent implements OnInit {
 
   isOffline$: Observable<boolean>;
   currentUser: User;
-  anyTabVisible$: Observable<boolean>;
 
   constructor(private navbarService: NavbarService) {
     this.isOffline$ = this.navbarService.isOffline$;
-    this.anyTabVisible$ = this.navbarService.anyTabVisible$;
 
     this.navbarService.currentUser$.subscribe(cu => this.currentUser = cu);
     this.navbarService.messages$.subscribe(messages => {
@@ -28,13 +28,6 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
-  }
-
-  showNav(tab: string) {
-    this.navbarService.showNav(tab);
-    if (tab === 'room') {
-      this.newChatMessages = false;
-    }
   }
 
   isVisible(tab: string) {
@@ -55,6 +48,10 @@ export class NavbarComponent implements OnInit {
       this.newChatMessages = true;
     }
 
+  }
+
+  getRouterOutletState(outlet) {
+    return outlet.isActivated ? outlet.activatedRoute : '';
   }
 
   reloadPage() {

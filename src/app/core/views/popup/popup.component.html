@@ -1,43 +1,13 @@
 <div class="overlay"
      *ngIf="popupService.isShown"
      [@fadeInOutAnimation]>
-
-  <div *ngFor="let data of popupData"
-       class="popup-wrapper center"
-       [class.text]="data.isText"
-       (click)="close()"
-       [@slideToBottomAnimation]>
-
-    <div class="popup"
-         (click)="$event.stopPropagation()">
-
-      <app-text-popup *ngIf="data.type === PopupType.text"
-                      [data]="data">
-      </app-text-popup>
-
-      <app-error-popup *ngIf="data.type === PopupType.error"
-                      [data]="data">
-      </app-error-popup>
-
-      <app-loading-popup *ngIf="data.type === PopupType.loading"
-                         [data]="data">
-      </app-loading-popup>
-
-      <app-instrument-popup *ngIf="data.type === PopupType.instrument"
-                            [data]="data">
-      </app-instrument-popup>
-
-      <app-rooms-popup *ngIf="data.type === PopupType.room_list"
-                            [data]="data">
-      </app-rooms-popup>
-
-      <div class="btn-group"
-           [class.hidden]="data.isModal">
-        <div class="btn btn-primary" (click)="close()">Close</div>
-      </div>
-
-    </div>
-
-  </div>
-
+  
+  <ng-container *ngFor="let data of popupData">
+    <app-popup-window-wrapper *ngIf="isNotRouting(data.type)"
+                              [data]="data">
+    </app-popup-window-wrapper>
+  </ng-container>
+  
+  <router-outlet></router-outlet>
+  
 </div>

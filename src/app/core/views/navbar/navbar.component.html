@@ -2,18 +2,24 @@
   <ul class="navbar">
 
     <li>
-      <a id="logo-holder" [class.selected]="isVisible('about')" (click)="showNav('about')">
+      <a id="logo-holder"
+         [routerLink]="[{ outlets: { navbar: ['about'] } }]"
+         routerLinkActive="selected">
         <img src="assets/img/icon/main-32.png" width="32px" height="32px"/>
         <span> Synthusic</span>
       </a>
     </li>
+    
     <li>
-      <a [class.selected]="isVisible('room')" [class.new-message]="newChatMessages"
-         (click)="showNav('room')">
+      <a [routerLink]="[{ outlets: { navbar: ['room'] } }]"
+         routerLinkActive="selected"
+         [class.new-message]="newChatMessages">
         <span class="glyphicon glyphicon-user"></span> Room</a>
     </li>
+    
     <li>
-      <a [class.selected]="isVisible('settings')" (click)="showNav('settings')">
+      <a [routerLink]="[{ outlets: { navbar: ['settings'] } }]"
+         routerLinkActive="selected">
         <span class="glyphicon glyphicon-wrench"></span> Settings</a>
     </li>
 
@@ -22,6 +28,10 @@
         <span class="glyphicon glyphicon-refresh"></span> Offline mode</a>
     </li>
   </ul>
-
-  <app-navbar-content-holder></app-navbar-content-holder>
+  
+  <div class="nav-content"
+       [@fadeCornerAnimation]="getRouterOutletState(o)">
+    <router-outlet #o="outlet" name="navbar"></router-outlet>
+  </div>
+  
 </div>

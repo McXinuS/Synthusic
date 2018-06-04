@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common'
 import { SERVICES } from './services'
 import { UTILITIES } from './utilities'
 import { VIEWS } from './views'
+import { RESOLVERS } from './resolvers';
 
 @NgModule({
   imports: [
@@ -10,7 +11,8 @@ import { VIEWS } from './views'
     ...VIEWS
   ],
   providers: [
-    ...SERVICES
+    ...SERVICES,
+    ...RESOLVERS
   ],
   declarations: [
     ...UTILITIES

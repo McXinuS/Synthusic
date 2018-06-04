@@ -102,3 +102,8 @@ li a.selected {
     background-color : transparent;
   }
 }
+
+.nav-content {
+  position   : relative;
+  width      : 100%;
+}

@@ -4,6 +4,7 @@ import {Instrument, Room} from '@shared-global/models';
 import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {RoomListPopupData} from '@core/models/popup-data.model';
+import {Router} from "@angular/router";
 
 @Injectable()
 export class PopupService {
@@ -17,13 +18,8 @@ export class PopupService {
   private popupDataSource: Subject<PopupData[]> = new Subject<PopupData[]>();
   popupData$: Observable<PopupData[]> = this.popupDataSource.asObservable();
 
-  private show(data: PopupData): number {
-    this.isShown = true;
 
-    this.popupData.push(data);
-    this.popupDataSource.next(this.popupData);
-
-    return data.id;
+  constructor(private router: Router) {
   }
 
   private getNextId(): number {
@@ -34,7 +30,7 @@ export class PopupService {
   /**
    * Creates object of popup window data.
    */
-  private createPopupData(type: PopupType, ...payload: any[]): PopupData {
+  getPopupData(type: PopupType, ...payload: any[]): PopupData {
     let id = this.getNextId();
     return this.createPopupDataWithId(id, type, ...payload);
   }
@@ -60,32 +56,40 @@ export class PopupService {
   }
 
   showMessage(header: string, message: string): number {
-    let data = this.createPopupData(PopupType.text, header, message);
+    let data = this.getPopupData(PopupType.text, header, message);
     return this.show(data);
   }
 
   showError(header: string, message: string): number {
-    let data = this.createPopupData(PopupType.error, header, message);
+    let data = this.getPopupData(PopupType.error, header, message);
     return this.show(data);
   }
 
   showLoader(header: string, message: string): number {
-    let data = this.createPopupData(PopupType.loading, header, message);
+    let data = this.getPopupData(PopupType.loading, header, message);
     return this.show(data);
   }
 
-  showInstrument(instrument: Instrument): number {
-    let data = this.createPopupData(PopupType.instrument, instrument);
-    return this.show(data);
+  showInstrument(instrument: Instrument) {
+    this.router.navigate(['instrument', instrument.id]);
   }
 
   showRoomList(rooms: Room[], onSelected: () => any): number {
-    let data = this.createPopupData(PopupType.room_list, rooms, onSelected);
+    let data = this.getPopupData(PopupType.room_list, rooms, onSelected);
     return this.show(data);
   }
 
   private getPopupIndex(id: number): number {
     return this.popupData.findIndex(data => data.id === id);
+  }
+
+  show(data: PopupData): number {
+    this.isShown = true;
+
+    this.popupData.push(data);
+    this.popupDataSource.next(this.popupData);
+
+    return data.id;
   }
 
   /**
@@ -116,12 +120,14 @@ export class PopupService {
   close(id: number) {
 
     let index = this.getPopupIndex(id);
-    if (index > -1) {
-      this.popupData.splice(index, 1);
-    }
+    if (index === -1) return;
+
+    this.popupData.splice(index, 1);
 
     this.isShown = this.popupData.length !== 0;
     this.popupDataSource.next(this.popupData);
+
+    this.router.navigate(['']);
   }
 
   /**
@@ -134,6 +140,9 @@ export class PopupService {
     this.popupDataSource.next(this.popupData);
   }
 
+  /**
+   * Close button and outside click event handler.
+   */
   onDismiss() {
     let lastPopup = this.popupData[this.popupData.length - 1];
     if (!lastPopup.isModal) {

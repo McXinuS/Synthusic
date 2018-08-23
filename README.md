@@ -1,4 +1,20 @@
-# SimpleSynthesizer
+# Synthusic
+
+## Description
+
+![Interface of main screen](/docs/main_win.jpg?raw=true "Interface of main screen")
+
+Multi-user note editor with additive synthesizers as instruments. The app is built on Angular 5 on frontend and Node.js + Express on backend. The app relies on WebSockets to maintain real-time users connection, [Verovio](https://www.verovio.org) library to display stave and WebAudio API to generate sound on client side.
+
+![Interface of instrument configuration](/docs/cfg_win.jpg?raw=true "Interface of instrument settings")
+
+Instruments are additive synthesizers, placed on a virtual scene. They have wave and envelope configuration and location on the scene.
+
+## Website
+
+Available at [synthusic.herokuapp.com](http://synthusic.herokuapp.com)
+
+---
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.24.
 
